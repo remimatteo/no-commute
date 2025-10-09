@@ -37,7 +37,8 @@ export default function Home() {
           description: job.description,
           requirements: job.requirements || [],
           applyUrl: job.apply_url,
-          featured: job.featured
+          featured: job.featured,
+          source: job.source || 'RemoteOK'
         }));
         
         setJobs(transformedJobs);
@@ -282,6 +283,9 @@ export default function Home() {
                           <Clock className="w-4 h-4 mr-2 flex-shrink-0" />
                           {job.postedDate}
                         </div>
+                        <div className="text-xs text-gray-500 mt-2">
+                          via {job.source || 'RemoteOK'}
+                        </div>
                       </div>
 
                       <div className="flex flex-wrap gap-2">
@@ -334,6 +338,9 @@ export default function Home() {
                         <div className={`flex items-center ${darkMode ? 'text-gray-500' : 'text-gray-500'} text-sm`}>
                           <Clock className="w-4 h-4 mr-2 flex-shrink-0" />
                           {job.postedDate}
+                        </div>
+                        <div className="text-xs text-gray-500 mt-2">
+                          via RemoteOK
                         </div>
                       </div>
 
@@ -415,7 +422,10 @@ export default function Home() {
             <div className="space-y-8 mb-10">
               <div>
                 <h3 className={`text-2xl font-bold mb-4 ${darkMode ? 'text-white' : 'text-gray-900'}`}>About the Role</h3>
-                <p className={`${darkMode ? 'text-gray-300' : 'text-gray-700'} text-lg leading-relaxed`}>{selectedJob.description}</p>
+                <div 
+                  className={`${darkMode ? 'text-gray-300' : 'text-gray-700'} text-lg leading-relaxed prose max-w-none`}
+                  dangerouslySetInnerHTML={{ __html: selectedJob.description }}
+                />
               </div>
 
               <div>
