@@ -1,282 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Search, MapPin, DollarSign, Clock, Briefcase, ExternalLink, Filter, X, TrendingUp, Zap } from 'lucide-react';
-
-const mockJobs = [
-  {
-    id: 1,
-    title: "Senior Frontend Developer",
-    company: "TechCorp Remote",
-    location: "Worldwide",
-    salary: "$120k - $160k",
-    type: "Full-time",
-    category: "Engineering",
-    tags: ["React", "TypeScript", "Next.js"],
-    postedDate: "2 days ago",
-    description: "We're looking for an experienced Frontend Developer to join our fully remote team. You'll work on building scalable web applications using React and TypeScript.",
-    requirements: ["5+ years React experience", "TypeScript proficiency", "Remote work experience", "Strong communication skills"],
-    applyUrl: "https://techcorp.com/careers",
-    featured: true
-  },
-  {
-    id: 2,
-    title: "Product Designer",
-    company: "DesignFlow",
-    location: "US & Canada",
-    salary: "$90k - $130k",
-    type: "Full-time",
-    category: "Design",
-    tags: ["Figma", "UI/UX", "Prototyping"],
-    postedDate: "1 week ago",
-    description: "Join our design team to create beautiful, intuitive interfaces for our SaaS product. Fully remote position with flexible hours.",
-    requirements: ["3+ years product design", "Figma expert", "Portfolio required", "User research experience"],
-    applyUrl: "https://designflow.com/jobs",
-    featured: false
-  },
-  {
-    id: 3,
-    title: "DevOps Engineer",
-    company: "CloudScale",
-    location: "Remote - Europe",
-    salary: "$100k - $140k",
-    type: "Full-time",
-    category: "Engineering",
-    tags: ["AWS", "Kubernetes", "Docker"],
-    postedDate: "3 days ago",
-    description: "Help us build and maintain cloud infrastructure for high-traffic applications. Work with cutting-edge DevOps tools.",
-    requirements: ["AWS certification", "Kubernetes experience", "CI/CD pipelines", "Infrastructure as Code"],
-    applyUrl: "https://cloudscale.io/careers",
-    featured: true
-  },
-  {
-    id: 4,
-    title: "Content Marketing Manager",
-    company: "GrowthLabs",
-    location: "Anywhere",
-    salary: "$70k - $95k",
-    type: "Full-time",
-    category: "Marketing",
-    tags: ["SEO", "Content Strategy", "Analytics"],
-    postedDate: "5 days ago",
-    description: "Drive our content strategy and SEO efforts. Create engaging content that converts. 100% remote culture.",
-    requirements: ["SEO expertise", "Content strategy", "3+ years experience", "Data-driven mindset"],
-    applyUrl: "https://growthlabs.com/careers",
-    featured: false
-  },
-  {
-    id: 5,
-    title: "Backend Engineer",
-    company: "DataStream",
-    location: "Remote - Worldwide",
-    salary: "$110k - $150k",
-    type: "Full-time",
-    category: "Engineering",
-    tags: ["Node.js", "PostgreSQL", "GraphQL"],
-    postedDate: "1 day ago",
-    description: "Build robust APIs and backend services for our data platform. Work with a global team of talented engineers.",
-    requirements: ["Node.js expert", "Database design", "Microservices", "API development"],
-    applyUrl: "https://datastream.dev/jobs",
-    featured: true
-  },
-  {
-    id: 6,
-    title: "Customer Success Manager",
-    company: "SupportHub",
-    location: "Remote - Americas",
-    salary: "$65k - $85k",
-    type: "Full-time",
-    category: "Customer Success",
-    tags: ["SaaS", "Customer Success", "Support"],
-    postedDate: "4 days ago",
-    description: "Help our customers succeed with our platform. Build relationships and drive retention.",
-    requirements: ["SaaS experience", "Customer-focused", "Excellent communication", "Problem-solving skills"],
-    applyUrl: "https://supporthub.io/careers",
-    featured: false
-  },
-  {
-    id: 7,
-    title: "Full Stack Engineer",
-    company: "InnovateTech",
-    location: "Worldwide",
-    salary: "$130k - $170k",
-    type: "Full-time",
-    category: "Engineering",
-    tags: ["React", "Python", "FastAPI"],
-    postedDate: "1 day ago",
-    description: "Build end-to-end features for our platform. Work across the entire stack from database to UI.",
-    requirements: ["Full-stack experience", "Python & JavaScript", "Database design", "System architecture"],
-    applyUrl: "https://innovatetech.io/careers",
-    featured: true
-  },
-  {
-    id: 8,
-    title: "Social Media Manager",
-    company: "BrandBuilders",
-    location: "US Remote",
-    salary: "$60k - $80k",
-    type: "Full-time",
-    category: "Marketing",
-    tags: ["Social Media", "Content Creation", "Brand"],
-    postedDate: "6 days ago",
-    description: "Create and execute social media strategies across all platforms. Drive engagement and build our brand presence.",
-    requirements: ["Social media expertise", "Content creation", "Analytics skills", "2+ years experience"],
-    applyUrl: "https://brandbuilders.co/jobs",
-    featured: false
-  },
-  {
-    id: 9,
-    title: "Senior Product Manager",
-    company: "ProductFlow",
-    location: "Remote - Global",
-    salary: "$140k - $180k",
-    type: "Full-time",
-    category: "Product",
-    tags: ["Product Strategy", "Roadmap", "Analytics"],
-    postedDate: "2 days ago",
-    description: "Lead product strategy and execution for our core platform. Work with engineering and design to ship features.",
-    requirements: ["5+ years PM experience", "Technical background", "Data-driven", "Leadership skills"],
-    applyUrl: "https://productflow.com/careers/pm",
-    featured: true
-  },
-  {
-    id: 10,
-    title: "iOS Developer",
-    company: "MobileFirst",
-    location: "Anywhere",
-    salary: "$110k - $145k",
-    type: "Full-time",
-    category: "Engineering",
-    tags: ["Swift", "iOS", "Mobile"],
-    postedDate: "3 days ago",
-    description: "Build beautiful iOS apps that millions use. Work with SwiftUI and modern iOS technologies.",
-    requirements: ["Swift expertise", "iOS SDK", "App Store experience", "Clean architecture"],
-    applyUrl: "https://mobilefirst.dev/careers",
-    featured: false
-  },
-  {
-    id: 11,
-    title: "Data Analyst",
-    company: "DataInsights",
-    location: "Remote - Europe",
-    salary: "$75k - $100k",
-    type: "Full-time",
-    category: "Data",
-    tags: ["SQL", "Python", "Tableau"],
-    postedDate: "1 week ago",
-    description: "Turn data into actionable insights. Build dashboards and help drive business decisions with data.",
-    requirements: ["SQL proficiency", "Data visualization", "Python/R", "Business acumen"],
-    applyUrl: "https://datainsights.io/jobs",
-    featured: false
-  },
-  {
-    id: 12,
-    title: "Sales Development Rep",
-    company: "SalesForce Pro",
-    location: "US & Canada",
-    salary: "$55k - $75k + Commission",
-    type: "Full-time",
-    category: "Sales",
-    tags: ["Sales", "B2B", "Outreach"],
-    postedDate: "4 days ago",
-    description: "Generate qualified leads and book meetings for our sales team. Great training and clear progression path.",
-    requirements: ["1+ year sales experience", "B2B background preferred", "Self-motivated", "Great communication"],
-    applyUrl: "https://salesforcepro.com/careers",
-    featured: false
-  },
-  {
-    id: 13,
-    title: "UI/UX Designer",
-    company: "PixelPerfect",
-    location: "Worldwide",
-    salary: "$85k - $115k",
-    type: "Full-time",
-    category: "Design",
-    tags: ["UI Design", "Figma", "Design Systems"],
-    postedDate: "2 days ago",
-    description: "Design intuitive interfaces and build design systems. Work on multiple products with creative freedom.",
-    requirements: ["3+ years UI/UX", "Figma mastery", "Design systems", "Strong portfolio"],
-    applyUrl: "https://pixelperfect.design/jobs",
-    featured: true
-  },
-  {
-    id: 14,
-    title: "Machine Learning Engineer",
-    company: "AI Innovations",
-    location: "Remote - Global",
-    salary: "$150k - $200k",
-    type: "Full-time",
-    category: "Engineering",
-    tags: ["Python", "ML", "TensorFlow"],
-    postedDate: "1 day ago",
-    description: "Build and deploy ML models at scale. Work on cutting-edge AI problems with massive datasets.",
-    requirements: ["ML/AI expertise", "Python proficiency", "Deep learning", "Research background"],
-    applyUrl: "https://aiinnovations.ai/careers",
-    featured: true
-  },
-  {
-    id: 15,
-    title: "QA Engineer",
-    company: "QualityFirst",
-    location: "Remote - Americas",
-    salary: "$70k - $95k",
-    type: "Full-time",
-    category: "Engineering",
-    tags: ["Testing", "Automation", "CI/CD"],
-    postedDate: "5 days ago",
-    description: "Ensure our software meets the highest quality standards. Build test automation and work with developers.",
-    requirements: ["QA experience", "Test automation", "CI/CD knowledge", "Detail-oriented"],
-    applyUrl: "https://qualityfirst.io/jobs",
-    featured: false
-  },
-  {
-    id: 16,
-    title: "Technical Writer",
-    company: "DocuMasters",
-    location: "Anywhere",
-    salary: "$65k - $90k",
-    type: "Full-time",
-    category: "Content",
-    tags: ["Documentation", "Technical Writing", "API"],
-    postedDate: "1 week ago",
-    description: "Write clear, comprehensive documentation for developers. Create tutorials, API docs, and guides.",
-    requirements: ["Technical writing", "Developer docs", "Clear communication", "Tech background"],
-    applyUrl: "https://documasters.com/careers",
-    featured: false
-  },
-  {
-    id: 17,
-    title: "Security Engineer",
-    company: "SecureStack",
-    location: "Worldwide",
-    salary: "$130k - $170k",
-    type: "Full-time",
-    category: "Engineering",
-    tags: ["Security", "Penetration Testing", "DevSecOps"],
-    postedDate: "3 days ago",
-    description: "Protect our infrastructure and applications. Conduct security audits and implement best practices.",
-    requirements: ["Security expertise", "Penetration testing", "Cloud security", "Certifications preferred"],
-    applyUrl: "https://securestack.io/jobs",
-    featured: true
-  },
-  {
-    id: 18,
-    title: "Account Executive",
-    company: "SaaSales Co",
-    location: "US Remote",
-    salary: "$80k - $120k + Commission",
-    type: "Full-time",
-    category: "Sales",
-    tags: ["Enterprise Sales", "SaaS", "B2B"],
-    postedDate: "2 days ago",
-    description: "Close enterprise deals and manage customer relationships. Work with Fortune 500 companies.",
-    requirements: ["Enterprise sales", "SaaS experience", "Quota attainment", "Strong closer"],
-    applyUrl: "https://saasales.co/careers",
-    featured: false
-  }
-];
 
 const categories = ["All", "Engineering", "Design", "Marketing", "Sales", "Product", "Data", "Customer Success", "Content"];
 
 export default function Home() {
+  const [jobs, setJobs] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedJob, setSelectedJob] = useState(null);
   const [showFilterMenu, setShowFilterMenu] = useState(false);
@@ -287,7 +16,42 @@ export default function Home() {
     jobType: ""
   });
 
-  const filteredJobs = mockJobs.filter(job => {
+  // Fetch jobs from database
+  useEffect(() => {
+    async function fetchJobs() {
+      try {
+        const response = await fetch('/api/jobs');
+        const data = await response.json();
+        
+        // Transform database format to match our component format
+        const transformedJobs = data.map(job => ({
+          id: job.id,
+          title: job.title,
+          company: job.company,
+          location: job.location,
+          salary: job.salary,
+          type: job.type,
+          category: job.category,
+          tags: job.tags || [],
+          postedDate: job.posted_date,
+          description: job.description,
+          requirements: job.requirements || [],
+          applyUrl: job.apply_url,
+          featured: job.featured
+        }));
+        
+        setJobs(transformedJobs);
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching jobs:', error);
+        setLoading(false);
+      }
+    }
+    
+    fetchJobs();
+  }, []);
+
+  const filteredJobs = jobs.filter(job => {
     const searchLower = searchQuery.toLowerCase();
     const matchesSearch = searchQuery === "" || 
       job.title.toLowerCase().includes(searchLower) ||
@@ -356,7 +120,7 @@ export default function Home() {
         <div className="text-center mb-8 sm:mb-12">
           <div className={`inline-flex items-center ${darkMode ? 'bg-blue-900/50 text-blue-300' : 'bg-blue-100 text-blue-700'} px-4 py-2 rounded-full text-sm font-medium mb-4`}>
             <TrendingUp className="w-4 h-4 mr-2" />
-            {mockJobs.length}+ active remote positions
+            {loading ? 'Loading...' : `${jobs.length}+ active remote positions`}
           </div>
           <h2 className={`text-4xl sm:text-5xl lg:text-6xl font-bold ${darkMode ? 'text-white' : 'text-gray-900'} mb-4 leading-tight`}>
             Work From Anywhere<br />
@@ -434,7 +198,7 @@ export default function Home() {
           {(activeFilters.category !== "All" || activeFilters.location || activeFilters.jobType) && (
             <div className="flex flex-wrap gap-2 mt-4">
               {activeFilters.category !== "All" && (
-                <span className="inline-flex items-center gap-2 bg-blue-100 text-blue-700 px-4 py-2 rounded-full text-sm font-medium">
+                <span className={`inline-flex items-center gap-2 ${darkMode ? 'bg-blue-900/50 text-blue-300' : 'bg-blue-100 text-blue-700'} px-4 py-2 rounded-full text-sm font-medium`}>
                   {activeFilters.category}
                   <button onClick={() => setActiveFilters({...activeFilters, category: "All"})}>
                     <X className="w-4 h-4" />
@@ -442,7 +206,7 @@ export default function Home() {
                 </span>
               )}
               {activeFilters.location && (
-                <span className="inline-flex items-center gap-2 bg-blue-100 text-blue-700 px-4 py-2 rounded-full text-sm font-medium">
+                <span className={`inline-flex items-center gap-2 ${darkMode ? 'bg-blue-900/50 text-blue-300' : 'bg-blue-100 text-blue-700'} px-4 py-2 rounded-full text-sm font-medium`}>
                   {activeFilters.location}
                   <button onClick={() => setActiveFilters({...activeFilters, location: ""})}>
                     <X className="w-4 h-4" />
@@ -450,7 +214,7 @@ export default function Home() {
                 </span>
               )}
               {activeFilters.jobType && (
-                <span className="inline-flex items-center gap-2 bg-blue-100 text-blue-700 px-4 py-2 rounded-full text-sm font-medium">
+                <span className={`inline-flex items-center gap-2 ${darkMode ? 'bg-blue-900/50 text-blue-300' : 'bg-blue-100 text-blue-700'} px-4 py-2 rounded-full text-sm font-medium`}>
                   {activeFilters.jobType}
                   <button onClick={() => setActiveFilters({...activeFilters, jobType: ""})}>
                     <X className="w-4 h-4" />
@@ -459,7 +223,7 @@ export default function Home() {
               )}
               <button
                 onClick={() => setActiveFilters({category: "All", location: "", jobType: ""})}
-                className="text-sm text-gray-600 hover:text-gray-900 font-medium"
+                className={`text-sm ${darkMode ? 'text-gray-400 hover:text-gray-200' : 'text-gray-600 hover:text-gray-900'} font-medium`}
               >
                 Clear all
               </button>
@@ -467,7 +231,12 @@ export default function Home() {
           )}
         </div>
 
-        {!selectedJob ? (
+        {loading ? (
+          <div className="text-center py-16">
+            <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-blue-600 border-t-transparent"></div>
+            <p className={`mt-4 ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>Loading amazing remote jobs...</p>
+          </div>
+        ) : !selectedJob ? (
           <div className="space-y-8">
             {featuredJobs.length > 0 && (
               <div>
@@ -516,9 +285,9 @@ export default function Home() {
                       </div>
 
                       <div className="flex flex-wrap gap-2">
-                        {job.tags.map(tag => (
+                        {job.tags.slice(0, 5).map((tag, idx) => (
                           <span
-                            key={tag}
+                            key={idx}
                             className={`${darkMode ? 'bg-gray-700 text-blue-300 border-blue-800' : 'bg-white text-blue-700 border-blue-200'} text-xs px-3 py-1.5 rounded-full font-medium border`}
                           >
                             {tag}
@@ -569,9 +338,9 @@ export default function Home() {
                       </div>
 
                       <div className="flex flex-wrap gap-2">
-                        {job.tags.map(tag => (
+                        {job.tags.slice(0, 5).map((tag, idx) => (
                           <span
-                            key={tag}
+                            key={idx}
                             className={`${darkMode ? 'bg-gray-700 text-blue-300' : 'bg-blue-50 text-blue-700'} text-xs px-3 py-1.5 rounded-full font-medium`}
                           >
                             {tag}
@@ -632,9 +401,9 @@ export default function Home() {
               </div>
 
               <div className="flex flex-wrap gap-2 mb-8">
-                {selectedJob.tags.map(tag => (
+                {selectedJob.tags.map((tag, idx) => (
                   <span
-                    key={tag}
+                    key={idx}
                     className={`${darkMode ? 'bg-blue-900/50 text-blue-300' : 'bg-blue-100 text-blue-700'} px-4 py-2 rounded-full font-semibold`}
                   >
                     {tag}
@@ -678,14 +447,14 @@ export default function Home() {
           </div>
         )}
 
-        {filteredJobs.length === 0 && (
-          <div className="text-center py-16 bg-white rounded-2xl shadow-md">
+        {!loading && filteredJobs.length === 0 && (
+          <div className={`text-center py-16 ${darkMode ? 'bg-gray-800' : 'bg-white'} rounded-2xl shadow-md`}>
             <div className="mb-6">
-              <div className="inline-flex items-center justify-center w-20 h-20 bg-gray-100 rounded-full mb-4">
+              <div className={`inline-flex items-center justify-center w-20 h-20 ${darkMode ? 'bg-gray-700' : 'bg-gray-100'} rounded-full mb-4`}>
                 <Search className="w-10 h-10 text-gray-400" />
               </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-2">No jobs found</h3>
-              <p className="text-lg text-gray-600 mb-6">Try adjusting your search or filters</p>
+              <h3 className={`text-2xl font-bold ${darkMode ? 'text-white' : 'text-gray-900'} mb-2`}>No jobs found</h3>
+              <p className={`text-lg ${darkMode ? 'text-gray-400' : 'text-gray-600'} mb-6`}>Try adjusting your search or filters</p>
             </div>
             <button
               onClick={() => {
@@ -744,7 +513,7 @@ export default function Home() {
         </div>
       </div>
 
-      <footer className="bg-white mt-0 border-t border-gray-200">
+      <footer className={`${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} mt-0 border-t transition-colors`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
             <div>
@@ -762,14 +531,14 @@ export default function Home() {
                   No Commute
                 </h3>
               </div>
-              <p className="text-gray-600">
+              <p className={`${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                 Connecting talented professionals with amazing remote opportunities worldwide.
               </p>
             </div>
             
             <div>
-              <h4 className="font-bold text-gray-900 mb-3">For Job Seekers</h4>
-              <ul className="space-y-2 text-gray-600">
+              <h4 className={`font-bold ${darkMode ? 'text-white' : 'text-gray-900'} mb-3`}>For Job Seekers</h4>
+              <ul className={`space-y-2 ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                 <li><a href="#" className="hover:text-blue-600 transition">Browse Jobs</a></li>
                 <li><a href="#" className="hover:text-blue-600 transition">Remote Work Tips</a></li>
                 <li><a href="#" className="hover:text-blue-600 transition">Career Resources</a></li>
@@ -777,8 +546,8 @@ export default function Home() {
             </div>
             
             <div>
-              <h4 className="font-bold text-gray-900 mb-3">For Employers</h4>
-              <ul className="space-y-2 text-gray-600">
+              <h4 className={`font-bold ${darkMode ? 'text-white' : 'text-gray-900'} mb-3`}>For Employers</h4>
+              <ul className={`space-y-2 ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                 <li><a href="#" className="hover:text-blue-600 transition">Post a Job</a></li>
                 <li><a href="#" className="hover:text-blue-600 transition">Pricing</a></li>
                 <li><a href="#" className="hover:text-blue-600 transition">Contact Us</a></li>
@@ -786,8 +555,8 @@ export default function Home() {
             </div>
           </div>
           
-          <div className="border-t border-gray-200 pt-8 text-center">
-            <p className="text-gray-600">
+          <div className={`border-t ${darkMode ? 'border-gray-700' : 'border-gray-200'} pt-8 text-center`}>
+            <p className={`${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
               © 2025 No Commute. Work from anywhere, live everywhere.
             </p>
           </div>

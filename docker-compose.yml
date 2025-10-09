@@ -1,0 +1,7 @@
+version: '3.8'
+
+services:
+  scraper:
+    build: ./scraper
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
