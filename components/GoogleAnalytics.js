@@ -1,13 +1,26 @@
-import '../styles/globals.css';
-import GoogleAnalytics from '../components/GoogleAnalytics';
+import Script from 'next/script';
 
-function MyApp({ Component, pageProps }) {
+export default function GoogleAnalytics({ measurementId }) {
+  if (!measurementId) {
+    return null;
+  }
+
   return (
     <>
-      <GoogleAnalytics measurementId={process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID} />
-      <Component {...pageProps} />
+      <Script
+        src={`https://www.googletagmanager.com/gtag/js?id=${measurementId}`}
+        strategy="afterInteractive"
+      />
+      <Script id="google-analytics" strategy="afterInteractive">
+        {`
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', '${measurementId}', {
+            page_path: window.location.pathname,
+          });
+        `}
+      </Script>
     </>
   );
 }
-
-export default MyApp;
