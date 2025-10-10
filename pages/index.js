@@ -92,6 +92,48 @@ const formatDate = (dateString) => {
   }
 };
 
+// Helper to convert company name to likely domain
+const companyToDomain = (companyName) => {
+  if (!companyName) return '';
+  
+  const name = companyName.toLowerCase().trim();
+  
+  // Common company domain mappings
+  const domainMap = {
+    '1inch': '1inch.io',
+    'gitlab': 'gitlab.com',
+    'github': 'github.com',
+    'stripe': 'stripe.com',
+    'shopify': 'shopify.com',
+    'amazon': 'amazon.com',
+    'google': 'google.com',
+    'microsoft': 'microsoft.com',
+    'meta': 'meta.com',
+    'facebook': 'facebook.com',
+    'apple': 'apple.com',
+    'netflix': 'netflix.com',
+    'spotify': 'spotify.com',
+    'airbnb': 'airbnb.com',
+    'uber': 'uber.com',
+    'lyft': 'lyft.com',
+    'coinbase': 'coinbase.com',
+    'openai': 'openai.com',
+    'anthropic': 'anthropic.com'
+  };
+  
+  // Check if we have a mapping
+  if (domainMap[name]) {
+    return domainMap[name];
+  }
+  
+  // Otherwise, guess domain from company name
+  const cleanName = name
+    .replace(/[^a-z0-9]/g, '') // Remove special chars
+    .replace(/inc$|llc$|ltd$|corp$|company$/g, ''); // Remove company suffixes
+  
+  return `${cleanName}.com`;
+};
+
 const extractDomain = (url) => {
   if (!url) return '';
   try {
@@ -115,28 +157,53 @@ export default function Home() {
     type: "All"
   });
   const [typedText, setTypedText] = useState('');
+  const [typingIndex, setTypingIndex] = useState(0);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [phraseIndex, setPhraseIndex] = useState(0);
   const [email, setEmail] = useState('');
   const [emailSubmitting, setEmailSubmitting] = useState(false);
   const [emailSubmitted, setEmailSubmitted] = useState(false);
-  const fullText = "Find Your Dream Remote Job";
+  
+  const phrases = [
+    "Find Your Dream Remote Job",
+    "Work From Anywhere",
+    "Skip The Commute",
+    "Join Remote Teams"
+  ];
 
   useEffect(() => {
     fetchJobs();
   }, []);
 
+  // Continuous typing animation with backspace
   useEffect(() => {
-    let currentIndex = 0;
-    const typingInterval = setInterval(() => {
-      if (currentIndex <= fullText.length) {
-        setTypedText(fullText.slice(0, currentIndex));
-        currentIndex++;
-      } else {
-        clearInterval(typingInterval);
-      }
-    }, 100);
+    const currentPhrase = phrases[phraseIndex];
+    const typingSpeed = isDeleting ? 10 : 25; // REALLY FAST
+    const pauseBeforeDelete = 500; // Half second
+    const pauseBeforeType = 50; // Almost instant
 
-    return () => clearInterval(typingInterval);
-  }, []);
+    const timer = setTimeout(() => {
+      if (!isDeleting && typingIndex < currentPhrase.length) {
+        // Typing forward
+        setTypedText(currentPhrase.slice(0, typingIndex + 1));
+        setTypingIndex(typingIndex + 1);
+      } else if (!isDeleting && typingIndex === currentPhrase.length) {
+        // Pause before deleting
+        setTimeout(() => setIsDeleting(true), pauseBeforeDelete);
+      } else if (isDeleting && typingIndex > 0) {
+        // Deleting
+        setTypedText(currentPhrase.slice(0, typingIndex - 1));
+        setTypingIndex(typingIndex - 1);
+      } else if (isDeleting && typingIndex === 0) {
+        // Move to next phrase
+        setIsDeleting(false);
+        setPhraseIndex((phraseIndex + 1) % phrases.length);
+        setTimeout(() => {}, pauseBeforeType);
+      }
+    }, typingSpeed);
+
+    return () => clearTimeout(timer);
+  }, [typingIndex, isDeleting, phraseIndex]);
 
   const fetchJobs = async () => {
     try {
@@ -473,8 +540,20 @@ export default function Home() {
               className={`group ${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} rounded-2xl shadow-md hover:shadow-xl transition-all cursor-pointer p-5 sm:p-6 border hover:border-blue-400 hover:scale-[1.02]`}
             >
               <div className="flex items-start gap-4 mb-4">
-                <div className={`w-14 h-14 ${darkMode ? 'bg-gray-700' : 'bg-gray-100'} rounded-xl flex items-center justify-center flex-shrink-0 transition-colors`}>
-                <Briefcase className={`w-7 h-7 ${darkMode ? 'text-gray-500' : 'text-gray-400'}`} />
+                <div className={`w-14 h-14 ${darkMode ? 'bg-gray-700' : 'bg-gray-100'} rounded-xl flex items-center justify-center flex-shrink-0 transition-colors overflow-hidden relative`}>
+                <img 
+                  src={`https://www.google.com/s2/favicons?domain=${companyToDomain(job.company)}&sz=64`}
+                  alt={job.company}
+                  className="w-10 h-10 object-contain"
+                  onError={(e) => {
+                    e.target.style.display = 'none';
+                    const fallback = e.target.nextElementSibling;
+                    if (fallback) fallback.style.display = 'flex';
+                  }}
+                />
+                <div className="w-full h-full items-center justify-center absolute inset-0" style={{ display: 'none' }}>
+                  <Briefcase className={`w-7 h-7 ${darkMode ? 'text-gray-500' : 'text-gray-400'}`} />
+                </div>
               </div>
 
                 <div className="flex-1 min-w-0">
