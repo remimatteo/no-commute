@@ -6,9 +6,11 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "generate-sitemap": "node scripts/generate-sitemap.js"
   },
   "dependencies": {
+    "dotenv": "^17.2.3",
     "lucide-react": "0.263.1",
     "next": "14.0.4",
     "pg": "^8.16.3",
