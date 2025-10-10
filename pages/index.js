@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Search, MapPin, DollarSign, Clock, Briefcase, ExternalLink, Filter, X, TrendingUp, Zap, Moon, Sun } from 'lucide-react';
 import SEO from '../components/SEO';
 import { WebsiteSchema, OrganizationSchema } from '../components/schema';
+import Link from 'next/link';
 
 const categories = [
   "All",
@@ -405,16 +406,22 @@ export default function Home() {
             </div>
             
             <div className="flex items-center gap-4">
-              <button
-                onClick={() => setDarkMode(!darkMode)}
-                className={`p-2 rounded-lg ${darkMode ? 'bg-gray-800 text-yellow-400' : 'bg-gray-100 text-gray-700'} hover:scale-110 transition-transform`}
-              >
-                {darkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
-              </button>
-              <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 sm:px-6 py-2 rounded-xl hover:shadow-lg transition-all font-semibold text-sm sm:text-base">
-                Post a Job
-              </button>
-            </div>
+  <Link 
+    href="/blog"
+    className={`px-4 py-2 rounded-lg font-semibold transition-all ${darkMode ? 'text-gray-300 hover:text-white hover:bg-gray-800' : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'}`}
+  >
+    Blog
+  </Link>
+  <button
+    onClick={() => setDarkMode(!darkMode)}
+    className={`p-2 rounded-lg ${darkMode ? 'bg-gray-800 text-yellow-400' : 'bg-gray-100 text-gray-700'} hover:scale-110 transition-transform`}
+  >
+    {darkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+  </button>
+  <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 sm:px-6 py-2 rounded-xl hover:shadow-lg transition-all font-semibold text-sm sm:text-base">
+    Post a Job
+  </button>
+</div>
           </div>
         </header>
 
