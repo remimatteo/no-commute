@@ -178,9 +178,9 @@ export default function Home() {
   // Continuous typing animation with backspace
   useEffect(() => {
     const currentPhrase = phrases[phraseIndex];
-    const typingSpeed = isDeleting ? 10 : 25; // REALLY FAST
-    const pauseBeforeDelete = 500; // Half second
-    const pauseBeforeType = 50; // Almost instant
+    const typingSpeed = isDeleting ? 25 : 60; // Normal but snappy
+    const pauseBeforeDelete = 1200; // 1.2 seconds to read
+    const pauseBeforeType = 150; // Quick transition
 
     const timer = setTimeout(() => {
       if (!isDeleting && typingIndex < currentPhrase.length) {
