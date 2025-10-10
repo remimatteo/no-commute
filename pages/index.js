@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Search, MapPin, DollarSign, Clock, Briefcase, ExternalLink, Filter, X, TrendingUp, Zap, Moon, Sun } from 'lucide-react';
 import SEO from '../components/SEO';
-import { WebsiteSchema, OrganizationSchema } from '../components/JsonLd';
+import { WebsiteSchema, OrganizationSchema } from '../components/schema';
 
 const categories = [
   "All",
