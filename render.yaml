@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: no-commute
+    env: node
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    envVars:
+      - key: DATABASE_URL
+        sync: false
+
+  - type: cron
+    name: job-scraper
+    env: node
+    schedule: "0 */12 * * *"  # Every 12 hours
+    buildCommand: npm install
+    startCommand: node scraper/scraper.js
+    envVars:
+      - key: DATABASE_URL
+        sync: false
