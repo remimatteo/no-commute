@@ -1,7 +1,7 @@
 import '../styles/globals.css';
 import GoogleAnalytics from '../components/GoogleAnalytics';
 
-export default function App({ Component, pageProps }) {
+function MyApp({ Component, pageProps }) {
   return (
     <>
       <GoogleAnalytics measurementId={process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID} />
@@ -9,3 +9,5 @@ export default function App({ Component, pageProps }) {
     </>
   );
 }
+
+export default MyApp;
