@@ -1,16 +1,20 @@
-import { Html, Head, Main, NextScript } from 'next/document'
+import { Html, Head, Main, NextScript } from "next/document";
 
 export default function Document() {
   return (
-    <Html>
+    <Html lang="en">
       <Head>
-        {/* Monetag verification */}
-        <meta name="monetag" content="cf4c027231e2f06123bce0c0fd7d7081" />
+        {/* ✅ Google AdSense Script */}
+        <script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9962507745166386"
+          crossOrigin="anonymous"
+        ></script>
       </Head>
       <body>
         <Main />
         <NextScript />
       </body>
     </Html>
-  )
+  );
 }
