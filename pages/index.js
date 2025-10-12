@@ -3,6 +3,7 @@ import { Search, MapPin, DollarSign, Clock, Briefcase, ExternalLink, Filter, X, 
 import SEO from '../components/SEO';
 import { WebsiteSchema, OrganizationSchema } from '../components/schema';
 import Link from 'next/link';
+import { generateJobSlug } from '../lib/slugify';
 
 const categories = [
   "All",
@@ -145,7 +146,6 @@ export default function Home() {
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedJob, setSelectedJob] = useState(null);
   const [showFilterMenu, setShowFilterMenu] = useState(false);
   const [darkMode, setDarkMode] = useState(true);
   const [activeFilters, setActiveFilters] = useState({
@@ -160,6 +160,7 @@ export default function Home() {
   const [email, setEmail] = useState('');
   const [emailSubmitting, setEmailSubmitting] = useState(false);
   const [emailSubmitted, setEmailSubmitted] = useState(false);
+  const [visibleJobsCount, setVisibleJobsCount] = useState(100);
   
   const phrases = [
     "Find Your Dream Remote Job",
@@ -255,17 +256,78 @@ export default function Home() {
     }
   };
 
+  // Reset visible jobs count when search/filters change
+  useEffect(() => {
+    setVisibleJobsCount(100);
+  }, [searchQuery, activeFilters]);
+
+  // Smart search with operators
   const filteredJobs = jobs
     .filter(job => {
-      const matchesSearch = job.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                          job.company.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                          job.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()));
-      
+      let matchesSearch = true;
+
+      if (searchQuery.trim()) {
+        const query = searchQuery.trim();
+
+        // Check for search operators
+        if (query.includes(':')) {
+          // Support operators: title:, company:, category:, tag:
+          const operatorRegex = /(title|company|category|tag):([^\s]+)/gi;
+          let matches = [...query.matchAll(operatorRegex)];
+
+          if (matches.length > 0) {
+            matchesSearch = matches.every(match => {
+              const [, field, value] = match;
+              const lowerValue = value.toLowerCase();
+
+              switch (field.toLowerCase()) {
+                case 'title':
+                  return job.title.toLowerCase().includes(lowerValue);
+                case 'company':
+                  return job.company.toLowerCase().includes(lowerValue);
+                case 'category':
+                  return job.category.toLowerCase().includes(lowerValue);
+                case 'tag':
+                  return job.tags.some(tag => tag.toLowerCase().includes(lowerValue));
+                default:
+                  return true;
+              }
+            });
+          } else {
+            // No valid operators, fall back to regular search
+            matchesSearch = job.title.toLowerCase().includes(query.toLowerCase()) ||
+                           job.company.toLowerCase().includes(query.toLowerCase()) ||
+                           job.tags.some(tag => tag.toLowerCase().includes(query.toLowerCase()));
+          }
+        } else if (query.includes('|')) {
+          // OR operator: "react | vue | angular"
+          const terms = query.split('|').map(t => t.trim().toLowerCase());
+          matchesSearch = terms.some(term =>
+            job.title.toLowerCase().includes(term) ||
+            job.company.toLowerCase().includes(term) ||
+            job.tags.some(tag => tag.toLowerCase().includes(term))
+          );
+        } else if (query.startsWith('-')) {
+          // NOT operator: "-junior"
+          const excludeTerm = query.substring(1).toLowerCase();
+          matchesSearch = !(
+            job.title.toLowerCase().includes(excludeTerm) ||
+            job.company.toLowerCase().includes(excludeTerm) ||
+            job.tags.some(tag => tag.toLowerCase().includes(excludeTerm))
+          );
+        } else {
+          // Regular search
+          matchesSearch = job.title.toLowerCase().includes(query.toLowerCase()) ||
+                         job.company.toLowerCase().includes(query.toLowerCase()) ||
+                         job.tags.some(tag => tag.toLowerCase().includes(query.toLowerCase()));
+        }
+      }
+
       const matchesCategory = activeFilters.category === "All" || job.category === activeFilters.category;
-      const matchesLocation = activeFilters.location === "All" || 
+      const matchesLocation = activeFilters.location === "All" ||
                              job.location.toLowerCase().includes(activeFilters.location.toLowerCase());
       const matchesType = activeFilters.type === "All" || job.type === activeFilters.type;
-      
+
       return matchesSearch && matchesCategory && matchesLocation && matchesType;
     })
     .sort((a, b) => new Date(b.postedDate) - new Date(a.postedDate));
@@ -286,94 +348,6 @@ export default function Home() {
     );
   }
 
-  if (selectedJob) {
-    return (
-      <>
-        <SEO 
-          title={`${selectedJob.title} at ${selectedJob.company}`}
-          description={`Remote ${selectedJob.type} position: ${selectedJob.title} at ${selectedJob.company}. ${selectedJob.location}. Apply now on No Commute Jobs.`}
-          canonical={`https://no-commute-jobs.com/jobs/${selectedJob.id}`}
-          keywords={`${selectedJob.title}, ${selectedJob.company}, remote job, ${selectedJob.category}, ${selectedJob.tags.join(', ')}`}
-        />
-        <div className={`min-h-screen ${darkMode ? 'bg-black' : 'bg-gray-50'} transition-colors`}>
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8">
-            <button
-              onClick={() => setSelectedJob(null)}
-              className={`${darkMode ? 'text-blue-400 hover:text-blue-300' : 'text-blue-600 hover:text-blue-700'} mb-6 flex items-center font-semibold text-lg group transition-colors`}
-            >
-              <span className="group-hover:-translate-x-1 transition-transform">←</span>
-              <span className="ml-2">Back to all jobs</span>
-            </button>
-
-            <div className="mb-8">
-              <h2 className={`text-3xl sm:text-4xl font-bold ${darkMode ? 'text-white' : 'text-gray-900'} mb-3`}>
-                {selectedJob.title}
-              </h2>
-              <p className={`text-xl sm:text-2xl ${darkMode ? 'text-gray-300' : 'text-gray-700'} font-semibold mb-6`}>{selectedJob.company}</p>
-
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
-                <div className={`flex items-center ${darkMode ? 'text-gray-300 bg-gray-800' : 'text-gray-700 bg-gray-100'} p-4 rounded-xl transition-colors`}>
-                  <MapPin className={`w-5 h-5 mr-3 ${darkMode ? 'text-blue-400' : 'text-blue-600'}`} />
-                  <div>
-                    <p className={`text-xs ${darkMode ? 'text-gray-500' : 'text-gray-500'} font-medium`}>Location</p>
-                    <p className="font-semibold">{selectedJob.location}</p>
-                  </div>
-                </div>
-                <div className={`flex items-center ${darkMode ? 'text-gray-300 bg-gray-800' : 'text-gray-700 bg-gray-100'} p-4 rounded-xl transition-colors`}>
-                  <DollarSign className={`w-5 h-5 mr-3 ${darkMode ? 'text-blue-400' : 'text-blue-600'}`} />
-                  <div>
-                    <p className={`text-xs ${darkMode ? 'text-gray-500' : 'text-gray-500'} font-medium`}>Salary</p>
-                    <p className="font-semibold">{selectedJob.salary}</p>
-                  </div>
-                </div>
-                <div className={`flex items-center ${darkMode ? 'text-gray-300 bg-gray-800' : 'text-gray-700 bg-gray-100'} p-4 rounded-xl transition-colors`}>
-                  <Clock className={`w-5 h-5 mr-3 ${darkMode ? 'text-blue-400' : 'text-blue-600'}`} />
-                  <div>
-                    <p className={`text-xs ${darkMode ? 'text-gray-500' : 'text-gray-500'} font-medium`}>Posted</p>
-                    <p className="font-semibold">{formatDate(selectedJob.postedDate)}</p>
-                  </div>
-                </div>
-              </div>
-
-              <div className={`${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} rounded-2xl p-6 sm:p-8 shadow-lg mb-6 border transition-colors`}>
-                <h3 className={`text-2xl font-bold ${darkMode ? 'text-white' : 'text-gray-900'} mb-4`}>About the Role</h3>
-                <div 
-                  className={`${darkMode ? 'text-gray-300' : 'text-gray-700'} leading-relaxed prose prose-invert max-w-none`}
-                  dangerouslySetInnerHTML={{ __html: selectedJob.description }}
-                />
-              </div>
-
-              {selectedJob.tags.length > 0 && (
-                <div className="mb-8">
-                  <h3 className={`text-xl font-bold ${darkMode ? 'text-white' : 'text-gray-900'} mb-4`}>Skills & Tags</h3>
-                  <div className="flex flex-wrap gap-3">
-                    {selectedJob.tags.map((tag, idx) => (
-                      <span
-                        key={idx}
-                        className={`${darkMode ? 'bg-blue-900/30 text-blue-300 border-blue-700' : 'bg-blue-50 text-blue-700 border-blue-200'} px-4 py-2 rounded-full font-medium border transition-colors`}
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              <a
-                href={selectedJob.applyUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-8 rounded-xl inline-flex items-center justify-center gap-3 text-lg transition-all transform hover:scale-105 shadow-lg"
-              >
-                Apply on Company Website
-                <ExternalLink className="w-5 h-5" />
-              </a>
-            </div>
-          </div>
-        </div>
-      </>
-    );
-  }
 
   return (
     <>
@@ -418,9 +392,11 @@ export default function Home() {
   >
     {darkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
   </button>
-  <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 sm:px-6 py-2 rounded-xl hover:shadow-lg transition-all font-semibold text-sm sm:text-base">
-    Post a Job
-  </button>
+  <Link href="/post-job">
+    <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 sm:px-6 py-2 rounded-xl hover:shadow-lg transition-all font-semibold text-sm sm:text-base">
+      Post a Job
+    </button>
+  </Link>
 </div>
           </div>
         </header>
@@ -439,7 +415,7 @@ export default function Home() {
                 <Search className={`w-5 h-5 ${darkMode ? 'text-gray-400' : 'text-gray-500'} ml-3`} />
                 <input
                   type="text"
-                  placeholder="Search by job title, company, or skills..."
+                  placeholder="Search: 'developer' or 'title:engineer' or 'react | vue' or '-junior'"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className={`flex-1 ${darkMode ? 'bg-gray-800 text-white placeholder-gray-500' : 'bg-white text-gray-900 placeholder-gray-400'} px-4 py-3 outline-none text-lg`}
@@ -452,6 +428,12 @@ export default function Home() {
                   Filters
                 </button>
               </div>
+
+              {searchQuery && (
+                <div className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'} text-center`}>
+                  💡 Pro tip: Use <code className={`${darkMode ? 'bg-gray-800' : 'bg-gray-100'} px-2 py-1 rounded`}>title:</code>, <code className={`${darkMode ? 'bg-gray-800' : 'bg-gray-100'} px-2 py-1 rounded`}>company:</code>, <code className={`${darkMode ? 'bg-gray-800' : 'bg-gray-100'} px-2 py-1 rounded`}>|</code> for OR, <code className={`${darkMode ? 'bg-gray-800' : 'bg-gray-100'} px-2 py-1 rounded`}>-</code> to exclude
+                </div>
+              )}
 
               <form onSubmit={handleEmailSubmit} className={`${darkMode ? 'bg-blue-900/20 border-blue-700' : 'bg-blue-50 border-blue-200'} rounded-2xl p-4 border transition-colors`}>
                 <div className="flex flex-col sm:flex-row gap-3">
@@ -552,72 +534,78 @@ export default function Home() {
         </section>
 
         <section className="max-w-7xl mx-auto px-4 sm:px-6 py-12">
-          <h3 className={`text-2xl font-bold ${darkMode ? 'text-white' : 'text-gray-900'} mb-6`}>All Positions</h3>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
-            {filteredJobs.map(job => (
-              <div
-                key={job.id}
-                onClick={() => setSelectedJob(job)}
-                className={`group ${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} rounded-2xl shadow-md hover:shadow-xl transition-all cursor-pointer p-5 sm:p-6 border hover:border-blue-400 hover:scale-[1.02]`}
-              >
-                <div className="flex items-start gap-4 mb-4">
-                  <div className={`w-14 h-14 ${darkMode ? 'bg-gray-700' : 'bg-gray-100'} rounded-xl flex items-center justify-center flex-shrink-0 transition-colors overflow-hidden relative`}>
-                    <img 
-                      src={`https://www.google.com/s2/favicons?domain=${companyToDomain(job.company)}&sz=64`}
-                      alt={job.company}
-                      className="w-10 h-10 object-contain"
-                      onError={(e) => {
-                        e.target.style.display = 'none';
-                        const fallback = e.target.nextElementSibling;
-                        if (fallback) fallback.style.display = 'flex';
-                      }}
-                    />
-                    <div className="w-full h-full items-center justify-center absolute inset-0" style={{ display: 'none' }}>
-                      <Briefcase className={`w-7 h-7 ${darkMode ? 'text-gray-500' : 'text-gray-400'}`} />
-                    </div>
-                  </div>
+          <h3 className={`text-2xl font-bold ${darkMode ? 'text-white' : 'text-gray-900'} mb-2`}>
+            {filteredJobs.length > 0 ? `Found ${filteredJobs.length} remote jobs` : 'All Remote Jobs'}
+          </h3>
+          <p className={`${darkMode ? 'text-gray-400' : 'text-gray-600'} mb-6`}>
+            Updated daily from top remote job boards
+          </p>
 
-                  <div className="flex-1 min-w-0">
-                    <span className={`${darkMode ? 'bg-green-900/30 text-green-400 border-green-700' : 'bg-green-100 text-green-700 border-green-200'} text-xs px-3 py-1 rounded-full font-semibold inline-block mb-2 border`}>
-                      {job.type}
-                    </span>
-                    <h3 className={`text-xl font-bold ${darkMode ? 'text-white' : 'text-gray-900'} mb-1 group-hover:text-blue-500 transition-colors truncate`}>
+          <div className="space-y-2">
+            {filteredJobs.slice(0, visibleJobsCount).map(job => {
+              const slug = job.slug || generateJobSlug(job.title, job.company);
+              return (
+              <Link
+                key={job.id}
+                href={`/jobs/${job.id}/${slug}`}
+                className={`group ${darkMode ? 'bg-gray-800 border-gray-700 hover:bg-gray-750' : 'bg-white border-gray-200 hover:bg-gray-50'} rounded-lg border transition-all cursor-pointer p-4 flex items-center gap-4 hover:border-blue-400 block`}
+              >
+                <div className={`w-12 h-12 ${darkMode ? 'bg-gray-700' : 'bg-gray-100'} rounded-lg flex items-center justify-center flex-shrink-0 overflow-hidden relative`}>
+                  <img
+                    src={`https://www.google.com/s2/favicons?domain=${companyToDomain(job.company)}&sz=64`}
+                    alt={job.company}
+                    className="w-8 h-8 object-contain"
+                    onError={(e) => {
+                      e.target.style.display = 'none';
+                      const fallback = e.target.nextElementSibling;
+                      if (fallback) fallback.style.display = 'flex';
+                    }}
+                  />
+                  <div className="w-full h-full items-center justify-center absolute inset-0" style={{ display: 'none' }}>
+                    <Briefcase className={`w-5 h-5 ${darkMode ? 'text-gray-500' : 'text-gray-400'}`} />
+                  </div>
+                </div>
+
+                <div className="flex-1 min-w-0 grid grid-cols-1 sm:grid-cols-12 gap-2 sm:gap-4 items-center">
+                  <div className="sm:col-span-5 min-w-0">
+                    <h3 className={`font-semibold ${darkMode ? 'text-white' : 'text-gray-900'} group-hover:text-blue-500 transition-colors truncate`}>
                       {job.title}
                     </h3>
-                    <p className={`${darkMode ? 'text-gray-300' : 'text-gray-700'} font-semibold truncate`}>{job.company}</p>
+                    <p className={`${darkMode ? 'text-gray-400' : 'text-gray-600'} text-sm truncate`}>{job.company}</p>
                   </div>
-                </div>
 
-                <div className="space-y-2 mb-4">
-                  <div className={`flex items-center ${darkMode ? 'text-gray-400' : 'text-gray-600'} text-sm`}>
-                    <MapPin className="w-4 h-4 mr-2 flex-shrink-0" />
-                    <span className="truncate">{job.location}</span>
-                  </div>
-                  <div className="flex items-center justify-between text-sm">
-                    <div className={`flex items-center ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                      <DollarSign className="w-4 h-4 mr-2 flex-shrink-0" />
-                      {job.salary}
-                    </div>
-                    <div className={`flex items-center ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                      <Clock className="w-4 h-4 mr-2 flex-shrink-0" />
-                      {formatDate(job.postedDate)}
-                    </div>
-                  </div>
-                </div>
-
-                <div className="flex flex-wrap gap-2">
-                  {job.tags.slice(0, 5).map((tag, idx) => (
-                    <span
-                      key={idx}
-                      className={`${darkMode ? 'bg-gray-700 text-gray-300' : 'bg-gray-100 text-gray-700'} text-xs px-2 py-1 rounded`}
-                    >
-                      {tag}
+                  <div className="sm:col-span-3 min-w-0">
+                    <span className={`${darkMode ? 'bg-blue-900/30 text-blue-400 border-blue-700' : 'bg-blue-100 text-blue-700 border-blue-200'} text-xs px-2 py-1 rounded-md font-medium inline-block border`}>
+                      {job.category}
                     </span>
-                  ))}
+                  </div>
+
+                  <div className="sm:col-span-3 flex items-center gap-2 text-sm">
+                    <MapPin className={`w-4 h-4 flex-shrink-0 ${darkMode ? 'text-gray-500' : 'text-gray-400'}`} />
+                    <span className={`${darkMode ? 'text-gray-400' : 'text-gray-600'} truncate`}>{job.location}</span>
+                  </div>
+
+                  <div className="sm:col-span-1 text-right">
+                    <span className={`${darkMode ? 'text-gray-500' : 'text-gray-500'} text-sm whitespace-nowrap`}>
+                      {formatDate(job.postedDate)}
+                    </span>
+                  </div>
                 </div>
-              </div>
-            ))}
+              </Link>
+            );
+            })}
           </div>
+
+          {filteredJobs.length > visibleJobsCount && (
+            <div className="mt-8 text-center">
+              <button
+                onClick={() => setVisibleJobsCount(prev => prev + 100)}
+                className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-semibold transition-all hover:shadow-lg"
+              >
+                Load More Jobs ({filteredJobs.length - visibleJobsCount} remaining)
+              </button>
+            </div>
+          )}
 
           {filteredJobs.length === 0 && (
             <div className="text-center py-16">
@@ -628,34 +616,95 @@ export default function Home() {
           )}
         </section>
 
+        <section className={`${darkMode ? 'bg-gray-900' : 'bg-gray-100'} py-16 transition-colors border-t ${darkMode ? 'border-gray-800' : 'border-gray-200'}`}>
+          <div className="max-w-7xl mx-auto px-4 sm:px-6">
+            <h3 className={`text-3xl font-bold ${darkMode ? 'text-white' : 'text-gray-900'} mb-8 text-center`}>
+              Browse by Category
+            </h3>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+              <div>
+                <h4 className={`text-lg font-bold ${darkMode ? 'text-white' : 'text-gray-900'} mb-4`}>By Job Title</h4>
+                <div className="space-y-2">
+                  {['Entry Level', 'Junior Developer', 'Internship', 'Software Engineer', 'Product Manager', 'Designer', 'Marketing Manager', 'Customer Support', 'Data Analyst', 'Sales Representative', 'Content Writer'].map(title => {
+                    const count = jobs.filter(j => j.title.toLowerCase().includes(title.toLowerCase())).length;
+                    return (
+                      <button
+                        key={title}
+                        onClick={() => setSearchQuery(title)}
+                        className={`block w-full text-left px-3 py-2 rounded-lg ${darkMode ? 'text-gray-300 hover:bg-gray-800' : 'text-gray-700 hover:bg-gray-200'} transition-colors`}
+                      >
+                        {title} <span className={`${darkMode ? 'text-gray-500' : 'text-gray-400'} text-sm`}>({count})</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              <div>
+                <h4 className={`text-lg font-bold ${darkMode ? 'text-white' : 'text-gray-900'} mb-4`}>By Skills</h4>
+                <div className="space-y-2">
+                  {['React', 'Python', 'JavaScript', 'AWS', 'TypeScript', 'Node.js', 'Figma', 'SQL'].map(skill => {
+                    const count = jobs.filter(j =>
+                      j.title.toLowerCase().includes(skill.toLowerCase()) ||
+                      j.tags.some(t => t.toLowerCase().includes(skill.toLowerCase()))
+                    ).length;
+                    return (
+                      <button
+                        key={skill}
+                        onClick={() => setSearchQuery(skill)}
+                        className={`block w-full text-left px-3 py-2 rounded-lg ${darkMode ? 'text-gray-300 hover:bg-gray-800' : 'text-gray-700 hover:bg-gray-200'} transition-colors`}
+                      >
+                        {skill} <span className={`${darkMode ? 'text-gray-500' : 'text-gray-400'} text-sm`}>({count})</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </section>
+
         <section className={`${darkMode ? 'bg-blue-900' : 'bg-blue-600'} py-16 transition-colors`}>
           <div className="max-w-4xl mx-auto px-4 sm:px-6 text-center">
-            <h3 className="text-3xl sm:text-4xl font-black text-white mb-4">
-              Never Miss a Remote Job
-            </h3>
-            <p className="text-lg text-blue-100 mb-8">
-              Get fresh remote opportunities delivered to your inbox weekly
-            </p>
-            <form onSubmit={handleEmailSubmit} className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="your@email.com"
-                className="flex-1 px-6 py-4 rounded-xl text-gray-900 outline-none shadow-lg"
-                disabled={emailSubmitting}
-              />
-              <button 
-                type="submit"
-                disabled={emailSubmitting || emailSubmitted}
-                className="bg-white text-blue-600 font-bold px-8 py-4 rounded-xl hover:bg-gray-100 transition-colors shadow-lg disabled:opacity-50"
-              >
-                {emailSubmitted ? '✓ Subscribed!' : emailSubmitting ? 'Submitting...' : 'Subscribe'}
-              </button>
-            </form>
-            <p className="text-blue-200 text-sm mt-4">
-              Join 10,000+ remote workers. Unsubscribe anytime.
-            </p>
+            <div className="mb-8">
+              <p className="text-2xl sm:text-3xl font-mono font-bold text-white mb-4 leading-relaxed">
+                "Building this because I believe talented people shouldn't be limited by geography. If you can do the work, you should be able to work from anywhere. That's the future."
+              </p>
+              <p className="text-blue-200 text-lg font-mono">
+                — Remi Matteo, Founder
+              </p>
+            </div>
+
+            <div className={`${darkMode ? 'bg-blue-800/50' : 'bg-blue-700'} rounded-2xl p-8`}>
+              <h3 className="text-2xl sm:text-3xl font-black text-white mb-4">
+                Never Miss a Remote Job
+              </h3>
+              <p className="text-lg text-blue-100 mb-6">
+                Get fresh remote opportunities delivered to your inbox weekly
+              </p>
+              <form onSubmit={handleEmailSubmit} className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="your@email.com"
+                  className="flex-1 px-6 py-4 rounded-xl text-gray-900 outline-none shadow-lg"
+                  disabled={emailSubmitting}
+                />
+                <button
+                  type="submit"
+                  disabled={emailSubmitting || emailSubmitted}
+                  className="bg-white text-blue-600 font-bold px-8 py-4 rounded-xl hover:bg-gray-100 transition-colors shadow-lg disabled:opacity-50"
+                >
+                  {emailSubmitted ? '✓ Subscribed!' : emailSubmitting ? 'Submitting...' : 'Subscribe'}
+                </button>
+              </form>
+              <p className="text-blue-200 text-sm mt-4">
+                Join 10,000+ remote workers. Unsubscribe anytime.
+              </p>
+            </div>
           </div>
         </section>
 
