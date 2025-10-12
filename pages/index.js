@@ -217,7 +217,7 @@ export default function Home() {
         description: job.description || '',
         requirements: [],
         applyUrl: job.apply_url || job.url || '#',
-        featured: false,
+        featured: job.featured || false,
         company_url: job.company_url || job.url || '',
         source: job.source || 'RemoteOK'
       }));
@@ -522,7 +522,16 @@ export default function Home() {
                 { label: "Remote Jobs", value: jobs.length },
                 { label: "Companies", value: new Set(jobs.map(j => j.company)).size },
                 { label: "Countries", value: "50+" },
-                { label: "New Today", value: jobs.filter(j => formatDate(j.postedDate) === '0d ago').length }
+                { label: "New This Week", value: jobs.filter(j => {
+                  try {
+                    const date = new Date(j.postedDate);
+                    const now = new Date();
+                    const diffDays = Math.floor((now - date) / (1000 * 60 * 60 * 24));
+                    return diffDays >= 0 && diffDays < 7;
+                  } catch {
+                    return false;
+                  }
+                }).length }
               ].map((stat, idx) => (
                 <div key={idx} className={`${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} p-4 rounded-xl border transition-colors`}>
                   <div className={`text-3xl font-black ${darkMode ? 'text-white' : 'text-gray-900'}`}>{stat.value}</div>
@@ -552,13 +561,20 @@ export default function Home() {
               >
                 <div className={`w-12 h-12 ${darkMode ? 'bg-gray-700' : 'bg-gray-100'} rounded-lg flex items-center justify-center flex-shrink-0 overflow-hidden relative`}>
                   <img
-                    src={`https://www.google.com/s2/favicons?domain=${companyToDomain(job.company)}&sz=64`}
+                    src={`https://logo.clearbit.com/${companyToDomain(job.company)}?size=80`}
                     alt={job.company}
-                    className="w-8 h-8 object-contain"
+                    className="w-full h-full object-cover"
                     onError={(e) => {
-                      e.target.style.display = 'none';
-                      const fallback = e.target.nextElementSibling;
-                      if (fallback) fallback.style.display = 'flex';
+                      // Try Google favicons as fallback
+                      if (!e.target.dataset.fallbackAttempted) {
+                        e.target.dataset.fallbackAttempted = 'true';
+                        e.target.src = `https://www.google.com/s2/favicons?domain=${companyToDomain(job.company)}&sz=64`;
+                      } else {
+                        // Show icon if both fail
+                        e.target.style.display = 'none';
+                        const fallback = e.target.nextElementSibling;
+                        if (fallback) fallback.style.display = 'flex';
+                      }
                     }}
                   />
                   <div className="w-full h-full items-center justify-center absolute inset-0" style={{ display: 'none' }}>

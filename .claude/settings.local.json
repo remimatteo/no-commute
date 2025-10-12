@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(node scraper.js)",
+      "Bash(curl -s -I \"https://remotive.com/api/remote-jobs\")",
+      "Bash(curl -s \"https://remotive.com/api/remote-jobs\")",
+      "Bash(node:*)",
+      "Bash(test:*)",
+      "Bash(npm run dev)",
+      "Bash(curl:*)",
+      "Bash(taskkill:*)",
+      "Bash(git config --list)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

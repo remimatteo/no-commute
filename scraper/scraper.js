@@ -1,4 +1,6 @@
 import pg from 'pg';
+import 'dotenv/config';
+
 const { Pool } = pg;
 
 const pool = new Pool({
@@ -31,102 +33,56 @@ function generateJobSlug(title, company) {
   return slug || 'job';
 }
 
-// Scrape RemoteOK
-async function scrapeRemoteOK() {
-  console.log('🔍 Fetching jobs from RemoteOK...');
+/**
+ * Parse RSS feed and extract job items
+ */
+function parseRSS(xmlText) {
+  const jobs = [];
 
-  try {
-    const response = await fetch('https://remoteok.com/api', {
-      headers: {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
-      }
+  // Match all <item> blocks
+  const itemMatches = xmlText.matchAll(/<item>([\s\S]*?)<\/item>/g);
+
+  for (const itemMatch of itemMatches) {
+    const itemContent = itemMatch[1];
+
+    // Extract fields
+    const titleMatch = itemContent.match(/<title>(?:<!\[CDATA\[)?(.*?)(?:\]\]>)?<\/title>/);
+    const linkMatch = itemContent.match(/<link>(?:<!\[CDATA\[)?(.*?)(?:\]\]>)?<\/link>/);
+    const descMatch = itemContent.match(/<description>(?:<!\[CDATA\[)?([\s\S]*?)(?:\]\]>)?<\/description>/);
+    const pubDateMatch = itemContent.match(/<pubDate>(.*?)<\/pubDate>/);
+    const categoryMatch = itemContent.match(/<category>(?:<!\[CDATA\[)?(.*?)(?:\]\]>)?<\/category>/);
+
+    jobs.push({
+      title: titleMatch ? titleMatch[1].trim() : '',
+      link: linkMatch ? linkMatch[1].trim() : '',
+      description: descMatch ? descMatch[1].trim() : '',
+      pubDate: pubDateMatch ? pubDateMatch[1].trim() : '',
+      category: categoryMatch ? categoryMatch[1].trim() : ''
     });
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
-    const data = await response.json();
-    const jobs = data.slice(1); // First item is metadata
-
-    console.log(`📦 Found ${jobs.length} jobs from RemoteOK`);
-
-    let inserted = 0;
-    let skipped = 0;
-    let errors = 0;
-
-    for (const job of jobs) {
-      try {
-        const applyUrl = job.url || `https://remoteok.com/l/${job.id}`;
-
-        const existing = await pool.query(
-          'SELECT id FROM jobs WHERE apply_url = $1',
-          [applyUrl]
-        );
-
-        if (existing.rows.length > 0) {
-          skipped++;
-          continue;
-        }
-
-        const title = job.position || 'Unknown Position';
-        const company = job.company || 'Unknown Company';
-        const slug = generateJobSlug(title, company);
-        const location = job.location || 'Worldwide';
-        const salary = job.salary_min && job.salary_max
-          ? `$${job.salary_min}k - $${job.salary_max}k`
-          : 'Competitive';
-        const type = 'Full-time';
-        const category = job.tags?.[0] || 'Other';
-        const tags = job.tags?.slice(0, 5) || [];
-        const description = job.description || 'No description provided.';
-        const postedDate = job.date ? new Date(job.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'Recently';
-
-        await pool.query(
-          `INSERT INTO jobs
-          (title, company, slug, location, salary, type, category, tags, posted_date, description, requirements, apply_url, featured, source)
-          VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)`,
-          [
-            title,
-            company,
-            slug,
-            location,
-            salary,
-            type,
-            category,
-            tags,
-            postedDate,
-            description,
-            ['Remote work experience', 'Self-motivated', 'Good communication skills'],
-            applyUrl,
-            false,
-            'RemoteOK'
-          ]
-        );
-
-        inserted++;
-
-        if (inserted % 50 === 0) {
-          console.log(`   ⏳ Processed ${inserted + skipped}/${jobs.length} jobs...`);
-        }
-      } catch (err) {
-        errors++;
-        console.error(`   ✗ Error inserting job "${job.position}":`, err.message);
-      }
-    }
-
-    console.log(`✅ RemoteOK: Inserted ${inserted} new jobs, skipped ${skipped} duplicates, ${errors} errors`);
-    return { inserted, skipped, errors, source: 'RemoteOK' };
-
-  } catch (error) {
-    console.error('❌ Error scraping RemoteOK:', error.message);
-    return { inserted: 0, skipped: 0, errors: 1, source: 'RemoteOK', error: error.message };
   }
+
+  return jobs;
 }
 
-// Scrape We Work Remotely
+/**
+ * Clean HTML tags from text
+ */
+function stripHtml(html) {
+  return html
+    .replace(/<[^>]*>/g, ' ')
+    .replace(/&nbsp;/g, ' ')
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+// Scrape We Work Remotely RSS Feed
 async function scrapeWeWorkRemotely() {
-  console.log('🔍 Fetching jobs from We Work Remotely...');
+  console.log('🔍 Fetching jobs from We Work Remotely RSS...');
 
   try {
     const response = await fetch('https://weworkremotely.com/remote-jobs.rss', {
@@ -139,30 +95,26 @@ async function scrapeWeWorkRemotely() {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
 
-    const text = await response.text();
+    const xmlText = await response.text();
+    const jobs = parseRSS(xmlText);
 
-    // Simple RSS parsing (extract job data from XML)
-    const jobMatches = text.matchAll(/<item>[\s\S]*?<title><!\[CDATA\[(.*?)\]\]><\/title>[\s\S]*?<link>(.*?)<\/link>[\s\S]*?<description><!\[CDATA\[(.*?)\]\]><\/description>[\s\S]*?<pubDate>(.*?)<\/pubDate>[\s\S]*?<\/item>/g);
+    console.log(`📦 Found ${jobs.length} jobs from We Work Remotely RSS`);
 
     let inserted = 0;
     let skipped = 0;
     let errors = 0;
-    let count = 0;
 
-    for (const match of jobMatches) {
-      count++;
+    for (const job of jobs) {
       try {
-        const [_, fullTitle, link, description, pubDate] = match;
-
-        // Parse title format: "Company Name: Job Title"
-        const titleParts = fullTitle.split(':');
-        const company = titleParts[0]?.trim() || 'Unknown Company';
-        const title = titleParts[1]?.trim() || fullTitle;
+        if (!job.link) {
+          errors++;
+          continue;
+        }
 
         // Check for duplicates
         const existing = await pool.query(
           'SELECT id FROM jobs WHERE apply_url = $1',
-          [link]
+          [job.link]
         );
 
         if (existing.rows.length > 0) {
@@ -170,8 +122,32 @@ async function scrapeWeWorkRemotely() {
           continue;
         }
 
+        // Parse title format: "Company: Job Title" or just use title
+        let company = 'Unknown Company';
+        let title = job.title;
+
+        if (job.title.includes(':')) {
+          const parts = job.title.split(':');
+          company = parts[0].trim();
+          title = parts.slice(1).join(':').trim();
+        }
+
         const slug = generateJobSlug(title, company);
-        const postedDate = new Date(pubDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        const description = stripHtml(job.description).substring(0, 2000);
+        const category = job.category || 'Other';
+
+        let postedDate = 'Recently';
+        if (job.pubDate) {
+          try {
+            postedDate = new Date(job.pubDate).toLocaleDateString('en-US', {
+              month: 'short',
+              day: 'numeric',
+              year: 'numeric'
+            });
+          } catch (e) {
+            // Keep 'Recently' if date parsing fails
+          }
+        }
 
         await pool.query(
           `INSERT INTO jobs
@@ -184,12 +160,12 @@ async function scrapeWeWorkRemotely() {
             'Worldwide',
             'Competitive',
             'Full-time',
-            'Other',
-            ['Remote'],
+            category,
+            ['Remote', category],
             postedDate,
-            description.substring(0, 500) + '...',
+            description || 'No description provided.',
             ['Remote work experience', 'Self-motivated'],
-            link,
+            job.link,
             false,
             'We Work Remotely'
           ]
@@ -198,11 +174,10 @@ async function scrapeWeWorkRemotely() {
         inserted++;
       } catch (err) {
         errors++;
-        console.error(`   ✗ Error inserting WWR job:`, err.message);
+        console.error(`   ✗ Error inserting WWR job: ${err.message}`);
       }
     }
 
-    console.log(`📦 Found ${count} jobs from We Work Remotely`);
     console.log(`✅ We Work Remotely: Inserted ${inserted} new jobs, skipped ${skipped} duplicates, ${errors} errors`);
     return { inserted, skipped, errors, source: 'We Work Remotely' };
 
@@ -212,9 +187,120 @@ async function scrapeWeWorkRemotely() {
   }
 }
 
-// Scrape Remotive
+// Scrape Remote.co RSS Feed
+async function scrapeRemoteCo() {
+  console.log('🔍 Fetching jobs from Remote.co RSS...');
+
+  try {
+    const response = await fetch('https://remote.co/remote-jobs/rss/', {
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const xmlText = await response.text();
+    const jobs = parseRSS(xmlText);
+
+    console.log(`📦 Found ${jobs.length} jobs from Remote.co RSS`);
+
+    let inserted = 0;
+    let skipped = 0;
+    let errors = 0;
+
+    for (const job of jobs) {
+      try {
+        if (!job.link) {
+          errors++;
+          continue;
+        }
+
+        // Check for duplicates
+        const existing = await pool.query(
+          'SELECT id FROM jobs WHERE apply_url = $1',
+          [job.link]
+        );
+
+        if (existing.rows.length > 0) {
+          skipped++;
+          continue;
+        }
+
+        // Extract company from title or description
+        let company = 'Unknown Company';
+        let title = job.title;
+
+        if (job.title.includes(' at ')) {
+          const parts = job.title.split(' at ');
+          title = parts[0].trim();
+          company = parts[1].trim();
+        } else if (job.title.includes(' - ')) {
+          const parts = job.title.split(' - ');
+          title = parts[0].trim();
+          company = parts[1]?.trim() || 'Unknown Company';
+        }
+
+        const slug = generateJobSlug(title, company);
+        const description = stripHtml(job.description).substring(0, 2000);
+        const category = job.category || 'Other';
+
+        let postedDate = 'Recently';
+        if (job.pubDate) {
+          try {
+            postedDate = new Date(job.pubDate).toLocaleDateString('en-US', {
+              month: 'short',
+              day: 'numeric',
+              year: 'numeric'
+            });
+          } catch (e) {
+            // Keep 'Recently' if date parsing fails
+          }
+        }
+
+        await pool.query(
+          `INSERT INTO jobs
+          (title, company, slug, location, salary, type, category, tags, posted_date, description, requirements, apply_url, featured, source)
+          VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)`,
+          [
+            title,
+            company,
+            slug,
+            'Worldwide',
+            'Competitive',
+            'Full-time',
+            category,
+            ['Remote', category],
+            postedDate,
+            description || 'No description provided.',
+            ['Remote work experience', 'Self-motivated'],
+            job.link,
+            false,
+            'Remote.co'
+          ]
+        );
+
+        inserted++;
+      } catch (err) {
+        errors++;
+        console.error(`   ✗ Error inserting Remote.co job: ${err.message}`);
+      }
+    }
+
+    console.log(`✅ Remote.co: Inserted ${inserted} new jobs, skipped ${skipped} duplicates, ${errors} errors`);
+    return { inserted, skipped, errors, source: 'Remote.co' };
+
+  } catch (error) {
+    console.error('❌ Error scraping Remote.co:', error.message);
+    return { inserted: 0, skipped: 0, errors: 1, source: 'Remote.co', error: error.message };
+  }
+}
+
+// Scrape Remotive API
 async function scrapeRemotive() {
-  console.log('🔍 Fetching jobs from Remotive...');
+  console.log('🔍 Fetching jobs from Remotive API...');
 
   try {
     const response = await fetch('https://remotive.com/api/remote-jobs', {
@@ -230,7 +316,7 @@ async function scrapeRemotive() {
     const data = await response.json();
     const jobs = data.jobs || [];
 
-    console.log(`📦 Found ${jobs.length} jobs from Remotive`);
+    console.log(`📦 Found ${jobs.length} jobs from Remotive API`);
 
     let inserted = 0;
     let skipped = 0;
@@ -238,6 +324,12 @@ async function scrapeRemotive() {
 
     for (const job of jobs) {
       try {
+        if (!job.url) {
+          errors++;
+          continue;
+        }
+
+        // Check for duplicates
         const existing = await pool.query(
           'SELECT id FROM jobs WHERE apply_url = $1',
           [job.url]
@@ -251,7 +343,25 @@ async function scrapeRemotive() {
         const title = job.title || 'Unknown Position';
         const company = job.company_name || 'Unknown Company';
         const slug = generateJobSlug(title, company);
-        const postedDate = new Date(job.publication_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        const description = stripHtml(job.description || '').substring(0, 2000);
+        const category = job.category || 'Other';
+        const location = job.candidate_required_location || 'Worldwide';
+        const salary = job.salary || 'Competitive';
+        const jobType = job.job_type || 'full_time';
+        const tags = job.tags || ['Remote'];
+
+        let postedDate = 'Recently';
+        if (job.publication_date) {
+          try {
+            postedDate = new Date(job.publication_date).toLocaleDateString('en-US', {
+              month: 'short',
+              day: 'numeric',
+              year: 'numeric'
+            });
+          } catch (e) {
+            // Keep 'Recently' if date parsing fails
+          }
+        }
 
         await pool.query(
           `INSERT INTO jobs
@@ -261,13 +371,13 @@ async function scrapeRemotive() {
             title,
             company,
             slug,
-            job.candidate_required_location || 'Worldwide',
-            job.salary || 'Competitive',
-            job.job_type || 'Full-time',
-            job.category || 'Other',
-            job.tags || ['Remote'],
+            location,
+            salary,
+            jobType === 'full_time' ? 'Full-time' : 'Contract',
+            category,
+            Array.isArray(tags) ? tags : [category, 'Remote'],
             postedDate,
-            job.description || 'No description provided.',
+            description || 'No description provided.',
             ['Remote work experience'],
             job.url,
             false,
@@ -277,12 +387,14 @@ async function scrapeRemotive() {
 
         inserted++;
 
-        if (inserted % 50 === 0) {
+        if (inserted % 100 === 0) {
           console.log(`   ⏳ Processed ${inserted + skipped}/${jobs.length} jobs...`);
         }
       } catch (err) {
         errors++;
-        console.error(`   ✗ Error inserting Remotive job:`, err.message);
+        if (errors <= 5) {
+          console.error(`   ✗ Error inserting Remotive job "${job.title}": ${err.message}`);
+        }
       }
     }
 
@@ -295,22 +407,129 @@ async function scrapeRemotive() {
   }
 }
 
+// Scrape FlexJobs RSS Feed
+async function scrapeFlexJobs() {
+  console.log('🔍 Fetching jobs from FlexJobs RSS...');
+
+  try {
+    const response = await fetch('https://www.flexjobs.com/jobs/rss', {
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const xmlText = await response.text();
+    const jobs = parseRSS(xmlText);
+
+    console.log(`📦 Found ${jobs.length} jobs from FlexJobs RSS`);
+
+    let inserted = 0;
+    let skipped = 0;
+    let errors = 0;
+
+    for (const job of jobs) {
+      try {
+        if (!job.link) {
+          errors++;
+          continue;
+        }
+
+        // Check for duplicates
+        const existing = await pool.query(
+          'SELECT id FROM jobs WHERE apply_url = $1',
+          [job.link]
+        );
+
+        if (existing.rows.length > 0) {
+          skipped++;
+          continue;
+        }
+
+        // Parse title
+        let company = 'Unknown Company';
+        let title = job.title;
+
+        if (job.title.includes(' - ')) {
+          const parts = job.title.split(' - ');
+          title = parts[0].trim();
+          company = parts[1]?.trim() || 'Unknown Company';
+        }
+
+        const slug = generateJobSlug(title, company);
+        const description = stripHtml(job.description).substring(0, 2000);
+        const category = job.category || 'Other';
+
+        let postedDate = 'Recently';
+        if (job.pubDate) {
+          try {
+            postedDate = new Date(job.pubDate).toLocaleDateString('en-US', {
+              month: 'short',
+              day: 'numeric',
+              year: 'numeric'
+            });
+          } catch (e) {
+            // Keep 'Recently' if date parsing fails
+          }
+        }
+
+        await pool.query(
+          `INSERT INTO jobs
+          (title, company, slug, location, salary, type, category, tags, posted_date, description, requirements, apply_url, featured, source)
+          VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)`,
+          [
+            title,
+            company,
+            slug,
+            'Remote',
+            'Competitive',
+            'Full-time',
+            category,
+            ['Remote', 'Flexible', category],
+            postedDate,
+            description || 'No description provided.',
+            ['Remote work experience', 'Flexible schedule'],
+            job.link,
+            false,
+            'FlexJobs'
+          ]
+        );
+
+        inserted++;
+      } catch (err) {
+        errors++;
+        console.error(`   ✗ Error inserting FlexJobs job: ${err.message}`);
+      }
+    }
+
+    console.log(`✅ FlexJobs: Inserted ${inserted} new jobs, skipped ${skipped} duplicates, ${errors} errors`);
+    return { inserted, skipped, errors, source: 'FlexJobs' };
+
+  } catch (error) {
+    console.error('❌ Error scraping FlexJobs:', error.message);
+    return { inserted: 0, skipped: 0, errors: 1, source: 'FlexJobs', error: error.message };
+  }
+}
+
 /**
- * Clean up old jobs (older than 60 days)
+ * Clean up old jobs (older than 30 days)
  */
 async function cleanupOldJobs() {
   console.log('🧹 Cleaning up old jobs...');
 
   try {
-    // Delete jobs older than 60 days
+    // Delete jobs older than 30 days
     const result = await pool.query(`
       DELETE FROM jobs
-      WHERE created_at < NOW() - INTERVAL '60 days'
+      WHERE created_at < NOW() - INTERVAL '30 days'
       RETURNING id
     `);
 
     const deletedCount = result.rowCount;
-    console.log(`✅ Removed ${deletedCount} old jobs (>60 days old)\n`);
+    console.log(`✅ Removed ${deletedCount} old jobs (>30 days old)\n`);
     return deletedCount;
   } catch (error) {
     console.error('❌ Error cleaning up old jobs:', error.message);
@@ -319,7 +538,7 @@ async function cleanupOldJobs() {
 }
 
 async function main() {
-  console.log('🚀 Starting multi-source job scraper...\n');
+  console.log('🚀 Starting RSS-based job scraper...\n');
   console.log(`⏰ Run time: ${new Date().toLocaleString()}\n`);
 
   // Clean up old jobs first
@@ -328,16 +547,15 @@ async function main() {
   // Run all scrapers
   const results = [];
 
-  const remoteOKResult = await scrapeRemoteOK();
-  results.push(remoteOKResult);
+  // Scrape Remotive first (main source with 1600+ jobs)
+  const remotiveResult = await scrapeRemotive();
+  results.push(remotiveResult);
   console.log('');
 
+  // Scrape We Work Remotely (secondary source)
   const wwrResult = await scrapeWeWorkRemotely();
   results.push(wwrResult);
   console.log('');
-
-  const remotiveResult = await scrapeRemotive();
-  results.push(remotiveResult);
 
   // Summary
   console.log('\n' + '='.repeat(60));

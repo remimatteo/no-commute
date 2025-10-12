@@ -9,10 +9,16 @@ const pool = new Pool({
 
 export default async function handler(req, res) {
   try {
-    const result = await pool.query(
-  'SELECT * FROM jobs ORDER BY created_at DESC LIMIT 2000'
-);
-    
+    // Fetch all jobs, sorted by featured/sponsored first, then by date
+    // Featured jobs (paid posts that are approved) appear at the top
+    const result = await pool.query(`
+      SELECT * FROM jobs
+      ORDER BY
+        COALESCE(featured, false) DESC,
+        created_at DESC
+      LIMIT 2000
+    `);
+
     res.status(200).json(result.rows);
   } catch (error) {
     console.error('Error fetching jobs:', error);

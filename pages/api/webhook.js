@@ -50,11 +50,14 @@ export default async function handler(req, res) {
       // Retrieve job data from session metadata
       const jobData = JSON.parse(session.metadata.jobData);
 
-      // Insert job into database
+      // Generate verification token
+      const verificationToken = require('crypto').randomBytes(32).toString('hex');
+
+      // Insert job into database with pending status
       await pool.query(
         `INSERT INTO jobs
-        (title, company, slug, location, salary, type, category, tags, posted_date, description, requirements, apply_url, company_url, featured, source)
-        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)`,
+        (title, company, slug, location, salary, type, category, tags, posted_date, description, requirements, apply_url, company_url, featured, source, status, submitter_email, verification_token)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18)`,
         [
           jobData.title,
           jobData.company,
@@ -70,13 +73,32 @@ export default async function handler(req, res) {
           jobData.apply_url,
           jobData.company_url,
           jobData.featured,
-          jobData.source
+          jobData.source,
+          'pending',  // Job starts as pending
+          jobData.email,
+          verificationToken
         ]
       );
 
-      console.log('✅ Job posted successfully:', jobData.title);
+      console.log('✅ Job submitted for verification:', jobData.title);
 
-      // TODO: Send confirmation email to jobData.email
+      // Send verification email to admin
+      const adminEmail = process.env.ADMIN_EMAIL || 'your-email@example.com';
+      const verifyUrl = `${process.env.NEXT_PUBLIC_SITE_URL || 'https://no-commute-jobs.com'}/api/verify-job?token=${verificationToken}&action=approve`;
+      const rejectUrl = `${process.env.NEXT_PUBLIC_SITE_URL || 'https://no-commute-jobs.com'}/api/verify-job?token=${verificationToken}&action=reject`;
+
+      console.log('📧 Verification URLs:');
+      console.log('Approve:', verifyUrl);
+      console.log('Reject:', rejectUrl);
+      console.log('\n📋 Job Details:');
+      console.log('Title:', jobData.title);
+      console.log('Company:', jobData.company);
+      console.log('Location:', jobData.location);
+      console.log('Apply URL:', jobData.apply_url);
+      console.log('Submitter:', jobData.email);
+
+      // TODO: Send actual email using SendGrid, Resend, or similar service
+      // For now, we're logging the URLs so you can manually verify
 
     } catch (error) {
       console.error('Error inserting job:', error);

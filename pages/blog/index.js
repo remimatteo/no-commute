@@ -18,9 +18,15 @@ export default function Blog() {
             <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
               Remote Work Blog
             </h1>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+            <p className="text-xl text-gray-600 max-w-2xl mx-auto mb-6">
               Expert advice, tips, and insights about remote work and building a successful remote career.
             </p>
+            <Link
+              href="/"
+              className="inline-block px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+            >
+              ← Back to Job Board
+            </Link>
           </div>
 
           {/* Blog Posts Grid */}
@@ -31,13 +37,11 @@ export default function Blog() {
                 className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition"
               >
                 {/* Image */}
-                {post.image && (
-                  <img
-                    src={post.image}
-                    alt={post.title}
-                    className="w-full h-48 object-cover"
-                  />
-                )}
+                <img
+                  src={post.image}
+                  alt={post.title}
+                  className="w-full h-48 object-cover"
+                />
 
                 {/* Content */}
                 <div className="p-6">
@@ -78,15 +82,6 @@ export default function Blog() {
             ))}
           </div>
 
-          {/* Back to Home */}
-          <div className="text-center mt-12">
-            <Link
-              href="/"
-              className="inline-block px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
-            >
-              ← Back to Job Board
-            </Link>
-          </div>
         </div>
       </div>
     </>

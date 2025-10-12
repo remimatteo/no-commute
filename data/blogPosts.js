@@ -7,7 +7,7 @@ export const blogPosts = [
     readTime: "8 min read",
     excerpt: "I was working retail making $28k/year. Now I'm a remote developer earning $95k. Here's exactly how I did it without a CS degree.",
     tags: ["Career Change", "Software Development", "Learning to Code"],
-    image: "/blog/developer-no-degree.jpg",
+    image: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=800&h=400&fit=crop",
     content: `
       <p>Six months ago, I was folding clothes at Target for $14/hour. Today, I'm writing code remotely for a tech startup and making more money than I ever thought possible. No, this isn't a scam post. This is the honest truth about how I went from retail hell to a remote developer job—and you can do it too.</p>
 
@@ -100,7 +100,7 @@ export const blogPosts = [
     readTime: "10 min read",
     excerpt: "After 200+ rejected applications and 3 failed portfolios, I finally landed a $92k remote UX job. Here's what actually works (and what's complete BS).",
     tags: ["UX Design", "Career Change", "Design Portfolio"],
-    image: "/blog/ux-design-truth.jpg",
+    image: "https://images.unsplash.com/photo-1561070791-2526d30994b5?w=800&h=400&fit=crop",
     content: `
       <p>Let me save you months of frustration: most UX design advice online is useless. "Just build a portfolio!" "Learn Figma!" "Do a bootcamp!" If it were that easy, everyone would be doing it.</p>
 
@@ -192,7 +192,7 @@ export const blogPosts = [
     readTime: "7 min read",
     excerpt: "319 applications. 19 phone screens. 7 final interviews. 1 offer. Here's my spreadsheet data on what actually gets responses.",
     tags: ["Job Search", "Remote Work", "Career Advice"],
-    image: "/blog/300-applications.jpg",
+    image: "https://images.unsplash.com/photo-1586281380349-632531db7ed4?w=800&h=400&fit=crop",
     content: `
       <p>I tracked every single job application I sent over 4 months. Every rejection, every response, every interview. I created a massive spreadsheet with 23 data points per application. The patterns I found completely changed my strategy—and finally got me hired.</p>
 
@@ -334,7 +334,7 @@ export const blogPosts = [
     readTime: "5 min read",
     excerpt: "Discover how remote work has transformed the job market in 2025 and what it means for job seekers and employers.",
     tags: ["Remote Work", "Career Trends", "Future of Work"],
-    image: "/blog/remote-work-revolution.jpg",
+    image: "https://images.unsplash.com/photo-1487014679447-9f8336841d58?w=800&h=400&fit=crop",
     content: `
       <p>The landscape of work has fundamentally shifted in 2025. Remote work is no longer just a perk—it's become the standard for millions of professionals worldwide.</p>
       
@@ -367,7 +367,7 @@ export const blogPosts = [
     readTime: "7 min read",
     excerpt: "A comprehensive guide to the best remote job boards in 2025, including tips on how to use each platform effectively.",
     tags: ["Job Search", "Resources", "Remote Jobs"],
-    image: "/blog/job-boards.jpg",
+    image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=400&fit=crop",
     content: `
       <p>Finding the right remote job can be challenging, but knowing where to look makes all the difference. Here are the top 10 remote job boards that consistently deliver quality opportunities.</p>
       
@@ -406,7 +406,7 @@ export const blogPosts = [
     readTime: "6 min read",
     excerpt: "Master the art of staying productive while working remotely with these proven strategies and tips.",
     tags: ["Productivity", "Work From Home", "Tips"],
-    image: "/blog/productivity.jpg",
+    image: "https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?w=800&h=400&fit=crop",
     content: `
       <p>Working from home offers incredible freedom, but it also comes with unique productivity challenges. Here are 10 proven strategies to help you stay focused and productive.</p>
       
@@ -452,7 +452,7 @@ export const blogPosts = [
     readTime: "8 min read",
     excerpt: "Understanding remote work compensation in 2025, including salary ranges by role and how location affects your pay.",
     tags: ["Salary", "Compensation", "Career Advice"],
-    image: "/blog/salary-guide.jpg",
+    image: "https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?w=800&h=400&fit=crop",
     content: `
       <p>One of the most common questions about remote work is: "How does my salary compare?" Let's break down what you should expect in 2025.</p>
       
@@ -518,7 +518,7 @@ export const blogPosts = [
     readTime: "9 min read",
     excerpt: "Stop scrolling past six-figure remote jobs thinking you're not qualified. I work with companies hiring for these roles—here's what they actually want.",
     tags: ["High-Paying Jobs", "Remote Work", "Career Growth"],
-    image: "/blog/100k-remote-jobs.jpg",
+    image: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=800&h=400&fit=crop",
     content: `
       <p>Let me tell you something most people don't realize: there are thousands of remote jobs paying over $100k. Not at Google or Facebook. Not requiring 10 years of experience. Regular companies, hiring right now, for roles you might actually be qualified for.</p>
 
@@ -667,7 +667,7 @@ export const blogPosts = [
     readTime: "6 min read",
     excerpt: "I reviewed 2,000+ resumes as a hiring manager. Here's exactly why yours gets thrown out—and the 5 changes that actually work.",
     tags: ["Resume Tips", "Job Search", "Career Advice"],
-    image: "/blog/resume-tips.jpg",
+    image: "https://images.unsplash.com/photo-1586281380117-5a60ae2050cc?w=800&h=400&fit=crop",
     content: `
       <p>As a hiring manager, I spend about 6 seconds on your resume. Six. Seconds. If you don't pass that test, I never see your cover letter, your portfolio, or your LinkedIn. You're just... gone.</p>
 
@@ -821,7 +821,7 @@ EDUCATION
     readTime: "8 min read",
     excerpt: "No tech background. No MBA. Just determination and a strategy. Here's how I went from making lattes to making $115k as a remote PM in 14 months.",
     tags: ["Career Change", "Product Management", "Success Story"],
-    image: "/blog/barista-to-pm.jpg",
+    image: "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=800&h=400&fit=crop",
     content: `
       <p>14 months ago, I was a Starbucks barista making $24k/year. I had a psychology degree, $40k in student debt, and zero idea what I wanted to do with my life. Today, I'm a Product Manager at a SaaS company, working remotely, earning $115k.</p>
 
@@ -976,7 +976,7 @@ EDUCATION
     readTime: "7 min read",
     excerpt: "I've conducted 300+ remote interviews. These 9 mistakes instantly disqualify candidates—and they're all easily avoidable.",
     tags: ["Interview Tips", "Remote Work", "Career Advice"],
-    image: "/blog/remote-interview-mistakes.jpg",
+    image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=800&h=400&fit=crop",
     content: `
       <p>As a hiring manager for a fully remote company, I've conducted over 300 video interviews in the last 2 years. I've seen amazing candidates blow it with simple, avoidable mistakes. I've also seen average candidates nail the interview and get offers.</p>
 
@@ -1146,7 +1146,7 @@ EDUCATION
     readTime: "9 min read",
     excerpt: "From teaching English to analyzing data for $88k remotely. Here's the exact roadmap I used to break into data analytics in 7 months.",
     tags: ["Data Analytics", "Career Change", "Learning Path"],
-    image: "/blog/data-analyst-no-experience.jpg",
+    image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=400&fit=crop",
     content: `
       <p>Seven months ago, I was teaching English online for $18/hour with no career prospects. Today, I'm a Data Analyst at a remote-first company earning $88k. No math degree, no bootcamp, no previous analytics experience.</p>
 
@@ -1416,7 +1416,7 @@ EDUCATION
     readTime: "6 min read",
     excerpt: "Everyone thought I was crazy. Giving up $120K, great benefits, and 'stability' to work remotely. One year later—no regrets.",
     tags: ["Remote Work", "Career Change", "Work-Life Balance"],
-    image: "/blog/quit-job-remote.jpg",
+    image: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800&h=400&fit=crop",
     content: `
       <p>One year ago, I walked into my manager's office at a Fortune 500 tech company and quit my $120K job. No backup plan. No offer in hand. Just a strong conviction that there had to be a better way to work.</p>
 
@@ -1582,7 +1582,7 @@ EDUCATION
     readTime: "7 min read",
     excerpt: "Everyone talks about technical skills. But after hiring 50+ remote employees, I've learned the REAL skills that make or break remote workers.",
     tags: ["Remote Work", "Skills", "Career Development"],
-    image: "/blog/remote-skills.jpg",
+    image: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=800&h=400&fit=crop",
     content: `
       <p>I've been hiring for remote positions for 4 years. I've interviewed 500+ candidates, hired 50+, and fired 7 who couldn't cut it remotely (even though they were technically competent).</p>
 
@@ -1826,7 +1826,7 @@ EDUCATION
     readTime: "5 min read",
     excerpt: "Discover how remote work has transformed the job market in 2025 and what it means for job seekers and employers.",
     tags: ["Remote Work", "Career Trends", "Future of Work"],
-    image: "/blog/remote-work-revolution.jpg",
+    image: "https://images.unsplash.com/photo-1487014679447-9f8336841d58?w=800&h=400&fit=crop",
     content: `
       <p>Remote work continues to reshape our world.</p>
     `
