@@ -4,6 +4,12 @@ export default function Document() {
   return (
     <Html lang="en">
       <Head>
+        {/* Google Fonts - Caveat for handwritten style */}
+        <link
+          href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600;700&display=swap"
+          rel="stylesheet"
+        />
+
         {/* ✅ CookieYes banner script (must load before any tracking or ads) */}
         <script
           id="cookieyes"

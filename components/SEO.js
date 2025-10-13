@@ -1,8 +1,8 @@
 import Head from 'next/head';
 
-export default function SEO({ 
-  title = 'No Commute Jobs - 1700+ Remote Job Opportunities',
-  description = 'Find your perfect remote job from 1700+ verified listings. Browse remote positions across tech, marketing, design, customer support and more. Updated daily.',
+export default function SEO({
+  title = 'No Commute Jobs - 2000+ Remote Job Opportunities',
+  description = 'Find your perfect remote job from 2000+ verified listings. Browse remote positions across tech, marketing, design, customer support and more. Updated daily.',
   canonical = 'https://no-commute-jobs.com',
   ogImage = 'https://no-commute-jobs.com/og-image.jpg',
   ogType = 'website',

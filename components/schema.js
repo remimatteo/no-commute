@@ -85,10 +85,13 @@ export function OrganizationSchema() {
     "name": "No Commute Jobs",
     "url": "https://no-commute-jobs.com",
     "logo": "https://no-commute-jobs.com/logo.png",
-    "description": "Remote job board featuring verified remote positions",
+    "description": "Remote job board featuring 2000+ verified remote positions updated daily",
+    // TODO: Create these social accounts and update URLs:
+    // Twitter/X: Create @nocommutejobs
+    // LinkedIn: Create company page
     "sameAs": [
-      "https://twitter.com/nocommutejobs",
-      "https://linkedin.com/company/nocommutejobs"
+      // "https://twitter.com/nocommutejobs",  // TODO: Create account
+      // "https://linkedin.com/company/nocommutejobs"  // TODO: Create page
     ]
   };
 

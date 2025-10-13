@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Search, MapPin, DollarSign, Clock, Briefcase, ExternalLink, Filter, X, TrendingUp, Zap, Moon, Sun } from 'lucide-react';
 import SEO from '../components/SEO';
 import { WebsiteSchema, OrganizationSchema } from '../components/schema';
+import FAQSchema from '../components/FAQSchema';
 import Link from 'next/link';
 import { generateJobSlug } from '../lib/slugify';
 
@@ -150,8 +151,9 @@ export default function Home() {
   const [darkMode, setDarkMode] = useState(true);
   const [activeFilters, setActiveFilters] = useState({
     category: "All",
-    location: "All",
-    type: "All"
+    location: "USA",
+    type: "All",
+    salaryListed: "All"
   });
   const [typedText, setTypedText] = useState('');
   const [typingIndex, setTypingIndex] = useState(0);
@@ -160,7 +162,7 @@ export default function Home() {
   const [email, setEmail] = useState('');
   const [emailSubmitting, setEmailSubmitting] = useState(false);
   const [emailSubmitted, setEmailSubmitted] = useState(false);
-  const [visibleJobsCount, setVisibleJobsCount] = useState(100);
+  const [visibleJobsCount, setVisibleJobsCount] = useState(30);
   
   const phrases = [
     "Find Your Dream Remote Job",
@@ -258,7 +260,7 @@ export default function Home() {
 
   // Reset visible jobs count when search/filters change
   useEffect(() => {
-    setVisibleJobsCount(100);
+    setVisibleJobsCount(30);
   }, [searchQuery, activeFilters]);
 
   // Smart search with operators
@@ -327,10 +329,97 @@ export default function Home() {
       const matchesLocation = activeFilters.location === "All" ||
                              job.location.toLowerCase().includes(activeFilters.location.toLowerCase());
       const matchesType = activeFilters.type === "All" || job.type === activeFilters.type;
+      const hasSalary = job.salary && job.salary !== 'Competitive' && job.salary.match(/\d/);
+      const matchesSalary = activeFilters.salaryListed === "All" ||
+                           (activeFilters.salaryListed === "Yes" && hasSalary) ||
+                           (activeFilters.salaryListed === "No" && !hasSalary);
 
-      return matchesSearch && matchesCategory && matchesLocation && matchesType;
+      return matchesSearch && matchesCategory && matchesLocation && matchesType && matchesSalary;
     })
-    .sort((a, b) => new Date(b.postedDate) - new Date(a.postedDate));
+    .sort((a, b) => {
+      // Prioritize high-value jobs
+      const hasSalaryA = a.salary && a.salary !== 'Competitive' && a.salary.match(/\d/);
+      const hasSalaryB = b.salary && b.salary !== 'Competitive' && b.salary.match(/\d/);
+
+      // Extract salary numbers for comparison (rough estimate)
+      const getSalaryValue = (salary) => {
+        if (!salary || salary === 'Competitive') return 0;
+        // Handle formats like "160k-300k" or "$80k - $120k"
+        const cleanSalary = salary.toLowerCase().replace(/[$,\s]/g, '');
+        const numbers = cleanSalary.match(/(\d+)k?/g);
+        if (!numbers) return 0;
+        // Parse numbers and convert k to thousands
+        const parsed = numbers.map(n => {
+          const num = parseInt(n.replace('k', ''));
+          return n.includes('k') ? num : num;
+        });
+        // Take the highest number found (usually max salary)
+        return Math.max(...parsed);
+      };
+
+      const salaryA = getSalaryValue(a.salary);
+      const salaryB = getSalaryValue(b.salary);
+
+      // Priority categories (Software Dev, Product, etc.)
+      const topCategories = ['Software Development', 'Product', 'Design', 'DevOps / Sysadmin'];
+      const isTopCategoryA = topCategories.includes(a.category);
+      const isTopCategoryB = topCategories.includes(b.category);
+
+      // Check if job is USA-based or worldwide (good for US users)
+      const locationA = a.location ? a.location.toLowerCase() : '';
+      const locationB = b.location ? b.location.toLowerCase() : '';
+
+      const isUSA_A = locationA.includes('usa') ||
+                      locationA.includes('united states') ||
+                      locationA.includes('us only') ||
+                      locationA === 'remote' ||
+                      locationA.includes('anywhere') ||
+                      locationA.includes('worldwide');
+
+      const isUSA_B = locationB.includes('usa') ||
+                      locationB.includes('united states') ||
+                      locationB.includes('us only') ||
+                      locationB === 'remote' ||
+                      locationB.includes('anywhere') ||
+                      locationB.includes('worldwide');
+
+      // Exclude jobs that explicitly mention non-USA locations
+      const isNonUSA_A = locationA.includes('vietnam') ||
+                         locationA.includes('poland') ||
+                         locationA.includes('europe only') ||
+                         locationA.includes('uk only') ||
+                         locationA.includes('asia only') ||
+                         (locationA.includes('uk') && !locationA.includes('anywhere')) ||
+                         (locationA.includes('germany') && !locationA.includes('anywhere')) ||
+                         (locationA.includes('spain') && !locationA.includes('anywhere'));
+
+      const isNonUSA_B = locationB.includes('vietnam') ||
+                         locationB.includes('poland') ||
+                         locationB.includes('europe only') ||
+                         locationB.includes('uk only') ||
+                         locationB.includes('asia only') ||
+                         (locationB.includes('uk') && !locationB.includes('anywhere')) ||
+                         (locationB.includes('germany') && !locationB.includes('anywhere')) ||
+                         (locationB.includes('spain') && !locationB.includes('anywhere'));
+
+      // Sort logic:
+      // 1. USA/Worldwide jobs first (huge priority), but penalize explicit non-USA locations
+      // 2. Top categories with good salaries (100k+)
+      // 3. Other jobs with good salaries
+      // 4. Top categories without salary info
+      // 5. Rest sorted by date
+      const usaBoostA = isUSA_A && !isNonUSA_A ? 10000 : 0;
+      const usaBoostB = isUSA_B && !isNonUSA_B ? 10000 : 0;
+      const scoreA = usaBoostA + (isTopCategoryA ? 1000 : 0) + (salaryA > 100 ? salaryA : 0);
+      const scoreB = usaBoostB + (isTopCategoryB ? 1000 : 0) + (salaryB > 100 ? salaryB : 0);
+
+      if (scoreA !== scoreB) {
+        return scoreB - scoreA;
+      }
+
+      // If scores are equal, sort by date
+      return new Date(b.postedDate) - new Date(a.postedDate);
+    });
 
   if (loading) {
     return (
@@ -351,28 +440,27 @@ export default function Home() {
 
   return (
     <>
-      <SEO 
-        title="No Commute Jobs - 1700+ Remote Job Opportunities"
-        description="Find your perfect remote job from 1700+ verified listings. Browse remote positions across tech, marketing, design, customer support and more. Updated daily."
+      <SEO
+        title={`No Commute Jobs - ${jobs.length}+ Remote Job Opportunities`}
+        description={`Find your perfect remote job from ${jobs.length}+ verified listings. Browse remote positions across tech, marketing, design, customer support and more. Updated daily.`}
         canonical="https://no-commute-jobs.com"
         keywords="remote jobs, work from home, remote work, telecommute, remote positions, online jobs, distributed teams, remote developer jobs, remote designer jobs"
       />
       
       <WebsiteSchema />
       <OrganizationSchema />
+      <FAQSchema />
 
       <div className={`min-h-screen ${darkMode ? 'bg-black' : 'bg-gray-50'} transition-colors`}>
         <header className={`${darkMode ? 'bg-gray-900 border-gray-800' : 'bg-white border-gray-200'} sticky top-0 z-50 border-b backdrop-blur-sm bg-opacity-90 transition-colors`}>
           <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="bg-blue-600 p-2 rounded-xl">
-                <svg className="w-6 h-6 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M17 8h1a4 4 0 1 1 0 8h-1"></path>
-                  <path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4Z"></path>
-                  <line x1="6" y1="2" x2="6" y2="4"></line>
-                  <line x1="10" y1="2" x2="10" y2="4"></line>
-                  <line x1="14" y1="2" x2="14" y2="4"></line>
-                </svg>
+              <div className={`p-2 rounded-xl ${darkMode ? 'bg-white' : 'bg-gray-900'}`}>
+                <img
+                  src="/logo.png"
+                  alt="No Commute Logo"
+                  className={`w-8 h-8 ${darkMode ? '' : 'invert'}`}
+                />
               </div>
               <div>
                 <h1 className={`text-2xl font-black ${darkMode ? 'text-white' : 'text-gray-900'}`}>No Commute</h1>
@@ -457,7 +545,7 @@ export default function Home() {
 
               {showFilterMenu && (
                 <div className={`${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} p-6 rounded-2xl shadow-xl border transition-colors`}>
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                     <div>
                       <label className={`block text-sm font-semibold ${darkMode ? 'text-gray-300' : 'text-gray-700'} mb-2`}>Category</label>
                       <select
@@ -503,10 +591,22 @@ export default function Home() {
                         <option value="Part Time">Part Time</option>
                       </select>
                     </div>
+                    <div>
+                      <label className={`block text-sm font-semibold ${darkMode ? 'text-gray-300' : 'text-gray-700'} mb-2`}>Salary Listed</label>
+                      <select
+                        value={activeFilters.salaryListed}
+                        onChange={(e) => setActiveFilters({...activeFilters, salaryListed: e.target.value})}
+                        className={`w-full ${darkMode ? 'bg-gray-700 text-white border-gray-600' : 'bg-gray-50 text-gray-900 border-gray-300'} border rounded-xl px-4 py-2 outline-none transition-colors`}
+                      >
+                        <option value="All">All Jobs</option>
+                        <option value="Yes">Salary Listed</option>
+                        <option value="No">No Salary</option>
+                      </select>
+                    </div>
                   </div>
                   <button
                     onClick={() => {
-                      setActiveFilters({category: "All", location: "All", type: "All"});
+                      setActiveFilters({category: "All", location: "All", type: "All", salaryListed: "All"});
                       setShowFilterMenu(false);
                     }}
                     className={`mt-4 w-full ${darkMode ? 'text-blue-400 hover:text-blue-300' : 'text-blue-600 hover:text-blue-700'} font-semibold transition-colors`}
@@ -583,17 +683,28 @@ export default function Home() {
                 </div>
 
                 <div className="flex-1 min-w-0 grid grid-cols-1 sm:grid-cols-12 gap-2 sm:gap-4 items-center">
-                  <div className="sm:col-span-5 min-w-0">
+                  <div className="sm:col-span-4 min-w-0">
                     <h3 className={`font-semibold ${darkMode ? 'text-white' : 'text-gray-900'} group-hover:text-blue-500 transition-colors truncate`}>
                       {job.title}
                     </h3>
                     <p className={`${darkMode ? 'text-gray-400' : 'text-gray-600'} text-sm truncate`}>{job.company}</p>
                   </div>
 
-                  <div className="sm:col-span-3 min-w-0">
+                  <div className="sm:col-span-2 min-w-0">
                     <span className={`${darkMode ? 'bg-blue-900/30 text-blue-400 border-blue-700' : 'bg-blue-100 text-blue-700 border-blue-200'} text-xs px-2 py-1 rounded-md font-medium inline-block border`}>
                       {job.category}
                     </span>
+                  </div>
+
+                  <div className="sm:col-span-2 flex items-center gap-2 text-sm">
+                    {job.salary && job.salary !== 'Competitive' && job.salary.match(/\d/) ? (
+                      <>
+                        <DollarSign className={`w-4 h-4 flex-shrink-0 ${darkMode ? 'text-green-500' : 'text-green-600'}`} />
+                        <span className={`${darkMode ? 'text-green-400' : 'text-green-700'} font-semibold truncate`}>{job.salary}</span>
+                      </>
+                    ) : (
+                      <span className={`${darkMode ? 'text-gray-500' : 'text-gray-500'} text-xs italic`}>Salary not listed</span>
+                    )}
                   </div>
 
                   <div className="sm:col-span-3 flex items-center gap-2 text-sm">
@@ -615,10 +726,10 @@ export default function Home() {
           {filteredJobs.length > visibleJobsCount && (
             <div className="mt-8 text-center">
               <button
-                onClick={() => setVisibleJobsCount(prev => prev + 100)}
+                onClick={() => setVisibleJobsCount(prev => prev + 30)}
                 className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-semibold transition-all hover:shadow-lg"
               >
-                Load More Jobs ({filteredJobs.length - visibleJobsCount} remaining)
+                Show 30 More Jobs
               </button>
             </div>
           )}
@@ -685,11 +796,11 @@ export default function Home() {
         <section className={`${darkMode ? 'bg-blue-900' : 'bg-blue-600'} py-16 transition-colors`}>
           <div className="max-w-4xl mx-auto px-4 sm:px-6 text-center">
             <div className="mb-8">
-              <p className="text-2xl sm:text-3xl font-mono font-bold text-white mb-4 leading-relaxed">
-                "Building this because I believe talented people shouldn't be limited by geography. If you can do the work, you should be able to work from anywhere. That's the future."
+              <p className="text-2xl sm:text-3xl text-white mb-6 leading-relaxed" style={{ fontFamily: "'Caveat', cursive", fontWeight: 600, transform: 'rotate(-1deg)' }}>
+                "Started this after watching my girlfriend turn down jobs because they weren't remote. It hit me - why should location matter when the work is digital? So I built this board. Still growing it, still learning. If it helps even one person find their perfect remote gig, it's worth it."
               </p>
-              <p className="text-blue-200 text-lg font-mono">
-                — Remi Matteo, Founder
+              <p className="text-blue-200 text-lg" style={{ fontFamily: "'Caveat', cursive", fontWeight: 500 }}>
+                — Remi, building this nights & weekends
               </p>
             </div>
 
@@ -720,6 +831,47 @@ export default function Home() {
               <p className="text-blue-200 text-sm mt-4">
                 Join 10,000+ remote workers. Unsubscribe anytime.
               </p>
+            </div>
+          </div>
+        </section>
+
+        <section className={`${darkMode ? 'bg-gray-900' : 'bg-white'} py-16 transition-colors border-t ${darkMode ? 'border-gray-800' : 'border-gray-200'}`}>
+          <div className="max-w-4xl mx-auto px-4 sm:px-6">
+            <h3 className={`text-3xl font-bold ${darkMode ? 'text-white' : 'text-gray-900'} mb-8 text-center`}>
+              Frequently Asked Questions
+            </h3>
+            <div className="space-y-6">
+              {[
+                {
+                  q: "Are all jobs on No Commute Jobs completely remote?",
+                  a: "Yes! Every job listed is 100% remote. We only list positions that allow you to work from anywhere."
+                },
+                {
+                  q: "How often are new jobs added?",
+                  a: "We update our job listings multiple times per day. New jobs are added as soon as they're posted by companies."
+                },
+                {
+                  q: "Is No Commute Jobs free to use?",
+                  a: "Absolutely! No Commute Jobs is 100% free for job seekers. No account or payment needed."
+                },
+                {
+                  q: "How much does it cost to post a job?",
+                  a: "Job postings cost $99 for 30 days. Your job goes live immediately and reaches thousands of job seekers."
+                },
+                {
+                  q: "Can I filter jobs by salary?",
+                  a: "Yes! Use our 'Salary Listed' filter to show only jobs with disclosed salary ranges."
+                }
+              ].map((faq, idx) => (
+                <details key={idx} className={`${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-gray-50 border-gray-200'} border rounded-lg p-4 transition-colors`}>
+                  <summary className={`font-semibold ${darkMode ? 'text-white' : 'text-gray-900'} cursor-pointer`}>
+                    {faq.q}
+                  </summary>
+                  <p className={`${darkMode ? 'text-gray-400' : 'text-gray-600'} mt-3`}>
+                    {faq.a}
+                  </p>
+                </details>
+              ))}
             </div>
           </div>
         </section>
