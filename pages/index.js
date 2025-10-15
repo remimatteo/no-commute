@@ -149,11 +149,12 @@ export default function Home() {
   const [searchQuery, setSearchQuery] = useState("");
   const [showFilterMenu, setShowFilterMenu] = useState(false);
   const [darkMode, setDarkMode] = useState(true);
-  const [activeFilters, setActiveFilters] = useState({
+const [activeFilters, setActiveFilters] = useState({
     category: "All",
     location: "USA",
     type: "All",
-    salaryListed: "All"
+    salaryListed: "All",
+    experience: "All"
   });
   const [typedText, setTypedText] = useState('');
   const [typingIndex, setTypingIndex] = useState(0);
@@ -162,7 +163,8 @@ export default function Home() {
   const [email, setEmail] = useState('');
   const [emailSubmitting, setEmailSubmitting] = useState(false);
   const [emailSubmitted, setEmailSubmitted] = useState(false);
-  const [visibleJobsCount, setVisibleJobsCount] = useState(30);
+const [visibleJobsCount, setVisibleJobsCount] = useState(30);
+const [totalJobs, setTotalJobs] = useState(0);
   
   const phrases = [
     "Find Your Dream Remote Job",
@@ -200,37 +202,60 @@ export default function Home() {
     return () => clearTimeout(timer);
   }, [typingIndex, isDeleting, phraseIndex]);
 
-  const fetchJobs = async () => {
-    try {
-      setLoading(true);
-      const response = await fetch('/api/jobs');
-      const data = await response.json();
-      
-      const transformedJobs = data.map((job) => ({
-        id: job.id,
-        title: job.title,
-        company: job.company,
-        location: job.location || 'Remote',
-        salary: job.salary || 'Competitive',
-        type: job.type || 'Full-time',
-        category: normalizeCategory(job.category),
-        tags: job.tags || [],
-        postedDate: job.posted_date || job.created_at,
-        description: job.description || '',
-        requirements: [],
-        applyUrl: job.apply_url || job.url || '#',
-        featured: job.featured || false,
-        company_url: job.company_url || job.url || '',
-        source: job.source || 'RemoteOK'
-      }));
-      
-      setJobs(transformedJobs);
-    } catch (error) {
-      console.error('Error fetching jobs:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
+const fetchJobs = async () => {
+  try {
+    setLoading(true);
+    const queryParams = new URLSearchParams({
+      category: activeFilters.category,
+      location: activeFilters.location,
+      type: activeFilters.type,
+      salaryListed: activeFilters.salaryListed,
+      experience: activeFilters.experience,
+      search: searchQuery,
+      limit: 2000
+    });
+
+    const response = await fetch(`/api/jobs?${queryParams}`);
+    const data = await response.json();
+    
+    const transformedJobs = data.jobs.map((job) => ({
+      id: job.id,
+      title: job.title,
+      company: job.company,
+      location: job.location || 'Remote',
+      salary: job.salary || 'Competitive',
+      type: job.type || 'Full-time',
+      category: normalizeCategory(job.category),
+      tags: job.tags || [],
+      postedDate: job.posted_date || job.created_at,
+      description: job.description || '',
+      requirements: [],
+      applyUrl: job.apply_url || job.url || '#',
+      featured: job.featured || false,
+      company_url: job.company_url || job.url || '',
+      source: job.source || 'RemoteOK'
+    }));
+    
+    setJobs(transformedJobs);
+    setTotalJobs(data.totalJobs);
+  } catch (error) {
+    console.error('Error fetching jobs:', error);
+  } finally {
+    setLoading(false);
+  }
+};
+
+// Fetch jobs when filters or search query change
+useEffect(() => {
+  fetchJobs();
+}, [
+  activeFilters.category, 
+  activeFilters.location, 
+  activeFilters.type, 
+  activeFilters.salaryListed,
+  activeFilters.experience,
+  searchQuery
+]);
 
   const handleEmailSubmit = async (e) => {
     e.preventDefault();
@@ -440,12 +465,12 @@ export default function Home() {
 
   return (
     <>
-      <SEO
-        title={`No Commute Jobs - ${jobs.length}+ Remote Job Opportunities`}
-        description={`Find your perfect remote job from ${jobs.length}+ verified listings. Browse remote positions across tech, marketing, design, customer support and more. Updated daily.`}
-        canonical="https://no-commute-jobs.com"
-        keywords="remote jobs, work from home, remote work, telecommute, remote positions, online jobs, distributed teams, remote developer jobs, remote designer jobs"
-      />
+<SEO
+  title={`No Commute Jobs - ${totalJobs}+ Remote Job Opportunities`}
+  description={`Find your perfect remote job from ${totalJobs}+ verified listings. Browse remote positions across tech, marketing, design, customer support and more. Updated daily.`}
+  canonical="https://no-commute-jobs.com"
+  keywords="remote jobs, work from home, remote work, telecommute, remote positions, online jobs, distributed teams, remote developer jobs, remote designer jobs"
+/>
       
       <WebsiteSchema />
       <OrganizationSchema />
@@ -494,9 +519,9 @@ export default function Home() {
             <h2 className={`text-4xl sm:text-5xl lg:text-6xl font-black ${darkMode ? 'text-white' : 'text-gray-900'} mb-4 min-h-[1.2em]`}>
               {typedText}<span className="animate-pulse">|</span>
             </h2>
-            <p className={`text-lg sm:text-xl ${darkMode ? 'text-gray-400' : 'text-gray-600'} mb-8 max-w-2xl mx-auto`}>
-              Work from anywhere. Live everywhere. {jobs.length}+ remote positions from top companies worldwide.
-            </p>
+<p className={`text-lg sm:text-xl ${darkMode ? 'text-gray-400' : 'text-gray-600'} mb-8 max-w-2xl mx-auto`}>
+  Work from anywhere. Live everywhere. {totalJobs}+ remote positions from top companies worldwide.
+</p>
 
             <div className="max-w-3xl mx-auto space-y-4">
               <div className={`${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} rounded-2xl shadow-xl p-2 flex items-center gap-2 border transition-colors`}>
