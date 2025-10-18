@@ -12,8 +12,8 @@ services:
     name: job-scraper
     env: node
     schedule: "0 */12 * * *"  # Every 12 hours
-    buildCommand: npm install
-    startCommand: node scraper/scraper.js
+    buildCommand: cd scraper && npm install
+    startCommand: cd scraper && node scraper.js
     envVars:
       - key: DATABASE_URL
         sync: false

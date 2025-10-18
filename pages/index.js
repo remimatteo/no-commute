@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { Search, MapPin, DollarSign, Clock, Briefcase, ExternalLink, Filter, X, TrendingUp, Zap, Moon, Sun } from 'lucide-react';
 import SEO from '../components/SEO';
 import { WebsiteSchema, OrganizationSchema } from '../components/schema';
@@ -95,41 +95,42 @@ const formatDate = (dateString) => {
   }
 };
 
+// Domain mapping for company logos
+const domainMap = {
+  '1inch': '1inch.io',
+  'gitlab': 'gitlab.com',
+  'github': 'github.com',
+  'stripe': 'stripe.com',
+  'shopify': 'shopify.com',
+  'amazon': 'amazon.com',
+  'google': 'google.com',
+  'microsoft': 'microsoft.com',
+  'meta': 'meta.com',
+  'facebook': 'facebook.com',
+  'apple': 'apple.com',
+  'netflix': 'netflix.com',
+  'spotify': 'spotify.com',
+  'airbnb': 'airbnb.com',
+  'uber': 'uber.com',
+  'lyft': 'lyft.com',
+  'coinbase': 'coinbase.com',
+  'openai': 'openai.com',
+  'anthropic': 'anthropic.com'
+};
+
 const companyToDomain = (companyName) => {
   if (!companyName) return '';
-  
+
   const name = companyName.toLowerCase().trim();
-  
-  const domainMap = {
-    '1inch': '1inch.io',
-    'gitlab': 'gitlab.com',
-    'github': 'github.com',
-    'stripe': 'stripe.com',
-    'shopify': 'shopify.com',
-    'amazon': 'amazon.com',
-    'google': 'google.com',
-    'microsoft': 'microsoft.com',
-    'meta': 'meta.com',
-    'facebook': 'facebook.com',
-    'apple': 'apple.com',
-    'netflix': 'netflix.com',
-    'spotify': 'spotify.com',
-    'airbnb': 'airbnb.com',
-    'uber': 'uber.com',
-    'lyft': 'lyft.com',
-    'coinbase': 'coinbase.com',
-    'openai': 'openai.com',
-    'anthropic': 'anthropic.com'
-  };
-  
+
   if (domainMap[name]) {
     return domainMap[name];
   }
-  
+
   const cleanName = name
     .replace(/[^a-z0-9]/g, '')
     .replace(/inc$|llc$|ltd$|corp$|company$/g, '');
-  
+
   return `${cleanName}.com`;
 };
 
@@ -143,19 +144,33 @@ const extractDomain = (url) => {
   }
 };
 
+// Job titles for browsing
+const jobTitles = ['Entry Level', 'Junior Developer', 'Internship', 'Software Engineer', 'Product Manager', 'Designer', 'Marketing Manager', 'Customer Support', 'Data Analyst', 'Sales Representative', 'Content Writer'];
+
+// Skills for browsing
+const skills = ['React', 'Python', 'JavaScript', 'AWS', 'TypeScript', 'Node.js', 'Figma', 'SQL'];
+
 export default function Home() {
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [showFilterMenu, setShowFilterMenu] = useState(false);
-  const [darkMode, setDarkMode] = useState(true);
-const [activeFilters, setActiveFilters] = useState({
-    category: "All",
-    location: "USA",
-    type: "All",
-    salaryListed: "All",
-    experience: "All"
-  });
+  const [darkMode, setDarkMode] = useState(false);
+  const [category, setCategory] = useState("All");
+  const [location, setLocation] = useState("USA");
+  const [type, setType] = useState("All");
+  const [salaryListed, setSalaryListed] = useState("All");
+  const [experience, setExperience] = useState("All");
+  
+  // Memoize filterState to prevent unnecessary re-renders
+  const filterState = useMemo(() => ({
+    category,
+    location,
+    type,
+    salaryListed,
+    experience
+  }), [category, location, type, salaryListed, experience]);
+  
   const [typedText, setTypedText] = useState('');
   const [typingIndex, setTypingIndex] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -165,19 +180,74 @@ const [activeFilters, setActiveFilters] = useState({
   const [emailSubmitted, setEmailSubmitted] = useState(false);
 const [visibleJobsCount, setVisibleJobsCount] = useState(30);
 const [totalJobs, setTotalJobs] = useState(0);
-  
-  const phrases = [
-    "Find Your Dream Remote Job",
-    "Work From Anywhere",
-    "Skip The Commute",
-    "Join Remote Teams"
-  ];
 
+  // Fetch jobs when filters or search query change
   useEffect(() => {
+    let isMounted = true;
+
+    const fetchJobs = async () => {
+      try {
+        setLoading(true);
+        const queryParams = new URLSearchParams({
+          category,
+          location,
+          type,
+          salaryListed,
+          experience,
+          search: searchQuery,
+          limit: 100
+        });
+
+        const response = await fetch(`/api/jobs?${queryParams}`);
+        const data = await response.json();
+
+        if (!isMounted) return;
+
+        const transformedJobs = data.jobs.map((job) => ({
+          id: job.id,
+          title: job.title,
+          company: job.company,
+          location: job.location || 'Remote',
+          salary: job.salary || 'Competitive',
+          type: job.type || 'Full-time',
+          category: normalizeCategory(job.category),
+          tags: job.tags || [],
+          postedDate: job.posted_date || job.created_at,
+          description: job.description || '',
+          requirements: [],
+          applyUrl: job.apply_url || job.url || '#',
+          featured: job.featured || false,
+          company_url: job.company_url || job.url || '',
+          source: job.source || 'RemoteOK'
+        }));
+
+        setJobs(transformedJobs);
+        setTotalJobs(data.totalJobs);
+      } catch (error) {
+        console.error('Error fetching jobs:', error);
+      } finally {
+        if (isMounted) {
+          setLoading(false);
+        }
+      }
+    };
+
     fetchJobs();
-  }, []);
 
+    return () => {
+      isMounted = false;
+    };
+  }, [category, location, type, salaryListed, experience, searchQuery]);
+
+  // Typing animation effect
   useEffect(() => {
+    const phrases = [
+      "Find Your Dream Remote Job",
+      "Work From Anywhere",
+      "Skip The Commute",
+      "Join Remote Teams"
+    ];
+
     const currentPhrase = phrases[phraseIndex];
     const typingSpeed = isDeleting ? 25 : 60;
     const pauseBeforeDelete = 1200;
@@ -194,68 +264,13 @@ const [totalJobs, setTotalJobs] = useState(0);
         setTypingIndex(typingIndex - 1);
       } else if (isDeleting && typingIndex === 0) {
         setIsDeleting(false);
-        setPhraseIndex((phraseIndex + 1) % phrases.length);
+        setPhraseIndex((prev) => (prev + 1) % phrases.length);
         setTimeout(() => {}, pauseBeforeType);
       }
     }, typingSpeed);
 
     return () => clearTimeout(timer);
   }, [typingIndex, isDeleting, phraseIndex]);
-
-const fetchJobs = async () => {
-  try {
-    setLoading(true);
-    const queryParams = new URLSearchParams({
-      category: activeFilters.category,
-      location: activeFilters.location,
-      type: activeFilters.type,
-      salaryListed: activeFilters.salaryListed,
-      experience: activeFilters.experience,
-      search: searchQuery,
-      limit: 2000
-    });
-
-    const response = await fetch(`/api/jobs?${queryParams}`);
-    const data = await response.json();
-    
-    const transformedJobs = data.jobs.map((job) => ({
-      id: job.id,
-      title: job.title,
-      company: job.company,
-      location: job.location || 'Remote',
-      salary: job.salary || 'Competitive',
-      type: job.type || 'Full-time',
-      category: normalizeCategory(job.category),
-      tags: job.tags || [],
-      postedDate: job.posted_date || job.created_at,
-      description: job.description || '',
-      requirements: [],
-      applyUrl: job.apply_url || job.url || '#',
-      featured: job.featured || false,
-      company_url: job.company_url || job.url || '',
-      source: job.source || 'RemoteOK'
-    }));
-    
-    setJobs(transformedJobs);
-    setTotalJobs(data.totalJobs);
-  } catch (error) {
-    console.error('Error fetching jobs:', error);
-  } finally {
-    setLoading(false);
-  }
-};
-
-// Fetch jobs when filters or search query change
-useEffect(() => {
-  fetchJobs();
-}, [
-  activeFilters.category, 
-  activeFilters.location, 
-  activeFilters.type, 
-  activeFilters.salaryListed,
-  activeFilters.experience,
-  searchQuery
-]);
 
   const handleEmailSubmit = async (e) => {
     e.preventDefault();
@@ -286,10 +301,10 @@ useEffect(() => {
   // Reset visible jobs count when search/filters change
   useEffect(() => {
     setVisibleJobsCount(30);
-  }, [searchQuery, activeFilters]);
+  }, [searchQuery, category, location, type, salaryListed, experience]);
 
-  // Smart search with operators
-  const filteredJobs = jobs
+  // Smart search with operators - memoized to prevent infinite re-renders
+  const filteredJobs = useMemo(() => jobs
     .filter(job => {
       let matchesSearch = true;
 
@@ -350,101 +365,31 @@ useEffect(() => {
         }
       }
 
-      const matchesCategory = activeFilters.category === "All" || job.category === activeFilters.category;
-      const matchesLocation = activeFilters.location === "All" ||
-                             job.location.toLowerCase().includes(activeFilters.location.toLowerCase());
-      const matchesType = activeFilters.type === "All" || job.type === activeFilters.type;
+      const matchesCategory = filterState.category === "All" || job.category === filterState.category;
+      const matchesLocation = filterState.location === "All" ||
+                             job.location.toLowerCase().includes(filterState.location.toLowerCase());
+      const matchesType = filterState.type === "All" || job.type === filterState.type;
       const hasSalary = job.salary && job.salary !== 'Competitive' && job.salary.match(/\d/);
-      const matchesSalary = activeFilters.salaryListed === "All" ||
-                           (activeFilters.salaryListed === "Yes" && hasSalary) ||
-                           (activeFilters.salaryListed === "No" && !hasSalary);
+      const matchesSalary = filterState.salaryListed === "All" ||
+                           (filterState.salaryListed === "Yes" && hasSalary) ||
+                           (filterState.salaryListed === "No" && !hasSalary);
 
       return matchesSearch && matchesCategory && matchesLocation && matchesType && matchesSalary;
     })
     .sort((a, b) => {
-      // Prioritize high-value jobs
-      const hasSalaryA = a.salary && a.salary !== 'Competitive' && a.salary.match(/\d/);
-      const hasSalaryB = b.salary && b.salary !== 'Competitive' && b.salary.match(/\d/);
+      // Sort by date (most recent first)
+      const dateA = new Date(a.postedDate);
+      const dateB = new Date(b.postedDate);
 
-      // Extract salary numbers for comparison (rough estimate)
-      const getSalaryValue = (salary) => {
-        if (!salary || salary === 'Competitive') return 0;
-        // Handle formats like "160k-300k" or "$80k - $120k"
-        const cleanSalary = salary.toLowerCase().replace(/[$,\s]/g, '');
-        const numbers = cleanSalary.match(/(\d+)k?/g);
-        if (!numbers) return 0;
-        // Parse numbers and convert k to thousands
-        const parsed = numbers.map(n => {
-          const num = parseInt(n.replace('k', ''));
-          return n.includes('k') ? num : num;
-        });
-        // Take the highest number found (usually max salary)
-        return Math.max(...parsed);
-      };
-
-      const salaryA = getSalaryValue(a.salary);
-      const salaryB = getSalaryValue(b.salary);
-
-      // Priority categories (Software Dev, Product, etc.)
-      const topCategories = ['Software Development', 'Product', 'Design', 'DevOps / Sysadmin'];
-      const isTopCategoryA = topCategories.includes(a.category);
-      const isTopCategoryB = topCategories.includes(b.category);
-
-      // Check if job is USA-based or worldwide (good for US users)
-      const locationA = a.location ? a.location.toLowerCase() : '';
-      const locationB = b.location ? b.location.toLowerCase() : '';
-
-      const isUSA_A = locationA.includes('usa') ||
-                      locationA.includes('united states') ||
-                      locationA.includes('us only') ||
-                      locationA === 'remote' ||
-                      locationA.includes('anywhere') ||
-                      locationA.includes('worldwide');
-
-      const isUSA_B = locationB.includes('usa') ||
-                      locationB.includes('united states') ||
-                      locationB.includes('us only') ||
-                      locationB === 'remote' ||
-                      locationB.includes('anywhere') ||
-                      locationB.includes('worldwide');
-
-      // Exclude jobs that explicitly mention non-USA locations
-      const isNonUSA_A = locationA.includes('vietnam') ||
-                         locationA.includes('poland') ||
-                         locationA.includes('europe only') ||
-                         locationA.includes('uk only') ||
-                         locationA.includes('asia only') ||
-                         (locationA.includes('uk') && !locationA.includes('anywhere')) ||
-                         (locationA.includes('germany') && !locationA.includes('anywhere')) ||
-                         (locationA.includes('spain') && !locationA.includes('anywhere'));
-
-      const isNonUSA_B = locationB.includes('vietnam') ||
-                         locationB.includes('poland') ||
-                         locationB.includes('europe only') ||
-                         locationB.includes('uk only') ||
-                         locationB.includes('asia only') ||
-                         (locationB.includes('uk') && !locationB.includes('anywhere')) ||
-                         (locationB.includes('germany') && !locationB.includes('anywhere')) ||
-                         (locationB.includes('spain') && !locationB.includes('anywhere'));
-
-      // Sort logic:
-      // 1. USA/Worldwide jobs first (huge priority), but penalize explicit non-USA locations
-      // 2. Top categories with good salaries (100k+)
-      // 3. Other jobs with good salaries
-      // 4. Top categories without salary info
-      // 5. Rest sorted by date
-      const usaBoostA = isUSA_A && !isNonUSA_A ? 10000 : 0;
-      const usaBoostB = isUSA_B && !isNonUSA_B ? 10000 : 0;
-      const scoreA = usaBoostA + (isTopCategoryA ? 1000 : 0) + (salaryA > 100 ? salaryA : 0);
-      const scoreB = usaBoostB + (isTopCategoryB ? 1000 : 0) + (salaryB > 100 ? salaryB : 0);
-
-      if (scoreA !== scoreB) {
-        return scoreB - scoreA;
+      // If dates are very close (within same day), sort alphabetically by title
+      // This creates consistent ordering without bias toward senior roles
+      const dateDiff = dateB - dateA;
+      if (Math.abs(dateDiff) < 1000 * 60 * 60 * 24) { // Within 24 hours
+        return a.title.localeCompare(b.title);
       }
 
-      // If scores are equal, sort by date
-      return new Date(b.postedDate) - new Date(a.postedDate);
-    });
+      return dateDiff;
+    }), [jobs, searchQuery, filterState]);
 
   if (loading) {
     return (
@@ -480,24 +425,28 @@ useEffect(() => {
         <header className={`${darkMode ? 'bg-gray-900 border-gray-800' : 'bg-white border-gray-200'} sticky top-0 z-50 border-b backdrop-blur-sm bg-opacity-90 transition-colors`}>
           <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className={`p-2 rounded-xl ${darkMode ? 'bg-white' : 'bg-gray-900'}`}>
-                <img
-                  src="/logo.png"
-                  alt="No Commute Logo"
-                  className={`w-8 h-8 ${darkMode ? '' : 'invert'}`}
-                />
-              </div>
+              <img
+                src="/logo.png"
+                alt="No Commute Logo"
+                className="w-10 h-10"
+              />
               <div>
                 <h1 className={`text-2xl font-black ${darkMode ? 'text-white' : 'text-gray-900'}`}>No Commute</h1>
               </div>
             </div>
             
             <div className="flex items-center gap-4">
-  <Link 
+  <Link
     href="/blog"
     className={`px-4 py-2 rounded-lg font-semibold transition-all ${darkMode ? 'text-gray-300 hover:text-white hover:bg-gray-800' : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'}`}
   >
     Blog
+  </Link>
+  <Link
+    href="/forum"
+    className={`px-4 py-2 rounded-lg font-semibold transition-all ${darkMode ? 'text-gray-300 hover:text-white hover:bg-gray-800' : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'}`}
+  >
+    Forum
   </Link>
   <button
     onClick={() => setDarkMode(!darkMode)}
@@ -520,7 +469,7 @@ useEffect(() => {
               {typedText}<span className="animate-pulse">|</span>
             </h2>
 <p className={`text-lg sm:text-xl ${darkMode ? 'text-gray-400' : 'text-gray-600'} mb-8 max-w-2xl mx-auto`}>
-  Work from anywhere. Live everywhere. {totalJobs}+ remote positions from top companies worldwide.
+  Work from anywhere. Live everywhere. 2000+ remote positions from top companies worldwide.
 </p>
 
             <div className="max-w-3xl mx-auto space-y-4">
@@ -574,8 +523,8 @@ useEffect(() => {
                     <div>
                       <label className={`block text-sm font-semibold ${darkMode ? 'text-gray-300' : 'text-gray-700'} mb-2`}>Category</label>
                       <select
-                        value={activeFilters.category}
-                        onChange={(e) => setActiveFilters({...activeFilters, category: e.target.value})}
+                        value={category}
+                        onChange={(e) => setCategory(e.target.value)}
                         className={`w-full ${darkMode ? 'bg-gray-700 text-white border-gray-600' : 'bg-gray-50 text-gray-900 border-gray-300'} border rounded-xl px-4 py-2 outline-none transition-colors`}
                       >
                         {categories.map(cat => (
@@ -586,8 +535,8 @@ useEffect(() => {
                     <div>
                       <label className={`block text-sm font-semibold ${darkMode ? 'text-gray-300' : 'text-gray-700'} mb-2`}>Location</label>
                       <select
-                        value={activeFilters.location}
-                        onChange={(e) => setActiveFilters({...activeFilters, location: e.target.value})}
+                        value={location}
+                        onChange={(e) => setLocation(e.target.value)}
                         className={`w-full ${darkMode ? 'bg-gray-700 text-white border-gray-600' : 'bg-gray-50 text-gray-900 border-gray-300'} border rounded-xl px-4 py-2 outline-none transition-colors`}
                       >
                         <option value="All">All Locations</option>
@@ -606,8 +555,8 @@ useEffect(() => {
                     <div>
                       <label className={`block text-sm font-semibold ${darkMode ? 'text-gray-300' : 'text-gray-700'} mb-2`}>Job Type</label>
                       <select
-                        value={activeFilters.type}
-                        onChange={(e) => setActiveFilters({...activeFilters, type: e.target.value})}
+                        value={type}
+                        onChange={(e) => setType(e.target.value)}
                         className={`w-full ${darkMode ? 'bg-gray-700 text-white border-gray-600' : 'bg-gray-50 text-gray-900 border-gray-300'} border rounded-xl px-4 py-2 outline-none transition-colors`}
                       >
                         <option value="All">All Types</option>
@@ -619,8 +568,8 @@ useEffect(() => {
                     <div>
                       <label className={`block text-sm font-semibold ${darkMode ? 'text-gray-300' : 'text-gray-700'} mb-2`}>Salary Listed</label>
                       <select
-                        value={activeFilters.salaryListed}
-                        onChange={(e) => setActiveFilters({...activeFilters, salaryListed: e.target.value})}
+                        value={salaryListed}
+                        onChange={(e) => setSalaryListed(e.target.value)}
                         className={`w-full ${darkMode ? 'bg-gray-700 text-white border-gray-600' : 'bg-gray-50 text-gray-900 border-gray-300'} border rounded-xl px-4 py-2 outline-none transition-colors`}
                       >
                         <option value="All">All Jobs</option>
@@ -631,7 +580,11 @@ useEffect(() => {
                   </div>
                   <button
                     onClick={() => {
-                      setActiveFilters({category: "All", location: "All", type: "All", salaryListed: "All"});
+                      setCategory("All");
+                      setLocation("All");
+                      setType("All");
+                      setSalaryListed("All");
+                      setExperience("All");
                       setShowFilterMenu(false);
                     }}
                     className={`mt-4 w-full ${darkMode ? 'text-blue-400 hover:text-blue-300' : 'text-blue-600 hover:text-blue-700'} font-semibold transition-colors`}
@@ -642,12 +595,17 @@ useEffect(() => {
               )}
             </div>
 
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-12 max-w-4xl mx-auto">
-              {[
-                { label: "Remote Jobs", value: jobs.length },
-                { label: "Companies", value: new Set(jobs.map(j => j.company)).size },
-                { label: "Countries", value: "50+" },
-                { label: "New This Week", value: jobs.filter(j => {
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mt-12 max-w-4xl mx-auto">
+              <div className={`${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} p-4 rounded-xl border transition-colors`}>
+                <div className={`text-3xl font-black ${darkMode ? 'text-white' : 'text-gray-900'}`}>{new Set(jobs.map(j => j.company)).size}</div>
+                <div className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>Companies</div>
+              </div>
+              <div className={`${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} p-4 rounded-xl border transition-colors`}>
+                <div className={`text-3xl font-black ${darkMode ? 'text-white' : 'text-gray-900'}`}>50+</div>
+                <div className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>Countries</div>
+              </div>
+              <div className={`${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} p-4 rounded-xl border transition-colors`}>
+                <div className={`text-3xl font-black ${darkMode ? 'text-white' : 'text-gray-900'}`}>{jobs.filter(j => {
                   try {
                     const date = new Date(j.postedDate);
                     const now = new Date();
@@ -656,21 +614,14 @@ useEffect(() => {
                   } catch {
                     return false;
                   }
-                }).length }
-              ].map((stat, idx) => (
-                <div key={idx} className={`${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} p-4 rounded-xl border transition-colors`}>
-                  <div className={`text-3xl font-black ${darkMode ? 'text-white' : 'text-gray-900'}`}>{stat.value}</div>
-                  <div className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>{stat.label}</div>
-                </div>
-              ))}
+                }).length}</div>
+                <div className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>New This Week</div>
+              </div>
             </div>
           </div>
         </section>
 
         <section className="max-w-7xl mx-auto px-4 sm:px-6 py-12">
-          <h3 className={`text-2xl font-bold ${darkMode ? 'text-white' : 'text-gray-900'} mb-2`}>
-            {filteredJobs.length > 0 ? `Found ${filteredJobs.length} remote jobs` : 'All Remote Jobs'}
-          </h3>
           <p className={`${darkMode ? 'text-gray-400' : 'text-gray-600'} mb-6`}>
             Updated daily from top remote job boards
           </p>
@@ -778,7 +729,7 @@ useEffect(() => {
               <div>
                 <h4 className={`text-lg font-bold ${darkMode ? 'text-white' : 'text-gray-900'} mb-4`}>By Job Title</h4>
                 <div className="space-y-2">
-                  {['Entry Level', 'Junior Developer', 'Internship', 'Software Engineer', 'Product Manager', 'Designer', 'Marketing Manager', 'Customer Support', 'Data Analyst', 'Sales Representative', 'Content Writer'].map(title => {
+                  {jobTitles.map(title => {
                     const count = jobs.filter(j => j.title.toLowerCase().includes(title.toLowerCase())).length;
                     return (
                       <button
@@ -796,7 +747,7 @@ useEffect(() => {
               <div>
                 <h4 className={`text-lg font-bold ${darkMode ? 'text-white' : 'text-gray-900'} mb-4`}>By Skills</h4>
                 <div className="space-y-2">
-                  {['React', 'Python', 'JavaScript', 'AWS', 'TypeScript', 'Node.js', 'Figma', 'SQL'].map(skill => {
+                  {skills.map(skill => {
                     const count = jobs.filter(j =>
                       j.title.toLowerCase().includes(skill.toLowerCase()) ||
                       j.tags.some(t => t.toLowerCase().includes(skill.toLowerCase()))
