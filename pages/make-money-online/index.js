@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import SEO from '../../components/SEO';
 import { sideHustles } from '../../data/sideHustles';
-import { ChevronRight, DollarSign, TrendingUp, Zap } from 'lucide-react';
+import { ChevronRight } from 'lucide-react';
 
 export default function MakeMoneyOnline() {
   return (
@@ -29,39 +29,6 @@ export default function MakeMoneyOnline() {
             >
               Or Browse Remote Jobs →
             </Link>
-          </div>
-
-          {/* Value Props */}
-          <div className="grid md:grid-cols-3 gap-6 mb-12">
-            <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200">
-              <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4">
-                <DollarSign className="w-6 h-6 text-green-600" />
-              </div>
-              <h3 className="text-lg font-bold text-gray-900 mb-2">Flexible Income</h3>
-              <p className="text-gray-600">
-                Work on your schedule. Most side hustles fit around your full-time job or school.
-              </p>
-            </div>
-
-            <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200">
-              <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
-                <Zap className="w-6 h-6 text-blue-600" />
-              </div>
-              <h3 className="text-lg font-bold text-gray-900 mb-2">Low Barrier to Entry</h3>
-              <p className="text-gray-600">
-                Most strategies require minimal or zero upfront investment to get started.
-              </p>
-            </div>
-
-            <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200">
-              <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-4">
-                <TrendingUp className="w-6 h-6 text-purple-600" />
-              </div>
-              <h3 className="text-lg font-bold text-gray-900 mb-2">Scalable Opportunities</h3>
-              <p className="text-gray-600">
-                Start small and scale up. Many people turn side hustles into full-time income.
-              </p>
-            </div>
           </div>
 
           {/* Side Hustle Guides */}
