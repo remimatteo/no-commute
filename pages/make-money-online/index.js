@@ -8,7 +8,7 @@ export default function MakeMoneyOnline() {
     <>
       <SEO
         title="Make Money Online: Side Hustles & Passive Income Ideas"
-        description="Discover proven side hustles and ways to make money online. From surveys to digital products, find flexible income opportunities that fit your schedule."
+        description="Discover proven side hustles and ways to make money online. Real strategies from surveys to digital products that actually work."
         canonical="https://no-commute-jobs.com/make-money-online"
         keywords="side hustles, make money online, passive income, online jobs, freelance work, survey sites, digital products, AI side hustles"
       />
