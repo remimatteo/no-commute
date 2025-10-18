@@ -557,6 +557,16 @@ async function main() {
   results.push(wwrResult);
   console.log('');
 
+  // Scrape Remote.co
+  const remoteCoResult = await scrapeRemoteCo();
+  results.push(remoteCoResult);
+  console.log('');
+
+  // Scrape FlexJobs
+  const flexJobsResult = await scrapeFlexJobs();
+  results.push(flexJobsResult);
+  console.log('');
+
   // Summary
   console.log('\n' + '='.repeat(60));
   console.log('📊 SCRAPING SUMMARY');
