@@ -5,6 +5,7 @@ import JobSchema from '../../../components/JobSchema';
 import BreadcrumbSchema from '../../../components/BreadcrumbSchema';
 import Link from 'next/link';
 import { Pool } from 'pg';
+import { formatSalary } from '../../../lib/formatSalary';
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
@@ -59,7 +60,7 @@ const normalizeCategory = (cat) => {
 };
 
 export default function JobDetailPage({ job }) {
-  const [darkMode, setDarkMode] = useState(true);
+  const [darkMode, setDarkMode] = useState(false);
 
   if (!job) {
     return (
@@ -170,7 +171,7 @@ export default function JobDetailPage({ job }) {
                 <DollarSign className={`w-5 h-5 mr-3 ${darkMode ? 'text-blue-400' : 'text-blue-600'}`} />
                 <div>
                   <p className={`text-xs ${darkMode ? 'text-gray-500' : 'text-gray-500'} font-medium`}>Salary</p>
-                  <p className="font-semibold">{transformedJob.salary}</p>
+                  <p className="font-semibold">{formatSalary(transformedJob.salary)}</p>
                 </div>
               </div>
               <div className={`flex items-center ${darkMode ? 'text-gray-300 bg-gray-800' : 'text-gray-700 bg-gray-100'} p-4 rounded-xl transition-colors`}>

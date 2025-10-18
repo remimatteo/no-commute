@@ -5,6 +5,7 @@ import { WebsiteSchema, OrganizationSchema } from '../components/schema';
 import FAQSchema from '../components/FAQSchema';
 import Link from 'next/link';
 import { generateJobSlug } from '../lib/slugify';
+import { formatSalary } from '../lib/formatSalary';
 
 const categories = [
   "All",
@@ -676,7 +677,7 @@ const [totalJobs, setTotalJobs] = useState(0);
                     {job.salary && job.salary !== 'Competitive' && job.salary.match(/\d/) ? (
                       <>
                         <DollarSign className={`w-4 h-4 flex-shrink-0 ${darkMode ? 'text-green-500' : 'text-green-600'}`} />
-                        <span className={`${darkMode ? 'text-green-400' : 'text-green-700'} font-semibold truncate`}>{job.salary}</span>
+                        <span className={`${darkMode ? 'text-green-400' : 'text-green-700'} font-semibold truncate`}>{formatSalary(job.salary)}</span>
                       </>
                     ) : (
                       <span className={`${darkMode ? 'text-gray-500' : 'text-gray-500'} text-xs italic`}>Salary not listed</span>
