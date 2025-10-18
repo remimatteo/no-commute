@@ -111,13 +111,11 @@ export default function JobDetailPage({ job }) {
         <header className={`${darkMode ? 'bg-gray-900 border-gray-800' : 'bg-white border-gray-200'} sticky top-0 z-50 border-b backdrop-blur-sm bg-opacity-90 transition-colors`}>
           <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
             <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
-              <div className={`p-2 rounded-xl ${darkMode ? 'bg-white' : 'bg-gray-900'}`}>
-                <img
-                  src="/logo.png"
-                  alt="No Commute Logo"
-                  className={`w-8 h-8 ${darkMode ? '' : 'invert'}`}
-                />
-              </div>
+              <img
+                src="/logo.png"
+                alt="No Commute Logo"
+                className="w-10 h-10"
+              />
               <div>
                 <h1 className={`text-2xl font-black ${darkMode ? 'text-white' : 'text-gray-900'}`}>No Commute</h1>
               </div>
@@ -129,6 +127,18 @@ export default function JobDetailPage({ job }) {
                 className={`px-4 py-2 rounded-lg font-semibold transition-all ${darkMode ? 'text-gray-300 hover:text-white hover:bg-gray-800' : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'}`}
               >
                 Blog
+              </Link>
+              <Link
+                href="/forum"
+                className={`px-4 py-2 rounded-lg font-semibold transition-all ${darkMode ? 'text-gray-300 hover:text-white hover:bg-gray-800' : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'}`}
+              >
+                Forum
+              </Link>
+              <Link
+                href="/make-money-online"
+                className={`px-4 py-2 rounded-lg font-semibold transition-all ${darkMode ? 'text-gray-300 hover:text-white hover:bg-gray-800' : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'}`}
+              >
+                Side Hustles
               </Link>
               <button
                 onClick={() => setDarkMode(!darkMode)}

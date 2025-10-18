@@ -2,7 +2,7 @@ import Head from 'next/head';
 
 export default function SEO({
   title = 'No Commute Jobs - 2000+ Remote Job Opportunities',
-  description = 'Find your perfect remote job from 2000+ verified listings. Browse remote positions across tech, marketing, design, customer support and more. Updated daily.',
+  description = 'Find your perfect remote job from 2000+ verified listings. Browse remote positions across tech, marketing, design, customer support and more. Updated daily with entry-level and experienced roles.',
   canonical = 'https://no-commute-jobs.com',
   ogImage = 'https://no-commute-jobs.com/og-image.jpg',
   ogType = 'website',
@@ -43,7 +43,10 @@ export default function SEO({
       <meta name="viewport" content="width=device-width, initial-scale=1" />
       <meta charSet="utf-8" />
       <link rel="icon" href="/favicon.ico" />
-      <meta name="theme-color" content="#000000" />
+      <meta name="theme-color" content="#ffffff" />
+      <link rel="apple-touch-icon" href="/logo.png" />
+      <meta name="msapplication-TileColor" content="#ffffff" />
+      <meta name="msapplication-TileImage" content="/logo.png" />
     </Head>
   );
 }
