@@ -77,7 +77,31 @@ export default function BlogPost({ post }) {
           )}
 
           {/* Content */}
-          <div className="prose prose-lg max-w-none mb-12">
+          <div className="prose prose-lg prose-blue max-w-none mb-12
+            prose-headings:font-bold
+            prose-h2:text-3xl prose-h2:mt-12 prose-h2:mb-6 prose-h2:pb-3 prose-h2:border-b-2 prose-h2:border-gray-200
+            prose-h3:text-2xl prose-h3:mt-8 prose-h3:mb-4
+            prose-p:text-gray-700 prose-p:leading-relaxed prose-p:mb-6 prose-p:text-lg
+            prose-ul:my-6 prose-ul:space-y-3
+            prose-ol:my-6 prose-ol:space-y-3
+            prose-li:text-gray-700 prose-li:leading-relaxed prose-li:text-lg
+            prose-a:text-blue-600 prose-a:no-underline prose-a:font-semibold hover:prose-a:text-blue-700 hover:prose-a:underline
+            prose-strong:text-gray-900 prose-strong:font-bold
+            prose-blockquote:border-l-4 prose-blockquote:border-blue-500 prose-blockquote:pl-6 prose-blockquote:italic prose-blockquote:bg-blue-50 prose-blockquote:py-4 prose-blockquote:my-6
+            prose-code:bg-gray-100 prose-code:text-gray-900 prose-code:px-2 prose-code:py-1 prose-code:rounded
+            prose-table:my-8 prose-th:bg-gray-100 prose-th:p-3 prose-td:p-3 prose-td:border prose-td:border-gray-200
+            prose-img:rounded-lg prose-img:shadow-md prose-img:my-8
+            [&>div>h2]:text-3xl [&>div>h2]:mt-12 [&>div>h2]:mb-6 [&>div>h2]:pb-3 [&>div>h2]:border-b-2 [&>div>h2]:border-gray-200 [&>div>h2]:font-bold
+            [&>div>h3]:text-2xl [&>div>h3]:mt-8 [&>div>h3]:mb-4 [&>div>h3]:font-bold
+            [&>div>p]:text-gray-700 [&>div>p]:leading-relaxed [&>div>p]:mb-6 [&>div>p]:text-lg
+            [&>div>ul]:my-6 [&>div>ul]:space-y-3 [&>div>ul]:pl-6
+            [&>div>ol]:my-6 [&>div>ol]:space-y-3 [&>div>ol]:pl-6
+            [&>div>li]:text-gray-700 [&>div>li]:leading-relaxed [&>div>li]:text-lg
+            [&>div>blockquote]:border-l-4 [&>div>blockquote]:border-blue-500 [&>div>blockquote]:pl-6 [&>div>blockquote]:italic [&>div>blockquote]:bg-blue-50 [&>div>blockquote]:py-4 [&>div>blockquote]:my-6 [&>div>blockquote]:rounded-r-lg
+            [&>div>table]:w-full [&>div>table]:my-8 [&>div>table]:border [&>div>table]:border-gray-200 [&>div>table]:rounded-lg [&>div>table]:overflow-hidden
+            [&>div>table>thead>tr>th]:bg-gray-100 [&>div>table>thead>tr>th]:p-3 [&>div>table>thead>tr>th]:font-bold [&>div>table>thead>tr>th]:text-left
+            [&>div>table>tbody>tr>td]:p-3 [&>div>table>tbody>tr>td]:border-t [&>div>table>tbody>tr>td]:border-gray-200
+          ">
             <div dangerouslySetInnerHTML={{ __html: post.content }} />
           </div>
 

@@ -77,10 +77,33 @@ export default function SideHustlePage() {
           </h1>
 
           {/* Content */}
-          <div
-            className="prose prose-lg max-w-none prose-headings:font-bold prose-h2:text-3xl prose-h2:mt-10 prose-h2:mb-4 prose-h3:text-2xl prose-h3:mt-8 prose-h3:mb-3 prose-p:text-gray-700 prose-p:leading-relaxed prose-ul:my-6 prose-li:my-2 prose-a:text-blue-600 prose-a:no-underline hover:prose-a:text-blue-700 prose-strong:text-gray-900 prose-blockquote:border-l-4 prose-blockquote:border-blue-600 prose-blockquote:pl-4 prose-blockquote:italic"
-            dangerouslySetInnerHTML={{ __html: hustle.content }}
-          />
+          <div className="prose prose-lg prose-blue max-w-none mb-12
+            prose-headings:font-bold
+            prose-h2:text-3xl prose-h2:mt-12 prose-h2:mb-6 prose-h2:pb-3 prose-h2:border-b-2 prose-h2:border-gray-200
+            prose-h3:text-2xl prose-h3:mt-8 prose-h3:mb-4
+            prose-p:text-gray-700 prose-p:leading-relaxed prose-p:mb-6 prose-p:text-lg
+            prose-ul:my-6 prose-ul:space-y-3
+            prose-ol:my-6 prose-ol:space-y-3
+            prose-li:text-gray-700 prose-li:leading-relaxed prose-li:text-lg
+            prose-a:text-blue-600 prose-a:no-underline prose-a:font-semibold hover:prose-a:text-blue-700 hover:prose-a:underline
+            prose-strong:text-gray-900 prose-strong:font-bold
+            prose-blockquote:border-l-4 prose-blockquote:border-blue-500 prose-blockquote:pl-6 prose-blockquote:italic prose-blockquote:bg-blue-50 prose-blockquote:py-4 prose-blockquote:my-6
+            prose-code:bg-gray-100 prose-code:text-gray-900 prose-code:px-2 prose-code:py-1 prose-code:rounded
+            prose-table:my-8 prose-th:bg-gray-100 prose-th:p-3 prose-td:p-3 prose-td:border prose-td:border-gray-200
+            prose-img:rounded-lg prose-img:shadow-md prose-img:my-8
+            [&>h2]:text-3xl [&>h2]:mt-12 [&>h2]:mb-6 [&>h2]:pb-3 [&>h2]:border-b-2 [&>h2]:border-gray-200 [&>h2]:font-bold
+            [&>h3]:text-2xl [&>h3]:mt-8 [&>h3]:mb-4 [&>h3]:font-bold
+            [&>p]:text-gray-700 [&>p]:leading-relaxed [&>p]:mb-6 [&>p]:text-lg
+            [&>ul]:my-6 [&>ul]:space-y-3 [&>ul]:pl-6
+            [&>ol]:my-6 [&>ol]:space-y-3 [&>ol]:pl-6
+            [&>li]:text-gray-700 [&>li]:leading-relaxed [&>li]:text-lg
+            [&>blockquote]:border-l-4 [&>blockquote]:border-blue-500 [&>blockquote]:pl-6 [&>blockquote]:italic [&>blockquote]:bg-blue-50 [&>blockquote]:py-4 [&>blockquote]:my-6 [&>blockquote]:rounded-r-lg
+            [&>table]:w-full [&>table]:my-8 [&>table]:border [&>table]:border-gray-200 [&>table]:rounded-lg [&>table]:overflow-hidden
+            [&>table>thead>tr>th]:bg-gray-100 [&>table>thead>tr>th]:p-3 [&>table>thead>tr>th]:font-bold [&>table>thead>tr>th]:text-left
+            [&>table>tbody>tr>td]:p-3 [&>table>tbody>tr>td]:border-t [&>table>tbody>tr>td]:border-gray-200
+          ">
+            <div dangerouslySetInnerHTML={{ __html: hustle.content }} />
+          </div>
 
           {/* Bottom CTA */}
           <div className="mt-12 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl p-8 text-center text-white">
