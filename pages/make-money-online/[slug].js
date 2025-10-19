@@ -106,16 +106,16 @@ export default function SideHustlePage() {
           </div>
 
           {/* Bottom CTA */}
-          <div className="mt-12 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl p-8 text-center text-white">
-            <h2 className="text-2xl font-bold mb-4">
+          <div className="mt-12 bg-white rounded-xl p-8 text-center border border-gray-200 shadow-md">
+            <h2 className="text-2xl font-bold mb-4 text-gray-900">
               Want Stable Remote Work Instead?
             </h2>
-            <p className="text-lg mb-6 opacity-90">
+            <p className="text-lg mb-6 text-gray-700">
               Explore 2000+ verified remote job listings across tech, marketing, design, customer support, and more.
             </p>
             <Link
               href="/"
-              className="inline-block bg-white text-blue-600 px-8 py-3 rounded-lg font-bold hover:bg-gray-100 transition"
+              className="inline-block bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
             >
               Browse Remote Jobs
             </Link>

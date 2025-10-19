@@ -151,9 +151,9 @@ const jobTitles = ['Entry Level', 'Junior Developer', 'Internship', 'Software En
 // Skills for browsing
 const skills = ['React', 'Python', 'JavaScript', 'AWS', 'TypeScript', 'Node.js', 'Figma', 'SQL'];
 
-export default function Home() {
-  const [jobs, setJobs] = useState([]);
-  const [loading, setLoading] = useState(true);
+export default function Home({ initialJobs = [], initialTotalJobs = 0 }) {
+  const [jobs, setJobs] = useState(initialJobs);
+  const [loading, setLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [showFilterMenu, setShowFilterMenu] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
@@ -181,10 +181,23 @@ export default function Home() {
   const [emailSubmitting, setEmailSubmitting] = useState(false);
   const [emailSubmitted, setEmailSubmitted] = useState(false);
 const [visibleJobsCount, setVisibleJobsCount] = useState(30);
-const [totalJobs, setTotalJobs] = useState(0);
+const [totalJobs, setTotalJobs] = useState(initialTotalJobs);
 
-  // Fetch jobs when filters or search query change
+  // Fetch jobs when filters change (only if not using default filters)
   useEffect(() => {
+    // Check if using non-default filters
+    const isDefaultFilters = category === "All" &&
+                            location === "USA" &&
+                            type === "All" &&
+                            salaryListed === "All" &&
+                            experience === "All" &&
+                            searchQuery === "";
+
+    // If using default filters and we have initial jobs, skip API call
+    if (isDefaultFilters && initialJobs.length > 0) {
+      return;
+    }
+
     let isMounted = true;
 
     const fetchJobs = async () => {
@@ -204,6 +217,14 @@ const [totalJobs, setTotalJobs] = useState(0);
         const data = await response.json();
 
         if (!isMounted) return;
+
+        // Handle API errors gracefully
+        if (!response.ok || !data.jobs) {
+          console.error('Failed to fetch jobs:', data.error || data.message || 'Unknown error');
+          setJobs([]);
+          setTotalJobs(0);
+          return;
+        }
 
         const transformedJobs = data.jobs.map((job) => ({
           id: job.id,
@@ -239,7 +260,7 @@ const [totalJobs, setTotalJobs] = useState(0);
     return () => {
       isMounted = false;
     };
-  }, [category, location, type, salaryListed, experience, searchQuery]);
+  }, [category, location, type, salaryListed, experience, searchQuery, initialJobs.length]);
 
   // Typing animation effect
   useEffect(() => {
@@ -413,8 +434,8 @@ const [totalJobs, setTotalJobs] = useState(0);
   return (
     <>
 <SEO
-  title={`No Commute Jobs - ${totalJobs}+ Remote Job Opportunities`}
-  description={`Find your perfect remote job from ${totalJobs}+ verified listings. Browse remote positions across tech, marketing, design, customer support and more. Updated daily.`}
+  title="No Commute Jobs - 2000+ Remote Job Opportunities"
+  description="Find your perfect remote job from 2000+ verified listings. Browse remote positions across tech, marketing, design, customer support and more. Updated daily."
   canonical="https://no-commute-jobs.com"
   keywords="remote jobs, work from home, remote work, telecommute, remote positions, online jobs, distributed teams, remote developer jobs, remote designer jobs"
 />
@@ -701,21 +722,13 @@ const [totalJobs, setTotalJobs] = useState(0);
                     alt={job.company}
                     className="w-full h-full object-cover"
                     onError={(e) => {
-                      // Try Google favicons as fallback
+                      // Fallback to UI Avatars (always works, looks professional)
                       if (!e.target.dataset.fallbackAttempted) {
                         e.target.dataset.fallbackAttempted = 'true';
-                        e.target.src = `https://www.google.com/s2/favicons?domain=${companyToDomain(job.company)}&sz=64`;
-                      } else {
-                        // Show icon if both fail
-                        e.target.style.display = 'none';
-                        const fallback = e.target.nextElementSibling;
-                        if (fallback) fallback.style.display = 'flex';
+                        e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(job.company)}&size=80&background=random&color=fff&bold=true`;
                       }
                     }}
                   />
-                  <div className="w-full h-full items-center justify-center absolute inset-0" style={{ display: 'none' }}>
-                    <Briefcase className={`w-5 h-5 ${darkMode ? 'text-gray-500' : 'text-gray-400'}`} />
-                  </div>
                 </div>
 
                 <div className="flex-1 min-w-0 grid grid-cols-1 sm:grid-cols-12 gap-2 sm:gap-4 items-center">
@@ -777,56 +790,6 @@ const [totalJobs, setTotalJobs] = useState(0);
               <p className={`${darkMode ? 'text-gray-500' : 'text-gray-600'}`}>Try adjusting your search or filters</p>
             </div>
           )}
-        </section>
-
-        <section className={`${darkMode ? 'bg-gray-900' : 'bg-gray-100'} py-16 transition-colors border-t ${darkMode ? 'border-gray-800' : 'border-gray-200'}`}>
-          <div className="max-w-7xl mx-auto px-4 sm:px-6">
-            <h3 className={`text-3xl font-bold ${darkMode ? 'text-white' : 'text-gray-900'} mb-8 text-center`}>
-              Browse by Category
-            </h3>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
-              <div>
-                <h4 className={`text-lg font-bold ${darkMode ? 'text-white' : 'text-gray-900'} mb-4`}>By Job Title</h4>
-                <div className="space-y-2">
-                  {jobTitles.map(title => {
-                    const count = jobs.filter(j => j.title.toLowerCase().includes(title.toLowerCase())).length;
-                    return (
-                      <button
-                        key={title}
-                        onClick={() => setSearchQuery(title)}
-                        className={`block w-full text-left px-3 py-2 rounded-lg ${darkMode ? 'text-gray-300 hover:bg-gray-800' : 'text-gray-700 hover:bg-gray-200'} transition-colors`}
-                      >
-                        {title} <span className={`${darkMode ? 'text-gray-500' : 'text-gray-400'} text-sm`}>({count})</span>
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-
-              <div>
-                <h4 className={`text-lg font-bold ${darkMode ? 'text-white' : 'text-gray-900'} mb-4`}>By Skills</h4>
-                <div className="space-y-2">
-                  {skills.map(skill => {
-                    const count = jobs.filter(j =>
-                      j.title.toLowerCase().includes(skill.toLowerCase()) ||
-                      j.tags.some(t => t.toLowerCase().includes(skill.toLowerCase()))
-                    ).length;
-                    return (
-                      <button
-                        key={skill}
-                        onClick={() => setSearchQuery(skill)}
-                        className={`block w-full text-left px-3 py-2 rounded-lg ${darkMode ? 'text-gray-300 hover:bg-gray-800' : 'text-gray-700 hover:bg-gray-200'} transition-colors`}
-                      >
-                        {skill} <span className={`${darkMode ? 'text-gray-500' : 'text-gray-400'} text-sm`}>({count})</span>
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-
-            </div>
-          </div>
         </section>
 
         <section className={`${darkMode ? 'bg-blue-900' : 'bg-blue-600'} py-16 transition-colors`}>
@@ -918,33 +881,30 @@ const [totalJobs, setTotalJobs] = useState(0);
               <div>
                 <h4 className={`font-bold ${darkMode ? 'text-white' : 'text-gray-900'} mb-4`}>Company</h4>
                 <ul className={`space-y-2 ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                  <li><a href="#" className="hover:text-blue-500 transition-colors">About</a></li>
-                  <li><a href="#" className="hover:text-blue-500 transition-colors">Blog</a></li>
-                  <li><a href="#" className="hover:text-blue-500 transition-colors">Careers</a></li>
+                  <li><Link href="/about" className="hover:text-blue-500 transition-colors">About</Link></li>
+                  <li><Link href="/blog" className="hover:text-blue-500 transition-colors">Blog</Link></li>
                 </ul>
               </div>
               <div>
                 <h4 className={`font-bold ${darkMode ? 'text-white' : 'text-gray-900'} mb-4`}>Resources</h4>
                 <ul className={`space-y-2 ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                  <li><a href="#" className="hover:text-blue-500 transition-colors">Remote Guide</a></li>
-                  <li><a href="#" className="hover:text-blue-500 transition-colors">Salary Data</a></li>
-                  <li><a href="#" className="hover:text-blue-500 transition-colors">Companies</a></li>
+                  <li><Link href="/make-money-online" className="hover:text-blue-500 transition-colors">Side Hustles</Link></li>
+                  <li><Link href="/forum" className="hover:text-blue-500 transition-colors">Forum</Link></li>
+                  <li><Link href="/post-job" className="hover:text-blue-500 transition-colors">Post a Job</Link></li>
                 </ul>
               </div>
               <div>
                 <h4 className={`font-bold ${darkMode ? 'text-white' : 'text-gray-900'} mb-4`}>Support</h4>
                 <ul className={`space-y-2 ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                  <li><a href="#" className="hover:text-blue-500 transition-colors">Help Center</a></li>
-                  <li><a href="#" className="hover:text-blue-500 transition-colors">Contact</a></li>
+                  <li><Link href="/contact" className="hover:text-blue-500 transition-colors">Contact</Link></li>
                   <li><a href="#" className="hover:text-blue-500 transition-colors">FAQ</a></li>
                 </ul>
               </div>
               <div>
                 <h4 className={`font-bold ${darkMode ? 'text-white' : 'text-gray-900'} mb-4`}>Legal</h4>
                 <ul className={`space-y-2 ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                  <li><a href="#" className="hover:text-blue-500 transition-colors">Privacy</a></li>
-                  <li><a href="#" className="hover:text-blue-500 transition-colors">Terms</a></li>
-                  <li><a href="#" className="hover:text-blue-500 transition-colors">Cookies</a></li>
+                  <li><Link href="/privacy" className="hover:text-blue-500 transition-colors">Privacy Policy</Link></li>
+                  <li><a href="#" className="hover:text-blue-500 transition-colors">Terms of Service</a></li>
                 </ul>
               </div>
             </div>
@@ -961,4 +921,85 @@ const [totalJobs, setTotalJobs] = useState(0);
       </div>
     </>
   );
+}
+
+// ISR: Fetch jobs at build time and revalidate every 6 hours
+export async function getStaticProps() {
+  const { Pool } = require('pg');
+
+  const pool = new Pool({
+    connectionString: process.env.DATABASE_URL,
+    ssl: {
+      rejectUnauthorized: false
+    }
+  });
+
+  try {
+    // Fetch jobs with default USA filter
+    const location = 'USA';
+    const limit = 100;
+
+    // Count total jobs
+    const countResult = await pool.query(`
+      SELECT COUNT(*) as total FROM jobs
+      WHERE location ILIKE $1
+    `, [`%${location}%`]);
+
+    const totalJobs = parseInt(countResult.rows[0].total, 10);
+
+    // Fetch jobs
+    const result = await pool.query(`
+      SELECT * FROM jobs
+      WHERE location ILIKE $1
+      ORDER BY
+        COALESCE(featured, false) DESC,
+        created_at DESC
+      LIMIT $2
+    `, [`%${location}%`, limit]);
+
+    // Transform jobs to match the expected format
+    const transformedJobs = result.rows.map((job) => ({
+      id: job.id,
+      title: job.title,
+      company: job.company,
+      location: job.location || 'Remote',
+      salary: job.salary || 'Competitive',
+      type: job.type || 'Full-time',
+      category: normalizeCategory(job.category),
+      tags: job.tags || [],
+      postedDate: job.posted_date || job.created_at,
+      description: job.description || '',
+      requirements: [],
+      applyUrl: job.apply_url || job.url || '#',
+      featured: job.featured || false,
+      company_url: job.company_url || job.url || '',
+      source: job.source || 'RemoteOK'
+    }));
+
+    await pool.end();
+
+    return {
+      props: {
+        initialJobs: transformedJobs,
+        initialTotalJobs: totalJobs
+      },
+      revalidate: 21600 // Revalidate every 6 hours (6 * 60 * 60 seconds)
+    };
+  } catch (error) {
+    console.error('Error in getStaticProps:', error);
+
+    try {
+      await pool.end();
+    } catch (e) {
+      // Ignore pool end errors
+    }
+
+    return {
+      props: {
+        initialJobs: [],
+        initialTotalJobs: 0
+      },
+      revalidate: 3600 // Retry in 1 hour if error
+    };
+  }
 }
