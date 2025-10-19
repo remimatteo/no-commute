@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
-import { Search, MapPin, DollarSign, Clock, Briefcase, ExternalLink, Filter, X, TrendingUp, Zap, Moon, Sun } from 'lucide-react';
+import { Search, MapPin, DollarSign, Clock, Briefcase, ExternalLink, Filter, X, TrendingUp, Zap, Moon, Sun, Menu } from 'lucide-react';
 import SEO from '../components/SEO';
 import { WebsiteSchema, OrganizationSchema } from '../components/schema';
 import FAQSchema from '../components/FAQSchema';
@@ -156,6 +156,7 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [showFilterMenu, setShowFilterMenu] = useState(false);
+  const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
   const [category, setCategory] = useState("All");
   const [location, setLocation] = useState("USA");
@@ -435,39 +436,91 @@ const [totalJobs, setTotalJobs] = useState(0);
                 <h1 className={`text-2xl font-black ${darkMode ? 'text-white' : 'text-gray-900'}`}>No Commute</h1>
               </div>
             </div>
-            
-            <div className="flex items-center gap-4">
-  <Link
-    href="/blog"
-    className={`px-4 py-2 rounded-lg font-semibold transition-all ${darkMode ? 'text-gray-300 hover:text-white hover:bg-gray-800' : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'}`}
-  >
-    Blog
-  </Link>
-  <Link
-    href="/forum"
-    className={`px-4 py-2 rounded-lg font-semibold transition-all ${darkMode ? 'text-gray-300 hover:text-white hover:bg-gray-800' : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'}`}
-  >
-    Forum
-  </Link>
-  <Link
-    href="/make-money-online"
-    className={`px-4 py-2 rounded-lg font-semibold transition-all ${darkMode ? 'text-gray-300 hover:text-white hover:bg-gray-800' : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'}`}
-  >
-    Side Hustles
-  </Link>
-  <button
-    onClick={() => setDarkMode(!darkMode)}
-    className={`p-2 rounded-lg ${darkMode ? 'bg-gray-800 text-yellow-400' : 'bg-gray-100 text-gray-700'} hover:scale-110 transition-transform`}
-  >
-    {darkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
-  </button>
-  <Link href="/post-job">
-    <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 sm:px-6 py-2 rounded-xl hover:shadow-lg transition-all font-semibold text-sm sm:text-base">
-      Post a Job
-    </button>
-  </Link>
-</div>
+
+            {/* Desktop Navigation - Hidden on Mobile */}
+            <div className="hidden lg:flex items-center gap-2">
+              <Link
+                href="/blog"
+                className={`px-4 py-2 rounded-lg font-semibold transition-all ${darkMode ? 'text-gray-300 hover:text-white hover:bg-gray-800' : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'}`}
+              >
+                Blog
+              </Link>
+              <Link
+                href="/forum"
+                className={`px-4 py-2 rounded-lg font-semibold transition-all ${darkMode ? 'text-gray-300 hover:text-white hover:bg-gray-800' : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'}`}
+              >
+                Forum
+              </Link>
+              <Link
+                href="/make-money-online"
+                className={`px-4 py-2 rounded-lg font-semibold transition-all ${darkMode ? 'text-gray-300 hover:text-white hover:bg-gray-800' : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'}`}
+              >
+                Side Hustles
+              </Link>
+              <button
+                onClick={() => setDarkMode(!darkMode)}
+                className={`p-2 rounded-lg ${darkMode ? 'bg-gray-800 text-yellow-400' : 'bg-gray-100 text-gray-700'} hover:scale-110 transition-transform`}
+              >
+                {darkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+              </button>
+              <Link href="/post-job">
+                <button className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-xl hover:shadow-lg transition-all font-semibold">
+                  Post a Job
+                </button>
+              </Link>
+            </div>
+
+            {/* Mobile Menu Button */}
+            <div className="lg:hidden flex items-center gap-2">
+              <Link href="/post-job">
+                <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl hover:shadow-lg transition-all font-semibold text-sm">
+                  Post Job
+                </button>
+              </Link>
+              <button
+                onClick={() => setShowMobileMenu(!showMobileMenu)}
+                className={`p-2 rounded-lg ${darkMode ? 'bg-gray-800 text-white' : 'bg-gray-100 text-gray-700'} hover:scale-110 transition-transform`}
+              >
+                {showMobileMenu ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              </button>
+            </div>
           </div>
+
+          {/* Mobile Menu Dropdown */}
+          {showMobileMenu && (
+            <div className={`lg:hidden ${darkMode ? 'bg-gray-900 border-gray-800' : 'bg-white border-gray-200'} border-t`}>
+              <div className="max-w-7xl mx-auto px-4 py-4 flex flex-col space-y-2">
+                <Link
+                  href="/blog"
+                  onClick={() => setShowMobileMenu(false)}
+                  className={`px-4 py-3 rounded-lg font-semibold transition-all ${darkMode ? 'text-gray-300 hover:text-white hover:bg-gray-800' : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'}`}
+                >
+                  Blog
+                </Link>
+                <Link
+                  href="/forum"
+                  onClick={() => setShowMobileMenu(false)}
+                  className={`px-4 py-3 rounded-lg font-semibold transition-all ${darkMode ? 'text-gray-300 hover:text-white hover:bg-gray-800' : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'}`}
+                >
+                  Forum
+                </Link>
+                <Link
+                  href="/make-money-online"
+                  onClick={() => setShowMobileMenu(false)}
+                  className={`px-4 py-3 rounded-lg font-semibold transition-all ${darkMode ? 'text-gray-300 hover:text-white hover:bg-gray-800' : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'}`}
+                >
+                  Side Hustles
+                </Link>
+                <button
+                  onClick={() => setDarkMode(!darkMode)}
+                  className={`px-4 py-3 rounded-lg font-semibold text-left transition-all flex items-center gap-3 ${darkMode ? 'text-gray-300 hover:text-white hover:bg-gray-800' : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'}`}
+                >
+                  {darkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+                  {darkMode ? 'Light Mode' : 'Dark Mode'}
+                </button>
+              </div>
+            </div>
+          )}
         </header>
 
         <section className={`${darkMode ? 'bg-black' : 'bg-gray-50'} py-12 sm:py-16 transition-colors`}>
