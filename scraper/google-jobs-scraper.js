@@ -50,7 +50,17 @@ async function scrapeGoogleJobs() {
 
   try {
     // Search for remote jobs
-    const url = `https://serpapi.com/search.json?engine=google_jobs&q=remote&api_key=${SERPAPI_KEY}&num=100`;
+const entryLevelQueries = [
+  'remote entry level software engineer',
+  'remote junior developer',
+  'remote entry level tech jobs',
+  'remote internship programming',
+  'remote entry level web developer'
+];
+
+// Randomly select a query to add variety
+const selectedQuery = entryLevelQueries[Math.floor(Math.random() * entryLevelQueries.length)];
+const url = `https://serpapi.com/search.json?engine=google_jobs&q=${encodeURIComponent(selectedQuery)}&api_key=${SERPAPI_KEY}&num=100`;
 
     const response = await fetch(url);
 
@@ -95,9 +105,23 @@ async function scrapeGoogleJobs() {
         }
 
         // Extract job type
-        let jobType = 'Full-time';
+let jobType = 'Full-time';
         if (job.detected_extensions?.schedule_type) {
           jobType = job.detected_extensions.schedule_type;
+        }
+
+        // Additional filtering for entry-level jobs
+        const isEntryLevel = 
+          title.toLowerCase().includes('entry') || 
+          title.toLowerCase().includes('junior') || 
+          title.toLowerCase().includes('internship') ||
+          description.toLowerCase().includes('entry level') ||
+          description.toLowerCase().includes('new grad');
+
+        // Skip if not entry-level
+        if (!isEntryLevel) {
+          skipped++;
+          continue;
         }
 
         const postedDate = new Date().toLocaleDateString('en-US', {

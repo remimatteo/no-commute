@@ -25,88 +25,104 @@ export const sideHustles = [
       <h2>1. Freelance Writing ($800-1500/month)</h2>
       <p>This was my most profitable side hustle. I started writing blog posts for small businesses in niches I already understood: remote work, productivity tools, and SaaS.</p>
 
-      <p><strong>Time investment:</strong> 10-15 hours per week</p>
-      <p><strong>How to start:</strong> I built a simple portfolio with 3 self-published articles on Medium. Then I cold-emailed 50 companies offering to write one free article. Three said yes. Two became paying clients.</p>
-
-      <p><strong>What worked:</strong> Specializing in one niche instead of being a generalist. I became the go-to writer for remote work content.</p>
-
-      <p><strong>Platforms:</strong> Started finding clients on Upwork and Fiverr, then transitioned to direct outreach on LinkedIn.</p>
+      <ul>
+        <li><strong>Time investment:</strong> 10-15 hours per week</li>
+        <li><strong>How to start:</strong> I built a simple portfolio with 3 self-published articles on Medium. Then I cold-emailed 50 companies offering to write one free article. Three said yes. Two became paying clients.</li>
+        <li><strong>What worked:</strong> Specializing in one niche instead of being a generalist. I became the go-to writer for remote work content.</li>
+        <li><strong>Platforms:</strong> Started finding clients on Upwork and Fiverr, then transitioned to direct outreach on LinkedIn.</li>
+      </ul>
 
       <h2>2. Virtual Assistant Work ($600-1000/month)</h2>
       <p>I help three small business owners with email management, calendar scheduling, and basic administrative tasks. The work is straightforward and fits easily around my full-time job.</p>
 
-      <p><strong>Time investment:</strong> 8-12 hours per week</p>
-      <p><strong>Skills needed:</strong> Organization, communication, basic familiarity with tools like Gmail, Google Calendar, Asana.</p>
-
-      <p><strong>How I found clients:</strong> Posted on Upwork with a clear, specific offer: "I will manage your email and calendar so you can focus on revenue-generating work." Landed my first client within two weeks.</p>
+      <ul>
+        <li><strong>Time investment:</strong> 8-12 hours per week</li>
+        <li><strong>Skills needed:</strong> Organization, communication, basic familiarity with tools like Gmail, Google Calendar, Asana.</li>
+        <li><strong>How I found clients:</strong> Posted on Upwork with a clear, specific offer: "I will manage your email and calendar so you can focus on revenue-generating work." Landed my first client within two weeks.</li>
+      </ul>
 
       <h2>3. Online Surveys and Micro Tasks ($200-400/month)</h2>
       <p>Yes, surveys actually work if you are strategic about it. I do not rely on this as primary income, but it is easy money during downtime.</p>
 
-      <p><strong>Time investment:</strong> 5-8 hours per month (during TV watching, waiting in line, etc.)</p>
-
-      <p><strong>Best platforms:</strong> Survey Junkie and Swagbucks consistently paid out. I ignored any site that required an upfront fee or seemed sketchy.</p>
-
-      <p><strong>Pro tip:</strong> Set up a separate email for survey sites. Your inbox will thank you.</p>
+      <ul>
+        <li><strong>Time investment:</strong> 5-8 hours per month (during TV watching, waiting in line, etc.)</li>
+        <li><strong>Best platforms:</strong> Survey Junkie and Swagbucks consistently paid out. I ignored any site that required an upfront fee or seemed sketchy.</li>
+        <li><strong>Pro tip:</strong> Set up a separate email for survey sites. Your inbox will thank you.</li>
+      </ul>
 
       <h2>4. Selling Digital Products on Etsy ($300-800/month)</h2>
       <p>I created Notion templates for remote workers: daily planners, project trackers, and meeting note templates. Once created, they sell passively.</p>
 
-      <p><strong>Time investment:</strong> 20 hours upfront to create templates, then 2-3 hours per month for updates and customer support.</p>
-
-      <p><strong>What sold best:</strong> Templates that solved specific, annoying problems. My "Remote Team Meeting Tracker" sells 10-15 copies per month at $12 each.</p>
-
-      <p><strong>How to start:</strong> Identify a problem you have solved for yourself. Package that solution. Sell it.</p>
+      <ul>
+        <li><strong>Time investment:</strong> 20 hours upfront to create templates, then 2-3 hours per month for updates and customer support.</li>
+        <li><strong>What sold best:</strong> Templates that solved specific, annoying problems. My "Remote Team Meeting Tracker" sells 10-15 copies per month at $12 each.</li>
+        <li><strong>How to start:</strong> Identify a problem you have solved for yourself. Package that solution. Sell it.</li>
+      </ul>
 
       <h2>5. User Testing Websites ($300-600/month)</h2>
       <p>Companies pay you to test their websites and apps. You record your screen while using their product and share feedback.</p>
 
-      <p><strong>Time investment:</strong> 4-6 hours per month</p>
-      <p><strong>Pay rate:</strong> $10-60 per test, depending on length and complexity</p>
-
-      <p><strong>Best platform:</strong> UserTesting.com consistently has available tests. You need a quiet space and a decent microphone.</p>
+      <ul>
+        <li><strong>Time investment:</strong> 4-6 hours per month</li>
+        <li><strong>Pay rate:</strong> $10-60 per test, depending on length and complexity</li>
+        <li><strong>Best platform:</strong> UserTesting.com consistently has available tests. You need a quiet space and a decent microphone.</li>
+      </ul>
 
       <h2>6. Transcription Work ($400-700/month)</h2>
       <p>I transcribe podcast episodes and video content. The work is repetitive but pays consistently and has zero creative pressure.</p>
 
-      <p><strong>Time investment:</strong> 10-12 hours per month</p>
-      <p><strong>Tools:</strong> I use Otter.ai to auto-transcribe, then I clean it up manually. This cuts my time in half.</p>
+      <ul>
+        <li><strong>Time investment:</strong> 10-12 hours per month</li>
+        <li><strong>Tools:</strong> I use Otter.ai to auto-transcribe, then I clean it up manually. This cuts my time in half.</li>
+      </ul>
 
       <h2>7. Social Media Management for Local Businesses ($500-1000/month)</h2>
       <p>I manage Instagram and Facebook for two local businesses: a coffee shop and a yoga studio. They get consistent content, I get steady income.</p>
 
-      <p><strong>Time investment:</strong> 6-8 hours per month total</p>
-      <p><strong>How I got clients:</strong> Identified local businesses with bad or nonexistent social media. Sent them examples of what I could create. Offered a trial month at a discount.</p>
+      <ul>
+        <li><strong>Time investment:</strong> 6-8 hours per month total</li>
+        <li><strong>How I got clients:</strong> Identified local businesses with bad or nonexistent social media. Sent them examples of what I could create. Offered a trial month at a discount.</li>
+      </ul>
 
       <h2>8. Proofreading and Editing ($300-600/month)</h2>
       <p>I proofread blog posts, ebooks, and business documents. It is straightforward work that requires attention to detail.</p>
 
-      <p><strong>Time investment:</strong> 8-10 hours per month</p>
-      <p><strong>How to start:</strong> Take a free grammar test on Upwork to prove your skills. Start with lower rates to build reviews, then increase.</p>
+      <ul>
+        <li><strong>Time investment:</strong> 8-10 hours per month</li>
+        <li><strong>How to start:</strong> Take a free grammar test on Upwork to prove your skills. Start with lower rates to build reviews, then increase.</li>
+      </ul>
 
       <h2>9. Creating and Selling Stock Photos ($150-400/month)</h2>
       <p>I am not a professional photographer. I use my iPhone to take photos during hikes, at coffee shops, and around the city. Some sell consistently on stock photo sites.</p>
 
-      <p><strong>Platforms:</strong> Shutterstock, Adobe Stock</p>
-      <p><strong>What sells:</strong> Authentic, candid shots of people working, lifestyle content, nature scenes</p>
+      <ul>
+        <li><strong>Platforms:</strong> Shutterstock, Adobe Stock</li>
+        <li><strong>What sells:</strong> Authentic, candid shots of people working, lifestyle content, nature scenes</li>
+      </ul>
 
       <h2>10. Online Tutoring ($500-900/month)</h2>
       <p>I tutor high school students in English and writing. Sessions are done over Zoom, making it incredibly flexible.</p>
 
-      <p><strong>Time investment:</strong> 6-10 hours per month</p>
-      <p><strong>How I started:</strong> Posted on local Facebook groups and Nextdoor. Got my first three students through word of mouth.</p>
+      <ul>
+        <li><strong>Time investment:</strong> 6-10 hours per month</li>
+        <li><strong>How I started:</strong> Posted on local Facebook groups and Nextdoor. Got my first three students through word of mouth.</li>
+      </ul>
 
       <h2>11. Affiliate Marketing Through a Blog ($200-500/month)</h2>
       <p>I started a blog about productivity tools for remote workers. I write honest reviews and include affiliate links to tools I actually use.</p>
 
-      <p><strong>Time investment:</strong> 10-15 hours per month writing content</p>
-      <p><strong>Reality check:</strong> This took 8 months to make any money. It is not quick, but it is passive once traffic builds.</p>
+      <ul>
+        <li><strong>Time investment:</strong> 10-15 hours per month writing content</li>
+        <li><strong>Reality check:</strong> This took 8 months to make any money. It is not quick, but it is passive once traffic builds.</li>
+      </ul>
 
       <h2>12. Data Entry and Admin Work ($400-700/month)</h2>
       <p>Basic data entry, spreadsheet work, and document organization. Not glamorous, but it pays and requires zero creative energy.</p>
 
-      <p><strong>Time investment:</strong> 8-12 hours per month</p>
-      <p><strong>Platforms:</strong> Upwork, Fiverr, FlexJobs</p>
+      <ul>
+        <li><strong>Time investment:</strong> 8-12 hours per month</li>
+        <li><strong>Platforms:</strong> Upwork, Fiverr, FlexJobs</li>
+      </ul>
 
       <h2>What Did Not Work</h2>
       <p>I also tried things that failed:</p>
@@ -134,15 +150,13 @@ export const sideHustles = [
       <p>If that sounds like a lot, it is. But I also cut out Netflix binges and reduced aimless social media scrolling. The trade-off has been worth it.</p>
 
       <h2>Tips for Getting Started</h2>
-      <p><strong>1. Start with one side hustle:</strong> Do not try to do everything at once. Pick one, get good at it, then add another.</p>
-
-      <p><strong>2. Track your time and earnings:</strong> I use a simple spreadsheet. If something is not making at least $20 per hour, I drop it.</p>
-
-      <p><strong>3. Set a financial goal:</strong> Mine was $2,000 per month. Having a target kept me focused.</p>
-
-      <p><strong>4. Protect your full-time job:</strong> Side hustles should not interfere with your primary income source. Schedule accordingly.</p>
-
-      <p><strong>5. Automate and systematize:</strong> Create templates, use tools, batch similar tasks. Work smarter, not just harder.</p>
+      <ul>
+        <li><strong>1. Start with one side hustle:</strong> Do not try to do everything at once. Pick one, get good at it, then add another.</li>
+        <li><strong>2. Track your time and earnings:</strong> I use a simple spreadsheet. If something is not making at least $20 per hour, I drop it.</li>
+        <li><strong>3. Set a financial goal:</strong> Mine was $2,000 per month. Having a target kept me focused.</li>
+        <li><strong>4. Protect your full-time job:</strong> Side hustles should not interfere with your primary income source. Schedule accordingly.</li>
+        <li><strong>5. Automate and systematize:</strong> Create templates, use tools, batch similar tasks. Work smarter, not just harder.</li>
+      </ul>
 
       <h2>Prefer Steady Income Instead?</h2>
       <p>Side hustles are great for extra cash, but they require constant effort. If you are looking for stable, consistent income without the hustle, check out our <a href="/" className="text-blue-600 hover:text-blue-700 underline">remote job listings</a>. Many positions offer flexibility similar to freelancing but with the security of a regular paycheck.</p>
@@ -191,11 +205,11 @@ export const sideHustles = [
         <li>Final deliverable takes me 45 minutes vs. 3+ hours writing from scratch</li>
       </ol>
 
-      <p><strong>What I charge:</strong> $150-300 per blog post, depending on length and complexity</p>
-
-      <p><strong>Time investment:</strong> 12-15 hours per month, earning $1,500-2,500</p>
-
-      <p><strong>How I got clients:</strong> Posted on Upwork: "AI-assisted blog writing that sounds human." Emphasized fast turnaround and quality over generic AI content.</p>
+      <ul>
+        <li><strong>What I charge:</strong> $150-300 per blog post, depending on length and complexity</li>
+        <li><strong>Time investment:</strong> 12-15 hours per month, earning $1,500-2,500</li>
+        <li><strong>How I got clients:</strong> Posted on Upwork: "AI-assisted blog writing that sounds human." Emphasized fast turnaround and quality over generic AI content.</li>
+      </ul>
 
       <h2>AI Side Hustle 2: Social Media Content Creation ($800-1,500/month)</h2>
       <p>I manage social media for four small businesses using AI tools to generate captions, hashtags, and content ideas.</p>
@@ -207,18 +221,19 @@ export const sideHustles = [
         <li>Later.com for scheduling</li>
       </ul>
 
-      <p><strong>My process:</strong> I batch-create a month of content in 4-6 hours using AI, then schedule everything. Clients think I am spending 20 hours per month. I am actually spending 5-6.</p>
-
-      <p><strong>What I charge:</strong> $300-400 per client per month for daily posts</p>
+      <ul>
+        <li><strong>My process:</strong> I batch-create a month of content in 4-6 hours using AI, then schedule everything. Clients think I am spending 20 hours per month. I am actually spending 5-6.</li>
+        <li><strong>What I charge:</strong> $300-400 per client per month for daily posts</li>
+      </ul>
 
       <h2>AI Side Hustle 3: AI Chatbot Setup for Small Businesses ($500-1,000 per project)</h2>
       <p>Small businesses want chatbots for their websites but do not know how to set them up. I use no-code tools like Chatbase and Voiceflow to build custom chatbots trained on their business info.</p>
 
-      <p><strong>What I deliver:</strong> A chatbot that answers common customer questions 24/7</p>
-
-      <p><strong>Time per project:</strong> 3-5 hours</p>
-
-      <p><strong>Income:</strong> $500-1,000 per setup, plus optional $150/month maintenance</p>
+      <ul>
+        <li><strong>What I deliver:</strong> A chatbot that answers common customer questions 24/7</li>
+        <li><strong>Time per project:</strong> 3-5 hours</li>
+        <li><strong>Income:</strong> $500-1,000 per setup, plus optional $150/month maintenance</li>
+      </ul>
 
       <p>I have done 8 of these in the past 4 months. Once you figure out the system, they are incredibly fast to set up.</p>
 
@@ -233,15 +248,19 @@ export const sideHustles = [
         <li>I optimize for ATS keywords and readability</li>
       </ul>
 
-      <p><strong>Time per resume:</strong> 30-45 minutes</p>
-      <p><strong>Charge:</strong> $75-150 per resume</p>
+      <ul>
+        <li><strong>Time per resume:</strong> 30-45 minutes</li>
+        <li><strong>Charge:</strong> $75-150 per resume</li>
+      </ul>
 
       <p>I do 5-8 of these per month. Easy side income during evenings.</p>
 
       <h2>AI Side Hustle 5: Email Marketing Campaigns ($600-1,200/month)</h2>
       <p>I write email sequences for coaches, consultants, and small ecommerce brands using AI to speed up the process.</p>
 
-      <p><strong>What I deliver:</strong> 5-10 email welcome sequence or promotional campaign</p>
+      <ul>
+        <li><strong>What I deliver:</strong> 5-10 email welcome sequence or promotional campaign</li>
+      </ul>
 
       <p><strong>My workflow:</strong></p>
       <ol>
@@ -251,34 +270,37 @@ export const sideHustles = [
         <li>Load into their email platform (Mailchimp, ConvertKit, etc.)</li>
       </ol>
 
-      <p><strong>What I charge:</strong> $400-800 per email sequence</p>
+      <ul>
+        <li><strong>What I charge:</strong> $400-800 per email sequence</li>
+      </ul>
 
       <h2>AI Side Hustle 6: Product Descriptions for Ecommerce ($400-800/month)</h2>
       <p>Ecommerce store owners need hundreds of product descriptions. I use ChatGPT to batch-write them in a fraction of the time.</p>
 
-      <p><strong>Typical project:</strong> 50 product descriptions at $8-12 each = $400-600 per project</p>
-
-      <p><strong>Time investment:</strong> 4-6 hours per project</p>
+      <ul>
+        <li><strong>Typical project:</strong> 50 product descriptions at $8-12 each = $400-600 per project</li>
+        <li><strong>Time investment:</strong> 4-6 hours per project</li>
+      </ul>
 
       <p>I found clients on Upwork and Fiverr. Once I have their product info and brand guidelines, the AI does 80 percent of the work.</p>
 
       <h2>AI Side Hustle 7: Midjourney Art for Print-on-Demand ($300-700/month)</h2>
       <p>I create AI-generated designs using Midjourney and sell them on Redbubble, Etsy, and Society6 as prints, t-shirts, and mugs.</p>
 
-      <p><strong>What sells best:</strong> Abstract art, motivational quotes with backgrounds, vintage-style illustrations</p>
-
-      <p><strong>Time investment:</strong> 5-8 hours per month creating designs and uploading</p>
-
-      <p><strong>Income:</strong> Passive after upload. I earn $300-700/month from designs I created months ago.</p>
+      <ul>
+        <li><strong>What sells best:</strong> Abstract art, motivational quotes with backgrounds, vintage-style illustrations</li>
+        <li><strong>Time investment:</strong> 5-8 hours per month creating designs and uploading</li>
+        <li><strong>Income:</strong> Passive after upload. I earn $300-700/month from designs I created months ago.</li>
+      </ul>
 
       <h2>AI Side Hustle 8: AI Workflow Automation Consulting ($500-1,500 per project)</h2>
       <p>This is my highest-paying AI side hustle. I help businesses automate repetitive tasks using AI and no-code tools like Zapier and Make.com.</p>
 
-      <p><strong>Example project:</strong> A real estate agent wanted to automate lead follow-up. I set up a system where new leads automatically get personalized emails generated by AI, scheduled follow-ups, and tracked in their CRM.</p>
-
-      <p><strong>What I charged:</strong> $1,200 for setup + $200/month maintenance</p>
-
-      <p><strong>Time to set up:</strong> 6-8 hours</p>
+      <ul>
+        <li><strong>Example project:</strong> A real estate agent wanted to automate lead follow-up. I set up a system where new leads automatically get personalized emails generated by AI, scheduled follow-ups, and tracked in their CRM.</li>
+        <li><strong>What I charged:</strong> $1,200 for setup + $200/month maintenance</li>
+        <li><strong>Time to set up:</strong> 6-8 hours</li>
+      </ul>
 
       <p>You do not need coding skills. You just need to understand how to connect tools and write good AI prompts.</p>
 
@@ -291,17 +313,19 @@ export const sideHustles = [
         <li><strong>Zapier/Make.com:</strong> Free tier works for most projects</li>
       </ul>
 
-      <p><strong>Total monthly cost:</strong> $83/month</p>
-      <p><strong>Average monthly income:</strong> $3,500-4,500</p>
+      <ul>
+        <li><strong>Total monthly cost:</strong> $83/month</li>
+        <li><strong>Average monthly income:</strong> $3,500-4,500</li>
+      </ul>
 
       <h2>How I Actually Got Clients</h2>
       <p>Most of my clients came from three places:</p>
 
-      <p><strong>1. Upwork:</strong> I created a profile emphasizing "AI-assisted services" with fast turnaround. My proposal response rate is around 30 percent because I offer speed and quality at reasonable prices.</p>
-
-      <p><strong>2. Fiverr:</strong> I have gigs for "AI-powered blog writing" and "chatbot setup." Once you get a few 5-star reviews, orders come in regularly.</p>
-
-      <p><strong>3. Direct outreach:</strong> I identify small businesses with bad or nonexistent social media, email them a free sample of what I could create, and offer a trial month.</p>
+      <ul>
+        <li><strong>1. Upwork:</strong> I created a profile emphasizing "AI-assisted services" with fast turnaround. My proposal response rate is around 30 percent because I offer speed and quality at reasonable prices.</li>
+        <li><strong>2. Fiverr:</strong> I have gigs for "AI-powered blog writing" and "chatbot setup." Once you get a few 5-star reviews, orders come in regularly.</li>
+        <li><strong>3. Direct outreach:</strong> I identify small businesses with bad or nonexistent social media, email them a free sample of what I could create, and offer a trial month.</li>
+      </ul>
 
       <h2>Common Mistakes to Avoid</h2>
       <p><strong>Mistake 1: Selling "pure AI content"</strong></p>
@@ -359,92 +383,92 @@ export const sideHustles = [
       <h2>Side Hustle 1: Note-Taking and Study Guides ($400-800/month)</h2>
       <p>I took detailed notes anyway. I just started selling them on Stuvia and OneClass.</p>
 
-      <p><strong>How it works:</strong> Upload your class notes, study guides, and exam prep materials. Students pay $5-15 per document.</p>
-
-      <p><strong>What worked best:</strong> STEM classes, business courses, and notoriously hard classes everyone struggles with.</p>
-
-      <p><strong>Time investment:</strong> Zero extra time if you are already taking good notes. Just format and upload.</p>
-
-      <p><strong>Income potential:</strong> My Organic Chemistry notes sold 40+ times at $12 each.</p>
+      <ul>
+        <li><strong>How it works:</strong> Upload your class notes, study guides, and exam prep materials. Students pay $5-15 per document.</li>
+        <li><strong>What worked best:</strong> STEM classes, business courses, and notoriously hard classes everyone struggles with.</li>
+        <li><strong>Time investment:</strong> Zero extra time if you are already taking good notes. Just format and upload.</li>
+        <li><strong>Income potential:</strong> My Organic Chemistry notes sold 40+ times at $12 each.</li>
+      </ul>
 
       <h2>Side Hustle 2: Tutoring Online ($600-1,200/month)</h2>
       <p>I tutored high school students in math and science through Wyzant and Chegg Tutors. Sessions were over Zoom, so I could tutor from my dorm room.</p>
 
-      <p><strong>Pay rate:</strong> $20-35/hour depending on subject</p>
-
-      <p><strong>Schedule:</strong> Evenings and weekends worked perfectly. I did 10-15 hours per month during busy school weeks, 20+ hours during breaks.</p>
-
-      <p><strong>How I got students:</strong> Created a strong profile emphasizing recent test scores and patience with struggling students. Reviews matter way more than credentials.</p>
+      <ul>
+        <li><strong>Pay rate:</strong> $20-35/hour depending on subject</li>
+        <li><strong>Schedule:</strong> Evenings and weekends worked perfectly. I did 10-15 hours per month during busy school weeks, 20+ hours during breaks.</li>
+        <li><strong>How I got students:</strong> Created a strong profile emphasizing recent test scores and patience with struggling students. Reviews matter way more than credentials.</li>
+      </ul>
 
       <h2>Side Hustle 3: Freelance Writing ($500-1,000/month)</h2>
       <p>I wrote blog posts for small businesses. Most assignments were 800-1,200 words, which I could knock out between classes or during slow library shifts.</p>
 
-      <p><strong>Where I found work:</strong> Upwork, Fiverr, and Contently</p>
-
-      <p><strong>Pay rate:</strong> Started at $50 per article, worked up to $150-200 as I got better and faster</p>
-
-      <p><strong>Best part:</strong> Completely flexible. If I had exams, I just did not take new assignments that week.</p>
+      <ul>
+        <li><strong>Where I found work:</strong> Upwork, Fiverr, and Contently</li>
+        <li><strong>Pay rate:</strong> Started at $50 per article, worked up to $150-200 as I got better and faster</li>
+        <li><strong>Best part:</strong> Completely flexible. If I had exams, I just did not take new assignments that week.</li>
+      </ul>
 
       <h2>Side Hustle 4: Social Media Management for Local Businesses ($300-700/month)</h2>
       <p>I managed Instagram and Facebook for a local coffee shop and a gym near campus. They got consistent content, I got steady income.</p>
 
-      <p><strong>Time commitment:</strong> 4-6 hours per month per client</p>
-
-      <p><strong>What I did:</strong> Planned a month of posts, batch-created content using Canva, and scheduled everything using Later.com.</p>
-
-      <p><strong>How I landed clients:</strong> Walked into local businesses and asked if they needed social media help. Showed examples of what I could create. Started with a trial month.</p>
+      <ul>
+        <li><strong>Time commitment:</strong> 4-6 hours per month per client</li>
+        <li><strong>What I did:</strong> Planned a month of posts, batch-created content using Canva, and scheduled everything using Later.com.</li>
+        <li><strong>How I landed clients:</strong> Walked into local businesses and asked if they needed social media help. Showed examples of what I could create. Started with a trial month.</li>
+      </ul>
 
       <h2>Side Hustle 5: Survey Sites and Micro Tasks ($150-300/month)</h2>
       <p>Not life-changing money, but perfect for dead time: waiting for class, sitting in the student union, boring lectures.</p>
 
-      <p><strong>Sites that actually paid:</strong> Survey Junkie, Swagbucks, Amazon MTurk</p>
-
-      <p><strong>Reality check:</strong> You will not get rich. But I made $10-15/hour during downtime I would have wasted on Instagram anyway.</p>
+      <ul>
+        <li><strong>Sites that actually paid:</strong> Survey Junkie, Swagbucks, Amazon MTurk</li>
+        <li><strong>Reality check:</strong> You will not get rich. But I made $10-15/hour during downtime I would have wasted on Instagram anyway.</li>
+      </ul>
 
       <h2>Side Hustle 6: Campus Ambassador Programs ($200-500/month)</h2>
       <p>Companies pay students to promote their products on campus. I was an ambassador for a meal kit service and a student discount app.</p>
 
-      <p><strong>What I did:</strong> Posted on social media, handed out flyers, got friends to sign up</p>
-
-      <p><strong>Pay structure:</strong> $100/month base + commission per referral</p>
-
-      <p><strong>Best part:</strong> Fun, social, and I could do it between classes or at campus events</p>
+      <ul>
+        <li><strong>What I did:</strong> Posted on social media, handed out flyers, got friends to sign up</li>
+        <li><strong>Pay structure:</strong> $100/month base + commission per referral</li>
+        <li><strong>Best part:</strong> Fun, social, and I could do it between classes or at campus events</li>
+      </ul>
 
       <h2>Side Hustle 7: Selling Class-Specific Study Materials on Etsy ($200-600/month)</h2>
       <p>I created exam study guides, flashcard sets, and formula sheets for my major (biology). Sold them on Etsy for $8-15 each.</p>
 
-      <p><strong>Time to create:</strong> 3-5 hours per study guide</p>
-
-      <p><strong>Income:</strong> Once created, they sold passively. My anatomy study guide made $400 over two semesters.</p>
-
-      <p><strong>Pro tip:</strong> Create materials for classes you just finished while the content is fresh.</p>
+      <ul>
+        <li><strong>Time to create:</strong> 3-5 hours per study guide</li>
+        <li><strong>Income:</strong> Once created, they sold passively. My anatomy study guide made $400 over two semesters.</li>
+        <li><strong>Pro tip:</strong> Create materials for classes you just finished while the content is fresh.</li>
+      </ul>
 
       <h2>Side Hustle 8: Proofreading and Editing ($300-600/month)</h2>
       <p>I proofread essays, theses, and application materials for other students and graduate students.</p>
 
-      <p><strong>Pay rate:</strong> $15-30 per document depending on length</p>
-
-      <p><strong>Where I advertised:</strong> Campus Facebook groups, flyers in the library, word of mouth</p>
-
-      <p><strong>Busy seasons:</strong> End of semester, grad school application deadlines. I made $800 in November alone editing application essays.</p>
+      <ul>
+        <li><strong>Pay rate:</strong> $15-30 per document depending on length</li>
+        <li><strong>Where I advertised:</strong> Campus Facebook groups, flyers in the library, word of mouth</li>
+        <li><strong>Busy seasons:</strong> End of semester, grad school application deadlines. I made $800 in November alone editing application essays.</li>
+      </ul>
 
       <h2>Side Hustle 9: Reselling Textbooks and Course Materials ($300-800/semester)</h2>
       <p>I bought used textbooks cheap at the end of the semester, then resold them on Amazon and Chegg when demand was high at the start of next semester.</p>
 
-      <p><strong>Strategy:</strong> Buy books in May for $20-30, sell them in August for $60-90</p>
-
-      <p><strong>Time investment:</strong> Maybe 5 hours per semester finding deals and listing books</p>
-
-      <p><strong>Profit margin:</strong> Usually doubled my money</p>
+      <ul>
+        <li><strong>Strategy:</strong> Buy books in May for $20-30, sell them in August for $60-90</li>
+        <li><strong>Time investment:</strong> Maybe 5 hours per semester finding deals and listing books</li>
+        <li><strong>Profit margin:</strong> Usually doubled my money</li>
+      </ul>
 
       <h2>Side Hustle 10: Virtual Assistant Work ($400-900/month)</h2>
       <p>I helped two online entrepreneurs with email management, calendar scheduling, and basic admin tasks.</p>
 
-      <p><strong>Pay rate:</strong> $15-20/hour</p>
-
-      <p><strong>Hours:</strong> 10-15 per month during school, 20-30 during breaks</p>
-
-      <p><strong>How I found clients:</strong> Upwork, Belay, and Fancy Hands. Emphasized my availability and organization skills.</p>
+      <ul>
+        <li><strong>Pay rate:</strong> $15-20/hour</li>
+        <li><strong>Hours:</strong> 10-15 per month during school, 20-30 during breaks</li>
+        <li><strong>How I found clients:</strong> Upwork, Belay, and Fancy Hands. Emphasized my availability and organization skills.</li>
+      </ul>
 
       <h2>My Actual Monthly Income Breakdown (Senior Year)</h2>
       <ul>
@@ -470,20 +494,19 @@ export const sideHustles = [
       <p><strong>My GPA:</strong> 3.7. Side hustles did not hurt my grades because I treated them like another class with a schedule.</p>
 
       <h2>Mistakes I Made</h2>
-      <p><strong>1. Overcommitting during finals week:</strong> I took on too many tutoring students in December. My stress level was insane. Learned to build in buffer time.</p>
-
-      <p><strong>2. Not tracking expenses:</strong> I owed taxes at the end of the year and had no records of business expenses I could have deducted.</p>
-
-      <p><strong>3. Saying yes to low-paying work:</strong> Early on, I took $25 writing gigs. Not worth it. I should have held out for better rates.</p>
+      <ul>
+        <li><strong>1. Overcommitting during finals week:</strong> I took on too many tutoring students in December. My stress level was insane. Learned to build in buffer time.</li>
+        <li><strong>2. Not tracking expenses:</strong> I owed taxes at the end of the year and had no records of business expenses I could have deducted.</li>
+        <li><strong>3. Saying yes to low-paying work:</strong> Early on, I took $25 writing gigs. Not worth it. I should have held out for better rates.</li>
+      </ul>
 
       <h2>Tips for Getting Started</h2>
-      <p><strong>Start with one side hustle:</strong> Do not try to do everything. Pick one from this list, get it working, then add another.</p>
-
-      <p><strong>Use campus resources:</strong> Career centers, job boards, and networking events can connect you with opportunities.</p>
-
-      <p><strong>Track everything:</strong> Hours worked, money earned, taxes owed. Use a simple spreadsheet or app like Toggl.</p>
-
-      <p><strong>Protect your academic performance:</strong> Side hustles should support your education, not replace it. If grades slip, scale back.</p>
+      <ul>
+        <li><strong>Start with one side hustle:</strong> Do not try to do everything. Pick one from this list, get it working, then add another.</li>
+        <li><strong>Use campus resources:</strong> Career centers, job boards, and networking events can connect you with opportunities.</li>
+        <li><strong>Track everything:</strong> Hours worked, money earned, taxes owed. Use a simple spreadsheet or app like Toggl.</li>
+        <li><strong>Protect your academic performance:</strong> Side hustles should support your education, not replace it. If grades slip, scale back.</li>
+      </ul>
 
       <h2>Want Full-Time Remote Work After Graduation?</h2>
       <p>Side hustles are great for flexible student income, but if you are graduating soon and want a stable remote career, check out our <a href="/" className="text-blue-600 hover:text-blue-700 underline">remote job listings</a>. Many entry-level positions are perfect for recent grads looking to start a remote career.</p>
@@ -533,95 +556,81 @@ export const sideHustles = [
       <h2>The 7 Survey Sites Worth Your Time</h2>
 
       <h3>1. Survey Junkie</h3>
-      <p><strong>Total earned in 3 months:</strong> $387</p>
-      <p><strong>Time invested:</strong> 24 hours</p>
-      <p><strong>Effective hourly rate:</strong> $16.13/hour</p>
-
-      <p><strong>Why it works:</strong> Survey Junkie has the highest pay-per-survey rate I found. Most surveys pay $1-3 and take 10-15 minutes. The disqualification rate is lower than competitors.</p>
-
-      <p><strong>Payout options:</strong> PayPal or gift cards. Minimum $10 cashout.</p>
-
-      <p><strong>Disqualification rate:</strong> ~30 percent (better than most)</p>
-
-      <p><strong>Verdict:</strong> Best overall survey site. If you only sign up for one, make it this one.</p>
+      <ul>
+        <li><strong>Total earned in 3 months:</strong> $387</li>
+        <li><strong>Time invested:</strong> 24 hours</li>
+        <li><strong>Effective hourly rate:</strong> $16.13/hour</li>
+        <li><strong>Why it works:</strong> Survey Junkie has the highest pay-per-survey rate I found. Most surveys pay $1-3 and take 10-15 minutes. The disqualification rate is lower than competitors.</li>
+        <li><strong>Payout options:</strong> PayPal or gift cards. Minimum $10 cashout.</li>
+        <li><strong>Disqualification rate:</strong> ~30 percent (better than most)</li>
+        <li><strong>Verdict:</strong> Best overall survey site. If you only sign up for one, make it this one.</li>
+      </ul>
 
       <h3>2. Swagbucks</h3>
-      <p><strong>Total earned in 3 months:</strong> $312</p>
-      <p><strong>Time invested:</strong> 21 hours</p>
-      <p><strong>Effective hourly rate:</strong> $14.86/hour</p>
-
-      <p><strong>Why it works:</strong> Swagbucks is not just surveys. You earn points for watching videos, shopping online, and searching the web. Surveys are hit-or-miss, but other earning options make up for it.</p>
-
-      <p><strong>Payout options:</strong> PayPal, Amazon gift cards, Visa gift cards</p>
-
-      <p><strong>Best feature:</strong> Daily bonus for hitting earning goals</p>
-
-      <p><strong>Verdict:</strong> Great for people who want multiple earning options beyond just surveys.</p>
+      <ul>
+        <li><strong>Total earned in 3 months:</strong> $312</li>
+        <li><strong>Time invested:</strong> 21 hours</li>
+        <li><strong>Effective hourly rate:</strong> $14.86/hour</li>
+        <li><strong>Why it works:</strong> Swagbucks is not just surveys. You earn points for watching videos, shopping online, and searching the web. Surveys are hit-or-miss, but other earning options make up for it.</li>
+        <li><strong>Payout options:</strong> PayPal, Amazon gift cards, Visa gift cards</li>
+        <li><strong>Best feature:</strong> Daily bonus for hitting earning goals</li>
+        <li><strong>Verdict:</strong> Great for people who want multiple earning options beyond just surveys.</li>
+      </ul>
 
       <h3>3. Branded Surveys</h3>
-      <p><strong>Total earned in 3 months:</strong> $218</p>
-      <p><strong>Time invested:</strong> 16 hours</p>
-      <p><strong>Effective hourly rate:</strong> $13.63/hour</p>
-
-      <p><strong>Why it works:</strong> Consistent survey availability. I never ran out of surveys to take. The interface is clean and easy to use.</p>
-
-      <p><strong>Payout options:</strong> PayPal or gift cards. Minimum $10 cashout.</p>
-
-      <p><strong>Loyalty program:</strong> Earn bonus points the more you survey</p>
-
-      <p><strong>Verdict:</strong> Solid secondary site with reliable survey flow.</p>
+      <ul>
+        <li><strong>Total earned in 3 months:</strong> $218</li>
+        <li><strong>Time invested:</strong> 16 hours</li>
+        <li><strong>Effective hourly rate:</strong> $13.63/hour</li>
+        <li><strong>Why it works:</strong> Consistent survey availability. I never ran out of surveys to take. The interface is clean and easy to use.</li>
+        <li><strong>Payout options:</strong> PayPal or gift cards. Minimum $10 cashout.</li>
+        <li><strong>Loyalty program:</strong> Earn bonus points the more you survey</li>
+        <li><strong>Verdict:</strong> Solid secondary site with reliable survey flow.</li>
+      </ul>
 
       <h3>4. Prolific</h3>
-      <p><strong>Total earned in 3 months:</strong> $156</p>
-      <p><strong>Time invested:</strong> 9 hours</p>
-      <p><strong>Effective hourly rate:</strong> $17.33/hour</p>
-
-      <p><strong>Why it works:</strong> Prolific is different. These are academic research studies, not marketing surveys. Pay is higher, disqualifications are rare, and surveys are actually interesting.</p>
-
-      <p><strong>Payout options:</strong> PayPal only. Minimum $5 cashout.</p>
-
-      <p><strong>Catch:</strong> Fewer surveys available than other sites, but quality over quantity.</p>
-
-      <p><strong>Verdict:</strong> Highest hourly rate, but limited availability. Great to have as a backup.</p>
+      <ul>
+        <li><strong>Total earned in 3 months:</strong> $156</li>
+        <li><strong>Time invested:</strong> 9 hours</li>
+        <li><strong>Effective hourly rate:</strong> $17.33/hour</li>
+        <li><strong>Why it works:</strong> Prolific is different. These are academic research studies, not marketing surveys. Pay is higher, disqualifications are rare, and surveys are actually interesting.</li>
+        <li><strong>Payout options:</strong> PayPal only. Minimum $5 cashout.</li>
+        <li><strong>Catch:</strong> Fewer surveys available than other sites, but quality over quantity.</li>
+        <li><strong>Verdict:</strong> Highest hourly rate, but limited availability. Great to have as a backup.</li>
+      </ul>
 
       <h3>5. InboxDollars</h3>
-      <p><strong>Total earned in 3 months:</strong> $94</p>
-      <p><strong>Time invested:</strong> 8 hours</p>
-      <p><strong>Effective hourly rate:</strong> $11.75/hour</p>
-
-      <p><strong>Why it works:</strong> InboxDollars pays in actual cash, not points. You see your dollar amount going up, which is psychologically satisfying.</p>
-
-      <p><strong>Payout options:</strong> Check or gift cards. Minimum $30 cashout (high, but achievable)</p>
-
-      <p><strong>Bonus:</strong> $5 sign-up bonus just for joining</p>
-
-      <p><strong>Verdict:</strong> Decent option, but higher cashout minimum means longer wait for payout.</p>
+      <ul>
+        <li><strong>Total earned in 3 months:</strong> $94</li>
+        <li><strong>Time invested:</strong> 8 hours</li>
+        <li><strong>Effective hourly rate:</strong> $11.75/hour</li>
+        <li><strong>Why it works:</strong> InboxDollars pays in actual cash, not points. You see your dollar amount going up, which is psychologically satisfying.</li>
+        <li><strong>Payout options:</strong> Check or gift cards. Minimum $30 cashout (high, but achievable)</li>
+        <li><strong>Bonus:</strong> $5 sign-up bonus just for joining</li>
+        <li><strong>Verdict:</strong> Decent option, but higher cashout minimum means longer wait for payout.</li>
+      </ul>
 
       <h3>6. Pinecone Research</h3>
-      <p><strong>Total earned in 3 months:</strong> $63</p>
-      <p><strong>Time invested:</strong> 6 hours</p>
-      <p><strong>Effective hourly rate:</strong> $10.50/hour</p>
-
-      <p><strong>Why it works:</strong> Pinecone Research is invitation-only and exclusive. Surveys pay $3 flat rate, every time. No disqualifications once you start a survey.</p>
-
-      <p><strong>Payout options:</strong> PayPal, check, or prizes</p>
-
-      <p><strong>Catch:</strong> Limited survey availability. You might only get 1-2 per week.</p>
-
-      <p><strong>Verdict:</strong> Great as a supplement, but you cannot rely on it for consistent income.</p>
+      <ul>
+        <li><strong>Total earned in 3 months:</strong> $63</li>
+        <li><strong>Time invested:</strong> 6 hours</li>
+        <li><strong>Effective hourly rate:</strong> $10.50/hour</li>
+        <li><strong>Why it works:</strong> Pinecone Research is invitation-only and exclusive. Surveys pay $3 flat rate, every time. No disqualifications once you start a survey.</li>
+        <li><strong>Payout options:</strong> PayPal, check, or prizes</li>
+        <li><strong>Catch:</strong> Limited survey availability. You might only get 1-2 per week.</li>
+        <li><strong>Verdict:</strong> Great as a supplement, but you cannot rely on it for consistent income.</li>
+      </ul>
 
       <h3>7. OneOpinion</h3>
-      <p><strong>Total earned in 3 months:</strong> $47</p>
-      <p><strong>Time invested:</strong> 5 hours</p>
-      <p><strong>Effective hourly rate:</strong> $9.40/hour</p>
-
-      <p><strong>Why it works:</strong> OneOpinion occasionally has high-paying surveys ($10-20) for product testing and in-depth research.</p>
-
-      <p><strong>Payout options:</strong> PayPal or gift cards. Minimum $25 cashout.</p>
-
-      <p><strong>Best feature:</strong> Product testing opportunities where they send you free stuff to review</p>
-
-      <p><strong>Verdict:</strong> Worth having for occasional high-paying surveys, but not consistent enough as a primary site.</p>
+      <ul>
+        <li><strong>Total earned in 3 months:</strong> $47</li>
+        <li><strong>Time invested:</strong> 5 hours</li>
+        <li><strong>Effective hourly rate:</strong> $9.40/hour</li>
+        <li><strong>Why it works:</strong> OneOpinion occasionally has high-paying surveys ($10-20) for product testing and in-depth research.</li>
+        <li><strong>Payout options:</strong> PayPal or gift cards. Minimum $25 cashout.</li>
+        <li><strong>Best feature:</strong> Product testing opportunities where they send you free stuff to review</li>
+        <li><strong>Verdict:</strong> Worth having for occasional high-paying surveys, but not consistent enough as a primary site.</li>
+      </ul>
 
       <h2>The 8 Sites I Do NOT Recommend</h2>
       <p>I tested these and they were not worth the time:</p>
@@ -637,23 +646,14 @@ export const sideHustles = [
       </ul>
 
       <h2>My Survey Strategy That Maximizes Earnings</h2>
-      <p><strong>1. Sign up for all 7 recommended sites</strong></p>
-      <p>Do not rely on just one. Survey availability fluctuates. Having multiple sites ensures you always have options.</p>
-
-      <p><strong>2. Complete your profile on each site</strong></p>
-      <p>Detailed profiles = better survey matches = fewer disqualifications. Spend 10 minutes filling out demographics, interests, and habits.</p>
-
-      <p><strong>3. Check sites 2-3 times per day</strong></p>
-      <p>High-paying surveys fill up fast. I check sites in the morning, at lunch, and in the evening.</p>
-
-      <p><strong>4. Use dead time only</strong></p>
-      <p>Do not carve out dedicated "survey time." Do them while waiting for appointments, during TV commercial breaks, or in line at the store.</p>
-
-      <p><strong>5. Track your hourly rate</strong></p>
-      <p>If a survey says it pays $2 and takes 30 minutes, that is $4/hour. Not worth it. I skip surveys that pay less than $10/hour equivalent.</p>
-
-      <p><strong>6. Cash out as soon as you hit minimum</strong></p>
-      <p>Do not let points sit. Sites can change policies or shut down. Get your money out regularly.</p>
+      <ul>
+        <li><strong>1. Sign up for all 7 recommended sites:</strong> Do not rely on just one. Survey availability fluctuates. Having multiple sites ensures you always have options.</li>
+        <li><strong>2. Complete your profile on each site:</strong> Detailed profiles = better survey matches = fewer disqualifications. Spend 10 minutes filling out demographics, interests, and habits.</li>
+        <li><strong>3. Check sites 2-3 times per day:</strong> High-paying surveys fill up fast. I check sites in the morning, at lunch, and in the evening.</li>
+        <li><strong>4. Use dead time only:</strong> Do not carve out dedicated "survey time." Do them while waiting for appointments, during TV commercial breaks, or in line at the store.</li>
+        <li><strong>5. Track your hourly rate:</strong> If a survey says it pays $2 and takes 30 minutes, that is $4/hour. Not worth it. I skip surveys that pay less than $10/hour equivalent.</li>
+        <li><strong>6. Cash out as soon as you hit minimum:</strong> Do not let points sit. Sites can change policies or shut down. Get your money out regularly.</li>
+      </ul>
 
       <h2>Red Flags to Avoid</h2>
       <p><strong>Avoid sites that:</strong></p>
@@ -733,15 +733,13 @@ export const sideHustles = [
         <li>Meeting notes template: $8</li>
       </ul>
 
-      <p><strong>Where I sell:</strong> Etsy and Gumroad</p>
-
-      <p><strong>Time to create:</strong> 5-8 hours per template initially, then minor updates as needed</p>
-
-      <p><strong>Monthly sales:</strong> 80-120 templates per month across all products</p>
-
-      <p><strong>Why they sell:</strong> People want systems that work immediately. My templates solve specific, annoying problems: tracking projects, organizing client info, planning your day.</p>
-
-      <p><strong>How I created them:</strong> I built systems for my own freelance work, then packaged them as templates. They are tools I actually use, which makes them authentic.</p>
+      <ul>
+        <li><strong>Where I sell:</strong> Etsy and Gumroad</li>
+        <li><strong>Time to create:</strong> 5-8 hours per template initially, then minor updates as needed</li>
+        <li><strong>Monthly sales:</strong> 80-120 templates per month across all products</li>
+        <li><strong>Why they sell:</strong> People want systems that work immediately. My templates solve specific, annoying problems: tracking projects, organizing client info, planning your day.</li>
+        <li><strong>How I created them:</strong> I built systems for my own freelance work, then packaged them as templates. They are tools I actually use, which makes them authentic.</li>
+      </ul>
 
       <h2>Product 2: Canva Templates for Social Media ($600-900/month)</h2>
       <p>I created Instagram post templates, story templates, and LinkedIn carousels designed for entrepreneurs and small businesses.</p>
@@ -753,13 +751,12 @@ export const sideHustles = [
         <li>20 Instagram story templates: $15</li>
       </ul>
 
-      <p><strong>Platform:</strong> Etsy and Creative Market</p>
-
-      <p><strong>Time to create:</strong> 12-15 hours per bundle</p>
-
-      <p><strong>Why they sell:</strong> Small business owners and solopreneurs need consistent social media content but do not have time or design skills. My templates let them look professional in 5 minutes.</p>
-
-      <p><strong>Pro tip:</strong> I created templates in specific niches (fitness coaches, real estate agents, life coaches) which sell way better than generic templates.</p>
+      <ul>
+        <li><strong>Platform:</strong> Etsy and Creative Market</li>
+        <li><strong>Time to create:</strong> 12-15 hours per bundle</li>
+        <li><strong>Why they sell:</strong> Small business owners and solopreneurs need consistent social media content but do not have time or design skills. My templates let them look professional in 5 minutes.</li>
+        <li><strong>Pro tip:</strong> I created templates in specific niches (fitness coaches, real estate agents, life coaches) which sell way better than generic templates.</li>
+      </ul>
 
       <h2>Product 3: Printable Planners and Worksheets ($400-700/month)</h2>
       <p>I sell printable planners, habit trackers, and productivity worksheets that people can download and print at home.</p>
@@ -771,20 +768,20 @@ export const sideHustles = [
         <li>Goal-setting workbook: $15</li>
       </ul>
 
-      <p><strong>Platform:</strong> Etsy exclusively</p>
-
-      <p><strong>Time to create:</strong> 4-6 hours per product</p>
-
-      <p><strong>Why they sell:</strong> People love physical planners but want instant access. Printables give them the best of both worlds.</p>
+      <ul>
+        <li><strong>Platform:</strong> Etsy exclusively</li>
+        <li><strong>Time to create:</strong> 4-6 hours per product</li>
+        <li><strong>Why they sell:</strong> People love physical planners but want instant access. Printables give them the best of both worlds.</li>
+      </ul>
 
       <h2>Product 4: Email Templates for Freelancers ($300-500/month)</h2>
       <p>I created a collection of email templates freelancers can use for common situations: pitching clients, following up, sending invoices, handling scope creep.</p>
 
-      <p><strong>Product:</strong> 50 email templates for $29</p>
-
-      <p><strong>Platform:</strong> Gumroad</p>
-
-      <p><strong>Why it works:</strong> Freelancers hate writing the same emails over and over. My templates save them time and make them sound professional.</p>
+      <ul>
+        <li><strong>Product:</strong> 50 email templates for $29</li>
+        <li><strong>Platform:</strong> Gumroad</li>
+        <li><strong>Why it works:</strong> Freelancers hate writing the same emails over and over. My templates save them time and make them sound professional.</li>
+      </ul>
 
       <h2>How I Actually Make Sales</h2>
       <p>Creating the product is only half the battle. Getting people to buy it is the hard part. Here is what actually worked:</p>
@@ -803,28 +800,35 @@ export const sideHustles = [
       <h3>Strategy 2: Pinterest</h3>
       <p>I create pins for each product linking directly to my Etsy listings. Pinterest drives 20 percent of my traffic.</p>
 
-      <p><strong>What works:</strong> Pins that show the product in use with clear text overlay explaining the benefit</p>
-
-      <p><strong>Time investment:</strong> 2 hours per month creating and scheduling pins</p>
+      <ul>
+        <li><strong>What works:</strong> Pins that show the product in use with clear text overlay explaining the benefit</li>
+        <li><strong>Time investment:</strong> 2 hours per month creating and scheduling pins</li>
+      </ul>
 
       <h3>Strategy 3: Instagram Content</h3>
       <p>I post productivity tips and behind-the-scenes content on Instagram. My bio links to my Etsy shop.</p>
 
-      <p><strong>Conversion rate:</strong> Low (maybe 2-3 sales per month directly from Instagram), but it builds brand awareness</p>
+      <ul>
+        <li><strong>Conversion rate:</strong> Low (maybe 2-3 sales per month directly from Instagram), but it builds brand awareness</li>
+      </ul>
 
       <h2>Mistakes I Made (So You Do Not Have To)</h2>
 
       <h3>Mistake 1: Creating Products Nobody Wanted</h3>
       <p>My first product was a complex meal planning template. I spent 15 hours building it. It sold 3 copies in 2 months.</p>
 
-      <p><strong>Lesson:</strong> Validate demand before you build. Check if similar products are selling, read reviews to see what people actually want.</p>
+      <ul>
+        <li><strong>Lesson:</strong> Validate demand before you build. Check if similar products are selling, read reviews to see what people actually want.</li>
+      </ul>
 
       <h3>Mistake 2: Underpricing</h3>
       <p>I initially priced my Notion templates at $5. They sold, but I was undervaluing my work.</p>
 
       <p>When I raised prices to $12-18, sales barely dropped. I just made way more per sale.</p>
 
-      <p><strong>Lesson:</strong> Price based on value, not what feels comfortable. If your product solves a real problem, people will pay for it.</p>
+      <ul>
+        <li><strong>Lesson:</strong> Price based on value, not what feels comfortable. If your product solves a real problem, people will pay for it.</li>
+      </ul>
 
       <h3>Mistake 3: Not Creating Bundles</h3>
       <p>I sold individual templates for months before realizing I could bundle them.</p>
@@ -840,9 +844,11 @@ export const sideHustles = [
         <li><strong>Tailwind:</strong> For scheduling Pinterest pins ($10/month)</li>
       </ul>
 
-      <p><strong>Total monthly costs:</strong> $33</p>
-      <p><strong>Average monthly revenue:</strong> $2,800</p>
-      <p><strong>Profit margin:</strong> Over 95 percent after platform fees</p>
+      <ul>
+        <li><strong>Total monthly costs:</strong> $33</li>
+        <li><strong>Average monthly revenue:</strong> $2,800</li>
+        <li><strong>Profit margin:</strong> Over 95 percent after platform fees</li>
+      </ul>
 
       <h2>How Long Until I Made Money</h2>
       <p>Timeline from start to $3,000/month:</p>
@@ -864,7 +870,9 @@ export const sideHustles = [
         <li>Marketing (Pinterest, Instagram) (4-5 hours per month)</li>
       </ul>
 
-      <p><strong>Total time investment now:</strong> 20-25 hours per month to maintain $3,000/month income</p>
+      <ul>
+        <li><strong>Total time investment now:</strong> 20-25 hours per month to maintain $3,000/month income</li>
+      </ul>
 
       <p>That is $120-150 per hour. Way better than my freelance rate.</p>
 

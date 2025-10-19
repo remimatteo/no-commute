@@ -9,7 +9,8 @@
       "Bash(npm run dev)",
       "Bash(curl:*)",
       "Bash(taskkill:*)",
-      "Bash(git config --list)"
+      "Bash(git config --list)",
+      "Read(//c/Users/Potato 99/Desktop/**)"
     ],
     "deny": [],
     "ask": []
