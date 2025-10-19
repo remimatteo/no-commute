@@ -8,16 +8,18 @@ const pool = new Pool({
 });
 
 export default async function handler(req, res) {
+  // Set cache headers for better performance
+  res.setHeader('Cache-Control', 'public, s-maxage=60, stale-while-revalidate=300');
+  
   try {
-    const { 
-      page = 1, 
-      limit = 2000, 
-      category, 
-      location, 
-      type, 
+    const {
+      page = 1,
+      limit = 100, // Reduced from 2000 to 100 for faster initial load
+      category,
+      location,
       salaryListed,
       search,
-      experience 
+      experience
     } = req.query;
 
     const offset = (page - 1) * limit;
@@ -36,12 +38,6 @@ export default async function handler(req, res) {
     if (location && location !== 'All') {
       filters.push(`location ILIKE $${paramCount}`);
       values.push(`%${location}%`);
-      paramCount++;
-    }
-
-    if (type && type !== 'All') {
-      filters.push(`type = $${paramCount}`);
-      values.push(type);
       paramCount++;
     }
 
@@ -91,9 +87,9 @@ export default async function handler(req, res) {
     const result = await pool.query(`
       SELECT * FROM jobs
       ${whereClause}
-      ORDER BY
+      ORDER BY 
         COALESCE(featured, false) DESC,
-        created_at DESC
+        RANDOM()
       LIMIT $${paramCount} OFFSET $${paramCount + 1}
     `, [...values, limit, offset]);
 
