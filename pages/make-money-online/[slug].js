@@ -91,16 +91,16 @@ export default function SideHustlePage() {
             prose-code:bg-gray-100 prose-code:text-gray-900 prose-code:px-2 prose-code:py-1 prose-code:rounded
             prose-table:my-8 prose-th:bg-gray-100 prose-th:p-3 prose-td:p-3 prose-td:border prose-td:border-gray-200
             prose-img:rounded-lg prose-img:shadow-md prose-img:my-8
-            [&>h2]:text-3xl [&>h2]:mt-12 [&>h2]:mb-6 [&>h2]:pb-3 [&>h2]:border-b-2 [&>h2]:border-gray-200 [&>h2]:font-bold
-            [&>h3]:text-2xl [&>h3]:mt-8 [&>h3]:mb-4 [&>h3]:font-bold
-            [&>p]:text-gray-700 [&>p]:leading-relaxed [&>p]:mb-6 [&>p]:text-lg
-            [&>ul]:my-6 [&>ul]:space-y-3 [&>ul]:pl-6
-            [&>ol]:my-6 [&>ol]:space-y-3 [&>ol]:pl-6
-            [&>li]:text-gray-700 [&>li]:leading-relaxed [&>li]:text-lg
-            [&>blockquote]:border-l-4 [&>blockquote]:border-blue-500 [&>blockquote]:pl-6 [&>blockquote]:italic [&>blockquote]:bg-blue-50 [&>blockquote]:py-4 [&>blockquote]:my-6 [&>blockquote]:rounded-r-lg
-            [&>table]:w-full [&>table]:my-8 [&>table]:border [&>table]:border-gray-200 [&>table]:rounded-lg [&>table]:overflow-hidden
-            [&>table>thead>tr>th]:bg-gray-100 [&>table>thead>tr>th]:p-3 [&>table>thead>tr>th]:font-bold [&>table>thead>tr>th]:text-left
-            [&>table>tbody>tr>td]:p-3 [&>table>tbody>tr>td]:border-t [&>table>tbody>tr>td]:border-gray-200
+            [&>div>h2]:text-3xl [&>div>h2]:mt-12 [&>div>h2]:mb-6 [&>div>h2]:pb-3 [&>div>h2]:border-b-2 [&>div>h2]:border-gray-200 [&>div>h2]:font-bold
+            [&>div>h3]:text-2xl [&>div>h3]:mt-8 [&>div>h3]:mb-4 [&>div>h3]:font-bold
+            [&>div>p]:text-gray-700 [&>div>p]:leading-relaxed [&>div>p]:mb-6 [&>div>p]:text-lg
+            [&>div>ul]:my-6 [&>div>ul]:space-y-3 [&>div>ul]:pl-6
+            [&>div>ol]:my-6 [&>div>ol]:space-y-3 [&>div>ol]:pl-6
+            [&>div>li]:text-gray-700 [&>div>li]:leading-relaxed [&>div>li]:text-lg
+            [&>div>blockquote]:border-l-4 [&>div>blockquote]:border-blue-500 [&>div>blockquote]:pl-6 [&>div>blockquote]:italic [&>div>blockquote]:bg-blue-50 [&>div>blockquote]:py-4 [&>div>blockquote]:my-6 [&>div>blockquote]:rounded-r-lg
+            [&>div>table]:w-full [&>div>table]:my-8 [&>div>table]:border [&>div>table]:border-gray-200 [&>div>table]:rounded-lg [&>div>table]:overflow-hidden
+            [&>div>table>thead>tr>th]:bg-gray-100 [&>div>table>thead>tr>th]:p-3 [&>div>table>thead>tr>th]:font-bold [&>div>table>thead>tr>th]:text-left
+            [&>div>table>tbody>tr>td]:p-3 [&>div>table>tbody>tr>td]:border-t [&>div>table>tbody>tr>td]:border-gray-200
           ">
             <div dangerouslySetInnerHTML={{ __html: hustle.content }} />
           </div>
