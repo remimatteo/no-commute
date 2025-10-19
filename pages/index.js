@@ -160,16 +160,18 @@ export default function Home() {
   const [darkMode, setDarkMode] = useState(false);
   const [category, setCategory] = useState("All");
   const [location, setLocation] = useState("USA");
+  const [type, setType] = useState("All");
   const [salaryListed, setSalaryListed] = useState("All");
   const [experience, setExperience] = useState("All");
-
+  
   // Memoize filterState to prevent unnecessary re-renders
   const filterState = useMemo(() => ({
     category,
     location,
+    type,
     salaryListed,
     experience
-  }), [category, location, salaryListed, experience]);
+  }), [category, location, type, salaryListed, experience]);
   
   const [typedText, setTypedText] = useState('');
   const [typingIndex, setTypingIndex] = useState(0);
@@ -191,6 +193,7 @@ const [totalJobs, setTotalJobs] = useState(0);
         const queryParams = new URLSearchParams({
           category,
           location,
+          type,
           salaryListed,
           experience,
           search: searchQuery,
@@ -236,7 +239,7 @@ const [totalJobs, setTotalJobs] = useState(0);
     return () => {
       isMounted = false;
     };
-  }, [category, location, salaryListed, experience, searchQuery]);
+  }, [category, location, type, salaryListed, experience, searchQuery]);
 
   // Typing animation effect
   useEffect(() => {
@@ -300,7 +303,7 @@ const [totalJobs, setTotalJobs] = useState(0);
   // Reset visible jobs count when search/filters change
   useEffect(() => {
     setVisibleJobsCount(30);
-  }, [searchQuery, category, location, salaryListed, experience]);
+  }, [searchQuery, category, location, type, salaryListed, experience]);
 
   // Smart search with operators - memoized to prevent infinite re-renders
   const filteredJobs = useMemo(() => jobs
@@ -607,6 +610,19 @@ const [totalJobs, setTotalJobs] = useState(0);
                         <option value="Canada">Canada</option>
                         <option value="UK">UK</option>
                         <option value="Australia">Australia</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className={`block text-sm font-semibold ${darkMode ? 'text-gray-300' : 'text-gray-700'} mb-2`}>Job Type</label>
+                      <select
+                        value={type}
+                        onChange={(e) => setType(e.target.value)}
+                        className={`w-full ${darkMode ? 'bg-gray-700 text-white border-gray-600' : 'bg-gray-50 text-gray-900 border-gray-300'} border rounded-xl px-4 py-2 outline-none transition-colors`}
+                      >
+                        <option value="All">All Types</option>
+                        <option value="Full Time">Full Time</option>
+                        <option value="Contract">Contract</option>
+                        <option value="Part Time">Part Time</option>
                       </select>
                     </div>
                     <div>
