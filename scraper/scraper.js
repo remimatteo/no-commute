@@ -536,6 +536,160 @@ async function cleanupOldJobs() {
   }
 }
 
+// Scrape Himalayas API
+async function scrapeHimalayas() {
+  console.log('🔍 Fetching jobs from Himalayas API...');
+
+  try {
+    // Himalayas API with pagination - fetch first 100 jobs
+    const response = await fetch('https://himalayas.app/jobs/api?limit=100', {
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    const jobs = data.jobs || [];
+
+    console.log(`📦 Found ${jobs.length} jobs from Himalayas API (out of ${data.totalCount} total)`);
+
+    let inserted = 0;
+    let skipped = 0;
+    let errors = 0;
+
+    for (const job of jobs) {
+      try {
+        if (!job.applicationLink) {
+          errors++;
+          continue;
+        }
+
+        // Check for duplicates
+        const existing = await pool.query(
+          'SELECT id FROM jobs WHERE apply_url = $1',
+          [job.applicationLink]
+        );
+
+        if (existing.rows.length > 0) {
+          skipped++;
+          continue;
+        }
+
+        const title = job.title || 'Unknown Position';
+        const company = job.companyName || 'Unknown Company';
+        const slug = generateJobSlug(title, company);
+        const description = stripHtml(job.description || job.excerpt || '').substring(0, 2000);
+
+        // Determine location from restrictions
+        let location = 'Worldwide';
+        if (job.locationRestrictions && job.locationRestrictions.length > 0) {
+          location = job.locationRestrictions.join(', ');
+        }
+
+        // Handle salary
+        let salary = 'Competitive';
+        if (job.minSalary && job.maxSalary) {
+          const currency = job.currency || 'USD';
+          salary = `${currency} ${job.minSalary.toLocaleString()} - ${job.maxSalary.toLocaleString()}`;
+        } else if (job.minSalary) {
+          const currency = job.currency || 'USD';
+          salary = `${currency} ${job.minSalary.toLocaleString()}+`;
+        }
+
+        // Determine category from parentCategories or categories
+        let category = 'Other';
+        if (job.parentCategories && job.parentCategories.length > 0) {
+          const categoryString = job.parentCategories[0].toLowerCase();
+          if (categoryString.includes('engineering') || categoryString.includes('development')) {
+            category = 'Software Development';
+          } else if (categoryString.includes('design')) {
+            category = 'Design';
+          } else if (categoryString.includes('marketing')) {
+            category = 'Marketing';
+          } else if (categoryString.includes('sales')) {
+            category = 'Sales / Business';
+          } else if (categoryString.includes('support') || categoryString.includes('customer')) {
+            category = 'Customer Service';
+          } else if (categoryString.includes('data')) {
+            category = 'Data Analysis';
+          } else if (categoryString.includes('hr') || categoryString.includes('people')) {
+            category = 'Human Resources';
+          } else if (categoryString.includes('writing') || categoryString.includes('content')) {
+            category = 'Writing';
+          } else if (categoryString.includes('product')) {
+            category = 'Product';
+          } else if (categoryString.includes('qa') || categoryString.includes('quality')) {
+            category = 'QA';
+          }
+        }
+
+        // Job type
+        let jobType = 'Full-time';
+        if (job.employmentType) {
+          if (job.employmentType === 'Part Time') jobType = 'Part Time';
+          if (job.employmentType === 'Contract') jobType = 'Contract';
+        }
+
+        // Posted date
+        let postedDate = 'Recently';
+        if (job.pubDate) {
+          postedDate = new Date(job.pubDate * 1000).toLocaleDateString('en-US', {
+            month: 'short',
+            day: 'numeric',
+            year: 'numeric'
+          });
+        }
+
+        const tags = job.categories || ['Remote'];
+
+        await pool.query(
+          `INSERT INTO jobs
+          (title, company, slug, location, salary, type, category, tags, posted_date, description, requirements, apply_url, featured, source)
+          VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)`,
+          [
+            title,
+            company,
+            slug,
+            location,
+            salary,
+            jobType,
+            category,
+            tags,
+            postedDate,
+            description || 'No description provided.',
+            job.seniority || ['Remote work experience'],
+            job.applicationLink,
+            false,
+            'Himalayas'
+          ]
+        );
+
+        inserted++;
+
+        if (inserted % 50 === 0) {
+          console.log(`   ⏳ Processed ${inserted + skipped}/${jobs.length} jobs...`);
+        }
+      } catch (err) {
+        errors++;
+        if (errors <= 5) {
+          console.error(`   ✗ Error inserting Himalayas job "${job.title}": ${err.message}`);
+        }
+      }
+    }
+
+    console.log(`✅ Himalayas: Inserted ${inserted} new jobs, skipped ${skipped} duplicates, ${errors} errors`);
+    return { inserted, skipped, errors, source: 'Himalayas' };
+
+  } catch (error) {
+    console.error('❌ Error scraping Himalayas:', error.message);
+    return { inserted: 0, skipped: 0, errors: 1, source: 'Himalayas', error: error.message };
+  }
+}
+
 // Scrape Remote OK API
 async function scrapeRemoteOK() {
   console.log('🔍 Fetching jobs from Remote OK API...');
@@ -716,6 +870,11 @@ async function main() {
   // Scrape FlexJobs
   const flexJobsResult = await scrapeFlexJobs();
   results.push(flexJobsResult);
+  console.log('');
+
+  // Scrape Himalayas
+  const himalayasResult = await scrapeHimalayas();
+  results.push(himalayasResult);
   console.log('');
 
   // Summary
