@@ -10,7 +10,8 @@
       "Bash(curl:*)",
       "Bash(taskkill:*)",
       "Bash(git config --list)",
-      "Read(//c/Users/Potato 99/Desktop/**)"
+      "Read(//c/Users/Potato 99/Desktop/**)",
+      "Bash(npm init -y)"
     ],
     "deny": [],
     "ask": []

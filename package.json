@@ -8,7 +8,7 @@
     "build": "next build",
     "start": "next start",
     "migrate": "node scripts/add-slug-column.cjs",
-    "generate-sitemap": "node scripts/generate-sitemap.js"
+    "generate-sitemap": "node scripts/generate-sitemap-improved.js"
   },
   "dependencies": {
     "dotenv": "^17.2.3",
