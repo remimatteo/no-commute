@@ -13,7 +13,9 @@
       "Read(//c/Users/Potato 99/Desktop/**)",
       "Bash(npm init -y)",
       "Bash(git commit:*)",
-      "Bash(git push)"
+      "Bash(git push)",
+      "Bash(npm install:*)",
+      "Bash(git add:*)"
     ],
     "deny": [],
     "ask": []

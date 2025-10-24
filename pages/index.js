@@ -4,6 +4,7 @@ import SEO from '../components/SEO';
 import { WebsiteSchema, OrganizationSchema } from '../components/schema';
 import FAQSchema from '../components/FAQSchema';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { generateJobSlug } from '../lib/slugify';
 import { formatSalary } from '../lib/formatSalary';
 
@@ -152,18 +153,36 @@ const jobTitles = ['Entry Level', 'Junior Developer', 'Internship', 'Software En
 const skills = ['React', 'Python', 'JavaScript', 'AWS', 'TypeScript', 'Node.js', 'Figma', 'SQL'];
 
 export default function Home({ initialJobs = [], initialTotalJobs = 0 }) {
+  const router = useRouter();
+
   const [jobs, setJobs] = useState(initialJobs);
   const [loading, setLoading] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState(router.query.search || "");
   const [showFilterMenu, setShowFilterMenu] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
-  const [category, setCategory] = useState("All");
-  const [location, setLocation] = useState("USA");
-  const [type, setType] = useState("All");
-  const [salaryListed, setSalaryListed] = useState("All");
-  const [experience, setExperience] = useState("All");
+  const [category, setCategory] = useState(router.query.category || "All");
+  const [location, setLocation] = useState(router.query.location || "All");
+  const [type, setType] = useState(router.query.type || "All");
+  const [salaryListed, setSalaryListed] = useState(router.query.salary || "All");
+  const [experience, setExperience] = useState(router.query.experience || "All");
   
+  // Function to update URL when filters change
+  const updateURL = useCallback((filters) => {
+    const query = {};
+    if (filters.search && filters.search !== "") query.search = filters.search;
+    if (filters.category && filters.category !== "All") query.category = filters.category;
+    if (filters.location && filters.location !== "All") query.location = filters.location;
+    if (filters.type && filters.type !== "All") query.type = filters.type;
+    if (filters.salary && filters.salary !== "All") query.salary = filters.salary;
+    if (filters.experience && filters.experience !== "All") query.experience = filters.experience;
+
+    router.push({
+      pathname: '/',
+      query: query
+    }, undefined, { shallow: true });
+  }, [router]);
+
   // Memoize filterState to prevent unnecessary re-renders
   const filterState = useMemo(() => ({
     category,
@@ -183,11 +202,23 @@ export default function Home({ initialJobs = [], initialTotalJobs = 0 }) {
 const [visibleJobsCount, setVisibleJobsCount] = useState(30);
 const [totalJobs, setTotalJobs] = useState(initialTotalJobs);
 
+  // Update URL when filters change
+  useEffect(() => {
+    updateURL({
+      search: searchQuery,
+      category,
+      location,
+      type,
+      salary: salaryListed,
+      experience
+    });
+  }, [category, location, type, salaryListed, experience, searchQuery, updateURL]);
+
   // Fetch jobs when filters change (only if not using default filters)
   useEffect(() => {
     // Check if using non-default filters
     const isDefaultFilters = category === "All" &&
-                            location === "USA" &&
+                            location === "All" &&
                             type === "All" &&
                             salaryListed === "All" &&
                             experience === "All" &&
@@ -300,22 +331,28 @@ const [totalJobs, setTotalJobs] = useState(initialTotalJobs);
     if (!email) return;
 
     setEmailSubmitting(true);
-    
+
     try {
-      const response = await fetch('https://script.google.com/macros/s/AKfycbzrHhbwmSwmXrSA96JDYYJGimIk-EhDCbrb7YIIQVM7taCHRUzL9uimrFQDf403sWiS/exec', {
+      const response = await fetch('/api/newsletter/subscribe', {
         method: 'POST',
-        mode: 'no-cors',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ email })
       });
-      
-      setEmailSubmitted(true);
-      setEmail('');
-      setTimeout(() => setEmailSubmitted(false), 3000);
+
+      const data = await response.json();
+
+      if (response.ok && data.success) {
+        setEmailSubmitted(true);
+        setEmail('');
+        setTimeout(() => setEmailSubmitted(false), 5000);
+      } else {
+        alert(data.error || 'Failed to subscribe. Please try again.');
+      }
     } catch (error) {
       console.error('Error submitting email:', error);
+      alert('Failed to subscribe. Please try again.');
     } finally {
       setEmailSubmitting(false);
     }

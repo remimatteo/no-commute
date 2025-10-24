@@ -59,7 +59,7 @@ const normalizeCategory = (cat) => {
   return 'Other';
 };
 
-export default function JobDetailPage({ job }) {
+export default function JobDetailPage({ job, similarJobs = [] }) {
   const [darkMode, setDarkMode] = useState(false);
 
   if (!job) {
@@ -258,6 +258,61 @@ export default function JobDetailPage({ job }) {
           </div>
         </div>
 
+        {/* Similar Jobs Section */}
+        {similarJobs && similarJobs.length > 0 && (
+          <section className="max-w-7xl mx-auto px-4 sm:px-6 py-12">
+            <h2 className={`text-3xl font-bold ${darkMode ? 'text-white' : 'text-gray-900'} mb-6`}>
+              Similar {normalizeCategory(transformedJob.category)} Jobs
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {similarJobs.map(similarJob => {
+                const jobSlug = similarJob.slug || `${similarJob.title.toLowerCase().replace(/[^a-z0-9]+/g, '-')}-at-${similarJob.company.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
+                return (
+                  <Link href={`/jobs/${similarJob.id}/${jobSlug}`} key={similarJob.id}>
+                    <div className={`${darkMode ? 'bg-gray-800 border-gray-700 hover:border-blue-500' : 'bg-white border-gray-200 hover:border-blue-400'} border rounded-lg p-4 hover:shadow-lg transition-all cursor-pointer h-full`}>
+                      <h3 className={`font-semibold ${darkMode ? 'text-white' : 'text-gray-900'} mb-2 line-clamp-2`}>
+                        {similarJob.title}
+                      </h3>
+                      <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'} mb-3`}>
+                        {similarJob.company}
+                      </p>
+                      <div className="flex flex-col gap-2 text-sm">
+                        <div className="flex items-center gap-2">
+                          <MapPin className={`w-4 h-4 ${darkMode ? 'text-gray-500' : 'text-gray-400'}`} />
+                          <span className={`${darkMode ? 'text-gray-400' : 'text-gray-600'} truncate`}>
+                            {similarJob.location}
+                          </span>
+                        </div>
+                        {similarJob.salary && similarJob.salary !== 'Competitive' && similarJob.salary.match(/\d/) && (
+                          <div className="flex items-center gap-2">
+                            <DollarSign className={`w-4 h-4 ${darkMode ? 'text-green-500' : 'text-green-600'}`} />
+                            <span className={`${darkMode ? 'text-green-400' : 'text-green-700'} font-medium truncate`}>
+                              {formatSalary(similarJob.salary)}
+                            </span>
+                          </div>
+                        )}
+                        <div className="flex items-center gap-2">
+                          <Clock className={`w-4 h-4 ${darkMode ? 'text-gray-500' : 'text-gray-400'}`} />
+                          <span className={`${darkMode ? 'text-gray-500' : 'text-gray-500'} text-xs`}>
+                            {formatDate(similarJob.posted_date)}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
+            <div className="mt-8 text-center">
+              <Link href={`/?category=${encodeURIComponent(transformedJob.category)}`}>
+                <button className={`${darkMode ? 'bg-blue-600 hover:bg-blue-700' : 'bg-blue-600 hover:bg-blue-700'} text-white font-semibold px-6 py-3 rounded-lg transition-colors`}>
+                  View All {normalizeCategory(transformedJob.category)} Jobs →
+                </button>
+              </Link>
+            </div>
+          </section>
+        )}
+
         {/* Footer */}
         <footer className={`${darkMode ? 'bg-gray-900 border-gray-800' : 'bg-white border-gray-200'} border-t transition-colors mt-12`}>
           <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
@@ -337,9 +392,22 @@ export async function getServerSideProps({ params }) {
       };
     }
 
+    // Fetch similar jobs (same category, different job, recent)
+    const similarJobsResult = await pool.query(
+      `SELECT id, title, company, location, salary, slug, category, posted_date
+       FROM jobs
+       WHERE category = $1
+         AND id != $2
+         AND created_at >= NOW() - INTERVAL '60 days'
+       ORDER BY RANDOM()
+       LIMIT 6`,
+      [job.category, id]
+    );
+
     return {
       props: {
-        job: JSON.parse(JSON.stringify(job)) // Serialize dates
+        job: JSON.parse(JSON.stringify(job)), // Serialize dates
+        similarJobs: JSON.parse(JSON.stringify(similarJobsResult.rows))
       }
     };
   } catch (error) {
