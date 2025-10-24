@@ -9,15 +9,14 @@ const pool = new Pool({
 
 export default async function handler(req, res) {
   try {
-    const { 
-      page = 1, 
-      limit = 2000, 
-      category, 
-      location, 
-      type, 
+    const {
+      page = 1,
+      limit = 2000,
+      category,
+      location,
       salaryListed,
       search,
-      experience 
+      experience
     } = req.query;
 
     const offset = (page - 1) * limit;
@@ -36,12 +35,6 @@ export default async function handler(req, res) {
     if (location && location !== 'All') {
       filters.push(`location ILIKE $${paramCount}`);
       values.push(`%${location}%`);
-      paramCount++;
-    }
-
-    if (type && type !== 'All') {
-      filters.push(`type = $${paramCount}`);
-      values.push(type);
       paramCount++;
     }
 

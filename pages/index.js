@@ -164,7 +164,6 @@ export default function Home({ initialJobs = [], initialTotalJobs = 0 }) {
   const [darkMode, setDarkMode] = useState(false);
   const [category, setCategory] = useState(router.query.category || "All");
   const [location, setLocation] = useState(router.query.location || "All");
-  const [type, setType] = useState(router.query.type || "All");
   const [salaryListed, setSalaryListed] = useState(router.query.salary || "All");
   const [experience, setExperience] = useState(router.query.experience || "All");
   
@@ -174,7 +173,6 @@ export default function Home({ initialJobs = [], initialTotalJobs = 0 }) {
     if (filters.search && filters.search !== "") query.search = filters.search;
     if (filters.category && filters.category !== "All") query.category = filters.category;
     if (filters.location && filters.location !== "All") query.location = filters.location;
-    if (filters.type && filters.type !== "All") query.type = filters.type;
     if (filters.salary && filters.salary !== "All") query.salary = filters.salary;
     if (filters.experience && filters.experience !== "All") query.experience = filters.experience;
 
@@ -188,10 +186,9 @@ export default function Home({ initialJobs = [], initialTotalJobs = 0 }) {
   const filterState = useMemo(() => ({
     category,
     location,
-    type,
     salaryListed,
     experience
-  }), [category, location, type, salaryListed, experience]);
+  }), [category, location, salaryListed, experience]);
   
   const [typedText, setTypedText] = useState('');
   const [typingIndex, setTypingIndex] = useState(0);
@@ -209,18 +206,16 @@ const [totalJobs, setTotalJobs] = useState(initialTotalJobs);
       search: searchQuery,
       category,
       location,
-      type,
       salary: salaryListed,
       experience
     });
-  }, [category, location, type, salaryListed, experience, searchQuery, updateURL]);
+  }, [category, location, salaryListed, experience, searchQuery, updateURL]);
 
   // Fetch jobs when filters change (only if not using default filters)
   useEffect(() => {
     // Check if using non-default filters
     const isDefaultFilters = category === "All" &&
                             location === "All" &&
-                            type === "All" &&
                             salaryListed === "All" &&
                             experience === "All" &&
                             searchQuery === "";
@@ -238,7 +233,6 @@ const [totalJobs, setTotalJobs] = useState(initialTotalJobs);
         const queryParams = new URLSearchParams({
           category,
           location,
-          type,
           salaryListed,
           experience,
           search: searchQuery,
@@ -292,7 +286,7 @@ const [totalJobs, setTotalJobs] = useState(initialTotalJobs);
     return () => {
       isMounted = false;
     };
-  }, [category, location, type, salaryListed, experience, searchQuery, initialJobs.length]);
+  }, [category, location, salaryListed, experience, searchQuery, initialJobs.length]);
 
   // Typing animation effect
   useEffect(() => {
@@ -362,7 +356,7 @@ const [totalJobs, setTotalJobs] = useState(initialTotalJobs);
   // Reset visible jobs count when search/filters change
   useEffect(() => {
     setVisibleJobsCount(30);
-  }, [searchQuery, category, location, type, salaryListed, experience]);
+  }, [searchQuery, category, location, salaryListed, experience]);
 
   // Smart search with operators - memoized to prevent infinite re-renders
   const filteredJobs = useMemo(() => jobs
@@ -429,13 +423,12 @@ const [totalJobs, setTotalJobs] = useState(initialTotalJobs);
       const matchesCategory = filterState.category === "All" || job.category === filterState.category;
       const matchesLocation = filterState.location === "All" ||
                              job.location.toLowerCase().includes(filterState.location.toLowerCase());
-      const matchesType = filterState.type === "All" || job.type === filterState.type;
       const hasSalary = job.salary && job.salary !== 'Competitive' && job.salary.match(/\d/);
       const matchesSalary = filterState.salaryListed === "All" ||
                            (filterState.salaryListed === "Yes" && hasSalary) ||
                            (filterState.salaryListed === "No" && !hasSalary);
 
-      return matchesSearch && matchesCategory && matchesLocation && matchesType && matchesSalary;
+      return matchesSearch && matchesCategory && matchesLocation && matchesSalary;
     })
     .sort((a, b) => {
       // Sort by date (most recent first)
@@ -672,19 +665,6 @@ const [totalJobs, setTotalJobs] = useState(initialTotalJobs);
                       </select>
                     </div>
                     <div>
-                      <label className={`block text-sm font-semibold ${darkMode ? 'text-gray-300' : 'text-gray-700'} mb-2`}>Job Type</label>
-                      <select
-                        value={type}
-                        onChange={(e) => setType(e.target.value)}
-                        className={`w-full ${darkMode ? 'bg-gray-700 text-white border-gray-600' : 'bg-gray-50 text-gray-900 border-gray-300'} border rounded-xl px-4 py-2 outline-none transition-colors`}
-                      >
-                        <option value="All">All Types</option>
-                        <option value="Full Time">Full Time</option>
-                        <option value="Contract">Contract</option>
-                        <option value="Part Time">Part Time</option>
-                      </select>
-                    </div>
-                    <div>
                       <label className={`block text-sm font-semibold ${darkMode ? 'text-gray-300' : 'text-gray-700'} mb-2`}>Salary Listed</label>
                       <select
                         value={salaryListed}
@@ -701,7 +681,6 @@ const [totalJobs, setTotalJobs] = useState(initialTotalJobs);
                     onClick={() => {
                       setCategory("All");
                       setLocation("All");
-                      setType("All");
                       setSalaryListed("All");
                       setExperience("All");
                       setShowFilterMenu(false);

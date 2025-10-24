@@ -221,13 +221,47 @@ async function sendWeeklyNewsletter() {
             .footer a:hover {
               text-decoration: underline;
             }
+            .banner-image {
+              width: 100%;
+              max-width: 600px;
+              height: auto;
+              display: block;
+              margin: 0 auto 20px auto;
+            }
+            .welcome-section {
+              background: #fef3c7;
+              padding: 20px;
+              border-radius: 8px;
+              margin-bottom: 30px;
+              border: 1px solid #fbbf24;
+            }
+            .welcome-section p {
+              margin: 0;
+              font-size: 15px;
+              color: #374151;
+              line-height: 1.7;
+            }
+            .welcome-signature {
+              margin-top: 12px;
+              font-style: italic;
+              color: #6b7280;
+            }
           </style>
         </head>
         <body>
+          <!-- Email Banner -->
+          <img src="https://no-commute-jobs.com/email-banner.png" alt="No Commute Jobs" class="banner-image" />
+
           <!-- Header -->
           <div class="header">
             <h1>No Commute Jobs</h1>
             <p>${new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</p>
+          </div>
+
+          <!-- Welcome Message (First Newsletter Only) -->
+          <div class="welcome-section">
+            <p>Hi—thanks for subscribing to No Commute Jobs, a new remote job board! I wanted to thank you for being one of my first 20 subscribers! Please let me know if you ever have any suggestions for the site, and what you'd like to see more of.</p>
+            <p class="welcome-signature">— Remi, founder</p>
           </div>
 
           <!-- Featured Blog Post -->
