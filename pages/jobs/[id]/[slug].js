@@ -392,18 +392,20 @@ export async function getServerSideProps({ params }) {
       };
     }
 
-    // Fetch similar jobs (same category, different job, recent)
+    // Fetch similar jobs - OPTIMIZED: Replaced ORDER BY RANDOM() with indexed query
+    // Random offset provides variety without the 5+ second performance penalty
+    const offset = Math.floor(Math.random() * 20);
     const similarJobsResult = await pool.query(
       `SELECT id, title, company, location, salary, slug, category, posted_date
        FROM jobs
        WHERE category = $1
          AND id != $2
          AND created_at >= NOW() - INTERVAL '60 days'
-       ORDER BY RANDOM()
+       ORDER BY created_at DESC
+       OFFSET $3
        LIMIT 6`,
-      [job.category, id]
+      [job.category, id, offset]
     );
-
     return {
       props: {
         job: JSON.parse(JSON.stringify(job)), // Serialize dates
