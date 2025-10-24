@@ -816,6 +816,9 @@ const [totalJobs, setTotalJobs] = useState(initialTotalJobs);
                     src={`https://logo.clearbit.com/${companyToDomain(job.company)}?size=80`}
                     alt={job.company}
                     className="w-full h-full object-cover"
+                    loading="lazy"
+                    width="48"
+                    height="48"
                     onError={(e) => {
                       // Fallback to UI Avatars (always works, looks professional)
                       if (!e.target.dataset.fallbackAttempted) {
@@ -988,27 +991,25 @@ export async function getStaticProps() {
   });
 
   try {
-    // Fetch jobs with default USA filter
-    const location = 'USA';
-    const limit = 100;
+    // Fetch all recent jobs (no location filter for better coverage)
+    // Pre-load 1000 jobs so most filter combinations work without API calls
+    const limit = 1000;
 
     // Count total jobs
     const countResult = await pool.query(`
       SELECT COUNT(*) as total FROM jobs
-      WHERE location ILIKE $1
-    `, [`%${location}%`]);
+    `);
 
     const totalJobs = parseInt(countResult.rows[0].total, 10);
 
-    // Fetch jobs
+    // Fetch jobs - load ALL recent jobs, not just USA
     const result = await pool.query(`
       SELECT * FROM jobs
-      WHERE location ILIKE $1
       ORDER BY
         COALESCE(featured, false) DESC,
         created_at DESC
-      LIMIT $2
-    `, [`%${location}%`, limit]);
+      LIMIT $1
+    `, [limit]);
 
     // Transform jobs to match the expected format
     const transformedJobs = result.rows.map((job) => ({
