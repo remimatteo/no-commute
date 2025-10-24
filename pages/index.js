@@ -663,12 +663,12 @@ const [totalJobs, setTotalJobs] = useState(initialTotalJobs);
         </section>
 
         {/* Browse by Category Section */}
-        <section className={`py-12 ${darkMode ? 'bg-gray-900' : 'bg-white'} transition-colors`}>
+        <section className={`py-8 sm:py-12 ${darkMode ? 'bg-gray-900' : 'bg-white'} transition-colors`}>
           <div className="max-w-7xl mx-auto px-4 sm:px-6">
-            <h2 className={`text-3xl font-bold ${darkMode ? 'text-white' : 'text-gray-900'} mb-8 text-center`}>
+            <h2 className={`text-2xl sm:text-3xl font-bold ${darkMode ? 'text-white' : 'text-gray-900'} mb-4 sm:mb-8 text-center`}>
               Browse by Category
             </h2>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-4">
               {[
                 { name: 'Software Development', slug: 'software-development', emoji: '💻' },
                 { name: 'Design', slug: 'design', emoji: '🎨' },
@@ -680,9 +680,9 @@ const [totalJobs, setTotalJobs] = useState(initialTotalJobs);
                 { name: 'Writing', slug: 'writing', emoji: '✍️' }
               ].map(cat => (
                 <Link href={`/category/${cat.slug}`} key={cat.slug}>
-                  <div className={`${darkMode ? 'bg-gray-800 border-gray-700 hover:border-blue-500' : 'bg-gray-50 border-gray-200 hover:border-blue-400'} border rounded-xl p-6 hover:shadow-lg transition-all text-center cursor-pointer`}>
-                    <div className="text-4xl mb-3">{cat.emoji}</div>
-                    <h3 className={`font-semibold ${darkMode ? 'text-white' : 'text-gray-900'}`}>{cat.name}</h3>
+                  <div className={`${darkMode ? 'bg-gray-800 border-gray-700 hover:border-blue-500' : 'bg-gray-50 border-gray-200 hover:border-blue-400'} border rounded-lg sm:rounded-xl p-3 sm:p-6 hover:shadow-lg transition-all text-center cursor-pointer`}>
+                    <div className="text-2xl sm:text-4xl mb-1 sm:mb-3">{cat.emoji}</div>
+                    <h3 className={`text-xs sm:text-base font-semibold ${darkMode ? 'text-white' : 'text-gray-900'}`}>{cat.name}</h3>
                   </div>
                 </Link>
               ))}
@@ -691,12 +691,12 @@ const [totalJobs, setTotalJobs] = useState(initialTotalJobs);
         </section>
 
         {/* Browse by Location Section */}
-        <section className={`py-12 ${darkMode ? 'bg-black' : 'bg-gray-50'} transition-colors`}>
+        <section className={`py-6 sm:py-12 ${darkMode ? 'bg-black' : 'bg-gray-50'} transition-colors`}>
           <div className="max-w-7xl mx-auto px-4 sm:px-6">
-            <h2 className={`text-3xl font-bold ${darkMode ? 'text-white' : 'text-gray-900'} mb-8 text-center`}>
+            <h2 className={`text-xl sm:text-3xl font-bold ${darkMode ? 'text-white' : 'text-gray-900'} mb-3 sm:mb-8 text-center`}>
               Browse by Location
             </h2>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+            <div className="grid grid-cols-3 md:grid-cols-3 lg:grid-cols-6 gap-2 sm:gap-4">
               {[
                 { name: 'USA', slug: 'usa', emoji: '🇺🇸' },
                 { name: 'Europe', slug: 'europe', emoji: '🇪🇺' },
@@ -706,9 +706,9 @@ const [totalJobs, setTotalJobs] = useState(initialTotalJobs);
                 { name: 'Asia', slug: 'asia', emoji: '🌏' }
               ].map(loc => (
                 <Link href={`/remote-jobs/${loc.slug}`} key={loc.slug}>
-                  <div className={`${darkMode ? 'bg-gray-800 border-gray-700 hover:border-blue-500' : 'bg-white border-gray-200 hover:border-blue-400'} border rounded-xl p-6 hover:shadow-lg transition-all text-center cursor-pointer`}>
-                    <div className="text-5xl mb-2">{loc.emoji}</div>
-                    <h3 className={`font-semibold ${darkMode ? 'text-white' : 'text-gray-900'}`}>{loc.name}</h3>
+                  <div className={`${darkMode ? 'bg-gray-800 border-gray-700 hover:border-blue-500' : 'bg-white border-gray-200 hover:border-blue-400'} border rounded-lg sm:rounded-xl p-2 sm:p-6 hover:shadow-lg transition-all text-center cursor-pointer`}>
+                    <div className="text-2xl sm:text-5xl mb-1 sm:mb-2">{loc.emoji}</div>
+                    <h3 className={`text-xs sm:text-base font-semibold ${darkMode ? 'text-white' : 'text-gray-900'}`}>{loc.name}</h3>
                   </div>
                 </Link>
               ))}
