@@ -22,8 +22,8 @@ async function importSubscribers() {
   try {
     console.log('📧 Starting CSV subscriber import...\n');
 
-    // Read CSV file
-    const csvPath = path.join(__dirname, '..', 'No commute emails - Sheet1.csv');
+    // Read CSV file from Desktop
+    const csvPath = 'C:\\Users\\Potato 99\\Desktop\\No commute emails - Sheet1.csv';
     console.log(`📂 Reading CSV from: ${csvPath}`);
 
     const csvContent = fs.readFileSync(csvPath, 'utf-8');

@@ -258,9 +258,9 @@ async function sendWeeklyNewsletter() {
             <p>${new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</p>
           </div>
 
-          <!-- Welcome Message (First Newsletter Only) -->
+          <!-- Welcome Message -->
           <div class="welcome-section">
-            <p>Hi—thanks for subscribing to No Commute Jobs, a new remote job board! I wanted to thank you for being one of my first 20 subscribers! Please let me know if you ever have any suggestions for the site, and what you'd like to see more of.</p>
+            <p>Hi—thanks for subscribing to No Commute Jobs! Every week, I hand-pick the best remote opportunities so you don't have to spend hours searching. If you ever have suggestions or want to see something specific, just reply to this email—I read every one.</p>
             <p class="welcome-signature">— Remi, founder</p>
           </div>
 
@@ -329,7 +329,7 @@ async function sendWeeklyNewsletter() {
 
       try {
         await resend.emails.send({
-          from: 'onboarding@resend.dev', // Update to your custom domain when ready
+          from: 'No Commute Jobs <nocommutejobs@gmail.com>',
           to: batch.map(s => s.email),
           subject: `🚀 ${weeklyJobs.length} New Remote Jobs This Week`,
           html: emailHTML
