@@ -3,6 +3,7 @@ import { Search, MapPin, DollarSign, Clock, Briefcase, ExternalLink, Filter, X, 
 import SEO from '../components/SEO';
 import { WebsiteSchema, OrganizationSchema } from '../components/schema';
 import FAQSchema from '../components/FAQSchema';
+import Footer from '../components/Footer';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { generateJobSlug } from '../lib/slugify';
@@ -739,7 +740,64 @@ const [totalJobs, setTotalJobs] = useState(initialTotalJobs);
           </div>
         </section>
 
+        {/* Browse by Category Section */}
+        <section className={`py-12 ${darkMode ? 'bg-gray-900' : 'bg-white'} transition-colors`}>
+          <div className="max-w-7xl mx-auto px-4 sm:px-6">
+            <h2 className={`text-3xl font-bold ${darkMode ? 'text-white' : 'text-gray-900'} mb-8 text-center`}>
+              Browse by Category
+            </h2>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              {[
+                { name: 'Software Development', slug: 'software-development', emoji: '💻' },
+                { name: 'Design', slug: 'design', emoji: '🎨' },
+                { name: 'Marketing', slug: 'marketing', emoji: '📈' },
+                { name: 'Sales', slug: 'sales', emoji: '💼' },
+                { name: 'Customer Service', slug: 'customer-service', emoji: '🎧' },
+                { name: 'Product', slug: 'product', emoji: '🚀' },
+                { name: 'Data Analysis', slug: 'data-analysis', emoji: '📊' },
+                { name: 'Writing', slug: 'writing', emoji: '✍️' }
+              ].map(cat => (
+                <Link href={`/category/${cat.slug}`} key={cat.slug}>
+                  <div className={`${darkMode ? 'bg-gray-800 border-gray-700 hover:border-blue-500' : 'bg-gray-50 border-gray-200 hover:border-blue-400'} border rounded-xl p-6 hover:shadow-lg transition-all text-center cursor-pointer`}>
+                    <div className="text-4xl mb-3">{cat.emoji}</div>
+                    <h3 className={`font-semibold ${darkMode ? 'text-white' : 'text-gray-900'}`}>{cat.name}</h3>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Browse by Location Section */}
+        <section className={`py-12 ${darkMode ? 'bg-black' : 'bg-gray-50'} transition-colors`}>
+          <div className="max-w-7xl mx-auto px-4 sm:px-6">
+            <h2 className={`text-3xl font-bold ${darkMode ? 'text-white' : 'text-gray-900'} mb-8 text-center`}>
+              Browse by Location
+            </h2>
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+              {[
+                { name: 'USA', slug: 'usa', emoji: '🇺🇸' },
+                { name: 'Europe', slug: 'europe', emoji: '🇪🇺' },
+                { name: 'Canada', slug: 'canada', emoji: '🇨🇦' },
+                { name: 'UK', slug: 'uk', emoji: '🇬🇧' },
+                { name: 'Australia', slug: 'australia', emoji: '🇦🇺' },
+                { name: 'Asia', slug: 'asia', emoji: '🌏' }
+              ].map(loc => (
+                <Link href={`/remote-jobs/${loc.slug}`} key={loc.slug}>
+                  <div className={`${darkMode ? 'bg-gray-800 border-gray-700 hover:border-blue-500' : 'bg-white border-gray-200 hover:border-blue-400'} border rounded-xl p-6 hover:shadow-lg transition-all text-center cursor-pointer`}>
+                    <div className="text-5xl mb-2">{loc.emoji}</div>
+                    <h3 className={`font-semibold ${darkMode ? 'text-white' : 'text-gray-900'}`}>{loc.name}</h3>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+
         <section className="max-w-7xl mx-auto px-4 sm:px-6 py-12">
+          <h2 className={`text-2xl font-bold ${darkMode ? 'text-white' : 'text-gray-900'} mb-6`}>
+            Latest Remote Jobs
+          </h2>
           <p className={`${darkMode ? 'text-gray-400' : 'text-gray-600'} mb-6`}>
             Updated daily from top remote job boards
           </p>
@@ -912,49 +970,7 @@ const [totalJobs, setTotalJobs] = useState(initialTotalJobs);
           </div>
         </section>
 
-        <footer className={`${darkMode ? 'bg-gray-900 border-gray-800' : 'bg-white border-gray-200'} border-t transition-colors`}>
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12">
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-8 mb-8">
-              <div>
-                <h4 className={`font-bold ${darkMode ? 'text-white' : 'text-gray-900'} mb-4`}>Company</h4>
-                <ul className={`space-y-2 ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                  <li><Link href="/about" className="hover:text-blue-500 transition-colors">About</Link></li>
-                  <li><Link href="/blog" className="hover:text-blue-500 transition-colors">Blog</Link></li>
-                </ul>
-              </div>
-              <div>
-                <h4 className={`font-bold ${darkMode ? 'text-white' : 'text-gray-900'} mb-4`}>Resources</h4>
-                <ul className={`space-y-2 ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                  <li><Link href="/make-money-online" className="hover:text-blue-500 transition-colors">Side Hustles</Link></li>
-                  <li><Link href="/forum" className="hover:text-blue-500 transition-colors">Forum</Link></li>
-                  <li><Link href="/post-job" className="hover:text-blue-500 transition-colors">Post a Job</Link></li>
-                </ul>
-              </div>
-              <div>
-                <h4 className={`font-bold ${darkMode ? 'text-white' : 'text-gray-900'} mb-4`}>Support</h4>
-                <ul className={`space-y-2 ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                  <li><Link href="/contact" className="hover:text-blue-500 transition-colors">Contact</Link></li>
-                  <li><a href="#" className="hover:text-blue-500 transition-colors">FAQ</a></li>
-                </ul>
-              </div>
-              <div>
-                <h4 className={`font-bold ${darkMode ? 'text-white' : 'text-gray-900'} mb-4`}>Legal</h4>
-                <ul className={`space-y-2 ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                  <li><Link href="/privacy" className="hover:text-blue-500 transition-colors">Privacy Policy</Link></li>
-                  <li><a href="#" className="hover:text-blue-500 transition-colors">Terms of Service</a></li>
-                </ul>
-              </div>
-            </div>
-            <div className={`border-t ${darkMode ? 'border-gray-800' : 'border-gray-200'} pt-8 text-center transition-colors`}>
-              <p className={`${darkMode ? 'text-gray-400' : 'text-gray-600'} mb-2`}>
-                © 2025 No Commute. Work from anywhere, live everywhere.
-              </p>
-              <p className={`text-xs ${darkMode ? 'text-gray-500' : 'text-gray-400'}`}>
-                Job listings sourced from RemoteOK and Remotive
-              </p>
-            </div>
-          </div>
-        </footer>
+        <Footer darkMode={darkMode} />
       </div>
     </>
   );
