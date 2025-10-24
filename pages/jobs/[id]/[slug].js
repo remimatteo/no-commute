@@ -363,7 +363,16 @@ export default function JobDetailPage({ job, similarJobs = [] }) {
   );
 }
 
-export async function getServerSideProps({ params }) {
+// Generate static paths for ISR
+export async function getStaticPaths() {
+  return {
+    paths: [],
+    fallback: 'blocking'
+  };
+}
+
+// Use ISR for fast caching
+export async function getStaticProps({ params }) {
   const { id, slug } = params;
 
   try {
@@ -374,23 +383,12 @@ export async function getServerSideProps({ params }) {
 
     if (result.rows.length === 0) {
       return {
-        props: {
-          job: null
-        }
+        notFound: true,
+        revalidate: 3600
       };
     }
 
     const job = result.rows[0];
-
-    // Redirect to correct slug if slug doesn't match
-    if (slug !== job.slug && job.slug) {
-      return {
-        redirect: {
-          destination: `/jobs/${id}/${job.slug}`,
-          permanent: true
-        }
-      };
-    }
 
     // Fetch similar jobs (same category, different job, recent)
     const similarJobsResult = await pool.query(
@@ -399,23 +397,23 @@ export async function getServerSideProps({ params }) {
        WHERE category = $1
          AND id != $2
          AND created_at >= NOW() - INTERVAL '60 days'
-       ORDER BY RANDOM()
+       ORDER BY created_at DESC
        LIMIT 6`,
       [job.category, id]
     );
 
     return {
       props: {
-        job: JSON.parse(JSON.stringify(job)), // Serialize dates
+        job: JSON.parse(JSON.stringify(job)),
         similarJobs: JSON.parse(JSON.stringify(similarJobsResult.rows))
-      }
+      },
+      revalidate: 21600 // Revalidate every 6 hours
     };
   } catch (error) {
     console.error('Error fetching job:', error);
     return {
-      props: {
-        job: null
-      }
+      notFound: true,
+      revalidate: 3600
     };
   }
 }
