@@ -755,17 +755,16 @@ const [totalJobs, setTotalJobs] = useState(initialTotalJobs);
             </h2>
             <div className="grid grid-cols-3 md:grid-cols-3 lg:grid-cols-6 gap-2 sm:gap-4">
               {[
-                { name: 'USA', slug: 'usa', emoji: '🇺🇸' },
-                { name: 'Europe', slug: 'europe', emoji: '🇪🇺' },
-                { name: 'Canada', slug: 'canada', emoji: '🇨🇦' },
-                { name: 'UK', slug: 'uk', emoji: '🇬🇧' },
-                { name: 'Australia', slug: 'australia', emoji: '🇦🇺' },
-                { name: 'Asia', slug: 'asia', emoji: '🌏' }
+                { name: 'USA', slug: 'usa' },
+                { name: 'Europe', slug: 'europe' },
+                { name: 'Canada', slug: 'canada' },
+                { name: 'UK', slug: 'uk' },
+                { name: 'Australia', slug: 'australia' },
+                { name: 'Asia', slug: 'asia' }
               ].map(loc => (
                 <Link href={`/remote-jobs/${loc.slug}`} key={loc.slug}>
-                  <div className={`${darkMode ? 'bg-gray-800 border-gray-700 hover:border-blue-500' : 'bg-white border-gray-200 hover:border-blue-400'} border rounded-lg sm:rounded-xl p-2 sm:p-6 hover:shadow-lg transition-all text-center cursor-pointer`}>
-                    <div className="text-2xl sm:text-5xl mb-1 sm:mb-2">{loc.emoji}</div>
-                    <h3 className={`text-xs sm:text-base font-semibold ${darkMode ? 'text-white' : 'text-gray-900'}`}>{loc.name}</h3>
+                  <div className={`${darkMode ? 'bg-gray-800 border-gray-700 hover:border-blue-500' : 'bg-white border-gray-200 hover:border-blue-400'} border rounded-lg sm:rounded-xl p-4 sm:p-6 hover:shadow-lg transition-all text-center cursor-pointer`}>
+                    <h3 className={`text-sm sm:text-base font-semibold ${darkMode ? 'text-white' : 'text-gray-900'}`}>{loc.name}</h3>
                   </div>
                 </Link>
               ))}

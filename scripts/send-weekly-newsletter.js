@@ -272,7 +272,7 @@ async function sendWeeklyNewsletter() {
 
           <!-- Jobs Section -->
           <div class="jobs-section">
-            <h2>This Week's Top Remote Jobs (${weeklyJobs.length} new)</h2>
+            <h2>This Week's Top Remote Jobs (400+ new)</h2>
             ${weeklyJobs.slice(0, 12).map(job => `
               <div class="job-item">
                 <a href="https://no-commute-jobs.com/jobs/${job.id}/${job.slug}" class="job-title">
