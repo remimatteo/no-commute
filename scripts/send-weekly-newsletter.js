@@ -28,13 +28,33 @@ async function sendWeeklyNewsletter() {
     const weeklyJobs = jobsResult.rows;
     console.log(`✅ Found ${weeklyJobs.length} jobs from the past week`);
 
-    // 2. Get latest blog post (you'll need to update this with your actual blog posts)
+    // 2. Get latest blog post
     const latestBlogPost = {
       title: 'Remote Work Skills Employers Want in 2025',
       slug: 'remote-promotion-skills',
       excerpt: 'Discover the skills that actually got me promoted in remote tech - it wasn\'t the technical skills that made the difference.',
       url: 'https://no-commute-jobs.com/blog/remote-promotion-skills'
     };
+
+    // 3. Get side hustle articles
+    const sideHustles = [
+      {
+        title: 'Best Side Hustles for 2025: 12 Proven Ways to Make Extra Money',
+        url: 'https://no-commute-jobs.com/make-money-online/best-side-hustles-2025'
+      },
+      {
+        title: 'AI Side Hustles: How to Make Money with ChatGPT and AI Tools',
+        url: 'https://no-commute-jobs.com/make-money-online/ai-side-hustles'
+      },
+      {
+        title: 'Survey Sites That Actually Pay in 2025',
+        url: 'https://no-commute-jobs.com/make-money-online/survey-sites-that-pay'
+      },
+      {
+        title: 'How to Sell Digital Products Online',
+        url: 'https://no-commute-jobs.com/make-money-online/sell-digital-products-online'
+      }
+    ];
 
     // 3. Get all active subscribers
     const subscribersResult = await pool.query(
@@ -50,12 +70,13 @@ async function sendWeeklyNewsletter() {
       return;
     }
 
-    // 4. Build email HTML
+    // 4. Build email HTML - Clean, professional design
     const emailHTML = `
       <!DOCTYPE html>
       <html>
         <head>
           <meta charset="utf-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
           <style>
             body {
               font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
@@ -64,168 +85,196 @@ async function sendWeeklyNewsletter() {
               max-width: 600px;
               margin: 0 auto;
               padding: 20px;
-              background-color: #f9fafb;
+              background-color: #ffffff;
             }
             .header {
-              background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-              color: white;
-              padding: 30px;
-              border-radius: 10px;
               text-align: center;
+              padding: 20px 0;
+              border-bottom: 1px solid #e5e7eb;
               margin-bottom: 30px;
             }
             .header h1 {
               margin: 0;
-              font-size: 28px;
+              font-size: 24px;
+              color: #111827;
+              font-weight: 600;
             }
-            .content {
-              background: white;
-              padding: 30px;
-              border-radius: 10px;
-              margin-bottom: 20px;
+            .header p {
+              margin: 5px 0 0 0;
+              font-size: 14px;
+              color: #6b7280;
             }
-            .job-card {
+            .blog-section {
               background: #f9fafb;
-              border: 1px solid #e5e7eb;
+              padding: 20px;
               border-radius: 8px;
-              padding: 15px;
-              margin-bottom: 15px;
-              transition: border-color 0.2s;
+              margin-bottom: 30px;
+              border-left: 4px solid #3b82f6;
             }
-            .job-card:hover {
-              border-color: #3b82f6;
+            .blog-section h2 {
+              margin: 0 0 10px 0;
+              font-size: 18px;
+              color: #111827;
+            }
+            .blog-link {
+              color: #3b82f6;
+              text-decoration: none;
+              font-weight: 500;
+            }
+            .blog-link:hover {
+              text-decoration: underline;
+            }
+            .jobs-section {
+              margin-bottom: 30px;
+            }
+            .jobs-section h2 {
+              font-size: 20px;
+              color: #111827;
+              margin: 0 0 20px 0;
+            }
+            .job-item {
+              padding: 12px 0;
+              border-bottom: 1px solid #e5e7eb;
+            }
+            .job-item:last-child {
+              border-bottom: none;
             }
             .job-title {
-              font-size: 16px;
-              font-weight: bold;
+              font-size: 15px;
+              font-weight: 500;
               color: #111827;
-              margin: 0 0 5px 0;
+              text-decoration: none;
+              display: block;
+              margin-bottom: 4px;
             }
-            .job-company {
-              color: #6b7280;
-              font-size: 14px;
-              margin: 0 0 10px 0;
+            .job-title:hover {
+              color: #3b82f6;
             }
-            .job-meta {
-              display: flex;
-              gap: 15px;
+            .job-salary {
               font-size: 13px;
-              color: #6b7280;
-            }
-            .job-meta span {
-              display: flex;
-              align-items: center;
-              gap: 5px;
-            }
-            .salary {
               color: #10b981;
               font-weight: 600;
             }
-            .blog-card {
-              background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
-              color: white;
-              border-radius: 10px;
-              padding: 20px;
-              margin: 20px 0;
-            }
-            .blog-card h3 {
-              margin: 0 0 10px 0;
-              font-size: 20px;
-            }
-            .blog-card p {
-              margin: 0 0 15px 0;
-              opacity: 0.95;
-            }
-            .cta {
-              background: white;
-              color: #f59e0b;
-              padding: 12px 24px;
-              text-decoration: none;
+            .side-hustles-section {
+              background: #fffbeb;
+              padding: 25px;
               border-radius: 8px;
-              display: inline-block;
-              font-weight: bold;
+              margin-bottom: 30px;
+              border-left: 4px solid #f59e0b;
             }
-            .view-all {
+            .side-hustles-section h3 {
+              margin: 0 0 10px 0;
+              font-size: 16px;
+              color: #92400e;
+            }
+            .side-hustles-section p {
+              margin: 0 0 15px 0;
+              font-size: 14px;
+              color: #78350f;
+            }
+            .side-hustle-link {
+              display: block;
+              color: #d97706;
+              text-decoration: none;
+              font-size: 14px;
+              margin-bottom: 8px;
+              padding-left: 12px;
+              position: relative;
+            }
+            .side-hustle-link:before {
+              content: "→";
+              position: absolute;
+              left: 0;
+            }
+            .side-hustle-link:hover {
+              text-decoration: underline;
+            }
+            .cta-button {
+              text-align: center;
+              margin: 30px 0;
+            }
+            .cta-button a {
               background: #3b82f6;
               color: white;
-              padding: 15px 30px;
+              padding: 14px 32px;
               text-decoration: none;
-              border-radius: 8px;
+              border-radius: 6px;
               display: inline-block;
-              margin: 20px 0;
-              font-weight: bold;
+              font-weight: 600;
+              font-size: 15px;
+            }
+            .cta-button a:hover {
+              background: #2563eb;
             }
             .footer {
               text-align: center;
-              color: #6b7280;
-              font-size: 14px;
-              margin-top: 30px;
+              color: #9ca3af;
+              font-size: 13px;
+              margin-top: 40px;
               padding-top: 20px;
               border-top: 1px solid #e5e7eb;
             }
             .footer a {
-              color: #3b82f6;
+              color: #6b7280;
               text-decoration: none;
+            }
+            .footer a:hover {
+              text-decoration: underline;
             }
           </style>
         </head>
         <body>
+          <!-- Header -->
           <div class="header">
-            <h1>🚀 Your Weekly Remote Jobs</h1>
-            <p style="margin: 10px 0 0 0; opacity: 0.95;">Fresh opportunities for ${new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</p>
+            <h1>No Commute Jobs</h1>
+            <p>${new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</p>
           </div>
 
-          <div class="content">
-            <h2 style="margin-top: 0;">This Week's Top Remote Jobs</h2>
-            <p style="color: #6b7280; margin-bottom: 20px;">
-              We found ${weeklyJobs.length} new remote jobs for you this week!
-            </p>
+          <!-- Featured Blog Post -->
+          <div class="blog-section">
+            <h2>📖 Featured Article</h2>
+            <a href="${latestBlogPost.url}" class="blog-link">${latestBlogPost.title} →</a>
+          </div>
 
-            ${weeklyJobs.slice(0, 10).map(job => `
-              <div class="job-card">
-                <h3 class="job-title">${job.title}</h3>
-                <p class="job-company">${job.company}</p>
-                <div class="job-meta">
-                  <span>📍 ${job.location}</span>
-                  ${job.salary && job.salary !== 'Competitive' && job.salary.match(/\d/) ? `<span class="salary">💰 ${job.salary}</span>` : ''}
-                  <span>🏷️ ${job.category}</span>
-                </div>
-                <a href="https://no-commute-jobs.com/jobs/${job.id}/${job.slug}" style="color: #3b82f6; text-decoration: none; font-size: 14px; margin-top: 10px; display: inline-block;">
-                  View Job →
+          <!-- Jobs Section -->
+          <div class="jobs-section">
+            <h2>This Week's Top Remote Jobs (${weeklyJobs.length} new)</h2>
+            ${weeklyJobs.slice(0, 12).map(job => `
+              <div class="job-item">
+                <a href="https://no-commute-jobs.com/jobs/${job.id}/${job.slug}" class="job-title">
+                  ${job.title}
                 </a>
+                ${job.salary && job.salary !== 'Competitive' && job.salary.match(/\d/) ?
+                  `<span class="job-salary">${job.salary}</span>` :
+                  ''}
               </div>
             `).join('')}
-
-            <center>
-              <a href="https://no-commute-jobs.com" class="view-all">
-                View All ${weeklyJobs.length} Jobs →
-              </a>
-            </center>
           </div>
 
-          <div class="blog-card">
-            <h3>📖 Featured Article</h3>
-            <p><strong>${latestBlogPost.title}</strong></p>
-            <p>${latestBlogPost.excerpt}</p>
-            <a href="${latestBlogPost.url}" class="cta">
-              Read More →
-            </a>
+          <!-- Side Hustles Section -->
+          <div class="side-hustles-section">
+            <h3>💰 While You Wait for Recruiters...</h3>
+            <p>Check out these side hustle guides we've published to make money in the meantime:</p>
+            ${sideHustles.map(hustle => `
+              <a href="${hustle.url}" class="side-hustle-link">${hustle.title}</a>
+            `).join('')}
           </div>
 
-          <div class="content">
-            <h3>Browse by Category</h3>
-            <p>
-              <a href="https://no-commute-jobs.com/category/software-development" style="color: #3b82f6; margin-right: 10px;">💻 Software Dev</a>
-              <a href="https://no-commute-jobs.com/category/design" style="color: #3b82f6; margin-right: 10px;">🎨 Design</a>
-              <a href="https://no-commute-jobs.com/category/marketing" style="color: #3b82f6; margin-right: 10px;">📈 Marketing</a>
-              <a href="https://no-commute-jobs.com/category/sales" style="color: #3b82f6; margin-right: 10px;">💼 Sales</a>
-            </p>
+          <!-- CTA Button -->
+          <div class="cta-button">
+            <a href="https://no-commute-jobs.com">See All Jobs</a>
           </div>
 
+          <!-- Footer -->
           <div class="footer">
             <p>You're receiving this because you subscribed to No Commute Jobs.</p>
-            <p><a href="https://no-commute-jobs.com">Browse Jobs</a> | <a href="https://no-commute-jobs.com/blog">Read Blog</a> | <a href="#">Unsubscribe</a></p>
-            <p style="margin-top: 20px; font-size: 12px; color: #9ca3af;">
+            <p style="margin-top: 10px;">
+              <a href="https://no-commute-jobs.com">Browse Jobs</a> ·
+              <a href="https://no-commute-jobs.com/blog">Blog</a> ·
+              <a href="https://no-commute-jobs.com/make-money-online">Side Hustles</a> ·
+              <a href="#">Unsubscribe</a>
+            </p>
+            <p style="margin-top: 15px; font-size: 12px;">
               © 2025 No Commute Jobs. All rights reserved.
             </p>
           </div>
