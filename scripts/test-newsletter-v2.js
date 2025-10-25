@@ -329,7 +329,7 @@ async function sendTestNewsletter() {
     console.log(`📤 Sending test newsletter to: ${testEmail}\n`);
 
     await resend.emails.send({
-      from: 'No Commute Jobs <nocommutejobs@gmail.com>',
+      from: 'onboarding@resend.dev',
       to: testEmail,
       subject: `[TEST] Your Weekly Remote Jobs - ${new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`,
       headers: {

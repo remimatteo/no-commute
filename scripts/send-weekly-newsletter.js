@@ -329,7 +329,7 @@ async function sendWeeklyNewsletter() {
 
       try {
         await resend.emails.send({
-          from: 'No Commute Jobs <nocommutejobs@gmail.com>',
+          from: 'onboarding@resend.dev',
           to: batch.map(s => s.email),
           subject: `🚀 ${weeklyJobs.length} New Remote Jobs This Week`,
           html: emailHTML
