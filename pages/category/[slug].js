@@ -473,7 +473,7 @@ export async function getStaticProps({ params }) {
         category: slug,
         initialJobs: serializedJobs
       },
-      revalidate: 21600 // Revalidate every 6 hours
+      revalidate: 300 // Revalidate every 5 minutes (faster updates)
     };
   } catch (error) {
     console.error(`[${slug}] Error in getStaticProps:`, error);
