@@ -413,28 +413,35 @@ export async function getStaticProps({ params }) {
   const config = categoryConfig[slug] || categoryConfig['software-development'];
 
   try {
+    // Fetch ALL jobs first, then filter in JavaScript after normalizing
+    // This is necessary because the database stores raw category names
+    // but we need to match against normalized category names
     const result = await pool.query(`
       SELECT * FROM jobs
-      WHERE category = $1
       ORDER BY
         COALESCE(featured, false) DESC,
         created_at DESC
-      LIMIT 100
-    `, [config.name]);
+      LIMIT 1000
+    `);
 
-    const transformedJobs = result.rows.map((job) => ({
-      id: job.id,
-      title: job.title,
-      company: job.company,
-      location: job.location || 'Remote',
-      salary: job.salary || 'Competitive',
-      type: job.type || 'Full-time',
-      category: normalizeCategory(job.category),
-      tags: job.tags || [],
-      postedDate: job.posted_date || job.created_at,
-      applyUrl: job.apply_url || job.url || '#',
-      slug: job.slug
-    }));
+    // Transform and filter jobs by normalized category
+    const transformedJobs = result.rows
+      .map((job) => ({
+        id: job.id,
+        title: job.title,
+        company: job.company,
+        location: job.location || 'Remote',
+        salary: job.salary || 'Competitive',
+        type: job.type || 'Full-time',
+        category: normalizeCategory(job.category),
+        tags: job.tags || [],
+        postedDate: job.posted_date || job.created_at,
+        applyUrl: job.apply_url || job.url || '#',
+        slug: job.slug,
+        originalCategory: job.category // Keep original for debugging
+      }))
+      .filter(job => job.category === config.name)
+      .slice(0, 100); // Limit to 100 after filtering
 
     await pool.end();
 
@@ -443,7 +450,7 @@ export async function getStaticProps({ params }) {
         category: slug,
         initialJobs: transformedJobs
       },
-      revalidate: 21600
+      revalidate: 21600 // Revalidate every 6 hours
     };
   } catch (error) {
     console.error('Error in getStaticProps:', error);
