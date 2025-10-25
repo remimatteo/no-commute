@@ -174,6 +174,16 @@ export default function CategoryJobs({ category, initialJobs = [] }) {
 
   const config = categoryConfig[category] || categoryConfig['software-development'];
 
+  // Debug: Log jobs on mount
+  useEffect(() => {
+    console.log(`[CategoryJobs] Category: ${category}`);
+    console.log(`[CategoryJobs] Initial jobs count: ${initialJobs.length}`);
+    console.log(`[CategoryJobs] Config name: ${config.name}`);
+    if (initialJobs.length === 0) {
+      console.warn(`[CategoryJobs] WARNING: No jobs received for ${category}!`);
+    }
+  }, []);
+
   const filteredJobs = useMemo(() => jobs.filter(job => {
     if (!searchQuery.trim()) return true;
     const query = searchQuery.toLowerCase();
@@ -424,6 +434,8 @@ export async function getStaticProps({ params }) {
       LIMIT 1000
     `);
 
+    console.log(`[${slug}] Fetched ${result.rows.length} jobs from database`);
+
     // Transform and filter jobs by normalized category
     const transformedJobs = result.rows
       .map((job) => ({
@@ -443,17 +455,28 @@ export async function getStaticProps({ params }) {
       .filter(job => job.category === config.name)
       .slice(0, 100); // Limit to 100 after filtering
 
+    console.log(`[${slug}] Filtered to ${transformedJobs.length} jobs for "${config.name}"`);
+
     await pool.end();
+
+    // Ensure we're returning serializable data (no undefined values)
+    const serializedJobs = transformedJobs.map(job => ({
+      ...job,
+      tags: job.tags || [],
+      postedDate: job.postedDate?.toString() || new Date().toISOString(),
+      applyUrl: job.applyUrl || '#',
+      slug: job.slug || ''
+    }));
 
     return {
       props: {
         category: slug,
-        initialJobs: transformedJobs
+        initialJobs: serializedJobs
       },
       revalidate: 21600 // Revalidate every 6 hours
     };
   } catch (error) {
-    console.error('Error in getStaticProps:', error);
+    console.error(`[${slug}] Error in getStaticProps:`, error);
 
     try {
       await pool.end();
