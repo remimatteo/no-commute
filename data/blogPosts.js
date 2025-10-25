@@ -1,5 +1,217 @@
 export const blogPosts = [
   {
+    title: "Remote Work Statistics 2025: We Analyzed 3,465 Job Listings",
+    slug: "remote-work-statistics-2025",
+    author: "Remi",
+    date: "2025-01-27",
+    readTime: "6 min read",
+    excerpt: "We analyzed 3,465 remote job listings to uncover the latest trends in remote work. Here's what the data reveals about salaries, top hiring companies, in-demand skills, and location requirements.",
+    tags: ["Remote Work", "Statistics", "Data Analysis", "Salary"],
+    image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=400&fit=crop",
+    content: `
+      <h2>The State of Remote Work in 2025</h2>
+      <p>Remote work isn't slowing down. To understand the current landscape, we analyzed <strong>3,465 active remote job listings</strong> from our database. Here's what the data reveals.</p>
+
+      <h2>Key Findings at a Glance</h2>
+      <ul>
+        <li><strong>3,465 active remote positions</strong> across all industries</li>
+        <li><strong>Only 28.1% disclose salary ranges</strong> - transparency is still lacking</li>
+        <li><strong>Software Development dominates</strong> with 483 positions (14% of total)</li>
+        <li><strong>USA-focused roles lead</strong> with 1,226 positions (35%)</li>
+        <li><strong>280 jobs (8%) are truly global</strong> - "Anywhere/Worldwide"</li>
+      </ul>
+
+      <h2>1. Most In-Demand Remote Job Categories</h2>
+      <p>Here's the breakdown of where the opportunities are:</p>
+
+      <table style="width:100%; border-collapse: collapse; margin: 20px 0;">
+        <thead>
+          <tr style="background: #f3f4f6; text-align: left;">
+            <th style="padding: 12px; border: 1px solid #e5e7eb;">Category</th>
+            <th style="padding: 12px; border: 1px solid #e5e7eb;">Number of Jobs</th>
+            <th style="padding: 12px; border: 1px solid #e5e7eb;">% of Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="padding: 12px; border: 1px solid #e5e7eb;"><strong>Software Development</strong></td>
+            <td style="padding: 12px; border: 1px solid #e5e7eb;">483</td>
+            <td style="padding: 12px; border: 1px solid #e5e7eb;">13.9%</td>
+          </tr>
+          <tr>
+            <td style="padding: 12px; border: 1px solid #e5e7eb;">Sales / Business Development</td>
+            <td style="padding: 12px; border: 1px solid #e5e7eb;">203</td>
+            <td style="padding: 12px; border: 1px solid #e5e7eb;">5.9%</td>
+          </tr>
+          <tr>
+            <td style="padding: 12px; border: 1px solid #e5e7eb;">DevOps / System Admin</td>
+            <td style="padding: 12px; border: 1px solid #e5e7eb;">202</td>
+            <td style="padding: 12px; border: 1px solid #e5e7eb;">5.8%</td>
+          </tr>
+          <tr>
+            <td style="padding: 12px; border: 1px solid #e5e7eb;">Customer Service</td>
+            <td style="padding: 12px; border: 1px solid #e5e7eb;">192</td>
+            <td style="padding: 12px; border: 1px solid #e5e7eb;">5.5%</td>
+          </tr>
+          <tr>
+            <td style="padding: 12px; border: 1px solid #e5e7eb;">Design (UI/UX)</td>
+            <td style="padding: 12px; border: 1px solid #e5e7eb;">176</td>
+            <td style="padding: 12px; border: 1px solid #e5e7eb;">5.1%</td>
+          </tr>
+          <tr>
+            <td style="padding: 12px; border: 1px solid #e5e7eb;">Marketing</td>
+            <td style="padding: 12px; border: 1px solid #e5e7eb;">158</td>
+            <td style="padding: 12px; border: 1px solid #e5e7eb;">4.6%</td>
+          </tr>
+          <tr>
+            <td style="padding: 12px; border: 1px solid #e5e7eb;">Finance / Legal</td>
+            <td style="padding: 12px; border: 1px solid #e5e7eb;">144</td>
+            <td style="padding: 12px; border: 1px solid #e5e7eb;">4.2%</td>
+          </tr>
+          <tr>
+            <td style="padding: 12px; border: 1px solid #e5e7eb;">Data Analysis</td>
+            <td style="padding: 12px; border: 1px solid #e5e7eb;">140</td>
+            <td style="padding: 12px; border: 1px solid #e5e7eb;">4.0%</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p><strong>Key Takeaway:</strong> Software development remains the king of remote work, representing nearly 14% of all available positions. However, opportunities exist across diverse fields - from customer service to finance.</p>
+
+      <h2>2. The Salary Transparency Problem</h2>
+      <p>One of the most striking findings: <strong>only 28.1% of remote job listings disclose salary information.</strong></p>
+
+      <ul>
+        <li>✅ <strong>973 jobs</strong> (28.1%) list salary ranges</li>
+        <li>❌ <strong>2,492 jobs</strong> (71.9%) hide compensation details</li>
+      </ul>
+
+      <p>This lack of transparency wastes job seekers' time and perpetuates pay inequality. Companies that disclose salaries upfront demonstrate respect for candidates and attract more qualified applicants.</p>
+
+      <p><strong>Our recommendation:</strong> Filter for "Salary Listed" when searching to find employers committed to pay transparency.</p>
+
+      <h2>3. Companies Hiring the Most Remote Workers</h2>
+      <p>Here are the top employers actively building remote teams:</p>
+
+      <ol>
+        <li><strong>Mercor</strong> - 194 active positions</li>
+        <li><strong>Capital One</strong> - 7 positions</li>
+        <li><strong>BruntWork</strong> - 7 positions</li>
+        <li><strong>Atlassian</strong> - 6 positions</li>
+        <li><strong>Samsara</strong> - 6 positions</li>
+        <li><strong>1inch</strong> - 6 positions (crypto/DeFi)</li>
+        <li><strong>Monzo</strong> - 6 positions (fintech)</li>
+      </ol>
+
+      <p>Interestingly, Mercor dominates with nearly 200 positions - suggesting aggressive growth in their remote-first approach.</p>
+
+      <h2>4. Location Requirements: Where Can You Work From?</h2>
+      <p>Not all "remote" jobs are created equal. Here's the geographic breakdown:</p>
+
+      <table style="width:100%; border-collapse: collapse; margin: 20px 0;">
+        <thead>
+          <tr style="background: #f3f4f6; text-align: left;">
+            <th style="padding: 12px; border: 1px solid #e5e7eb;">Location Requirement</th>
+            <th style="padding: 12px; border: 1px solid #e5e7eb;">Number of Jobs</th>
+            <th style="padding: 12px; border: 1px solid #e5e7eb;">% of Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="padding: 12px; border: 1px solid #e5e7eb;"><strong>USA Only</strong></td>
+            <td style="padding: 12px; border: 1px solid #e5e7eb;">1,226</td>
+            <td style="padding: 12px; border: 1px solid #e5e7eb;">35.4%</td>
+          </tr>
+          <tr>
+            <td style="padding: 12px; border: 1px solid #e5e7eb;"><strong>Anywhere/Worldwide</strong></td>
+            <td style="padding: 12px; border: 1px solid #e5e7eb;">280</td>
+            <td style="padding: 12px; border: 1px solid #e5e7eb;">8.1%</td>
+          </tr>
+          <tr>
+            <td style="padding: 12px; border: 1px solid #e5e7eb;">UK Only</td>
+            <td style="padding: 12px; border: 1px solid #e5e7eb;">121</td>
+            <td style="padding: 12px; border: 1px solid #e5e7eb;">3.5%</td>
+          </tr>
+          <tr>
+            <td style="padding: 12px; border: 1px solid #e5e7eb;">Europe</td>
+            <td style="padding: 12px; border: 1px solid #e5e7eb;">108</td>
+            <td style="padding: 12px; border: 1px solid #e5e7eb;">3.1%</td>
+          </tr>
+          <tr>
+            <td style="padding: 12px; border: 1px solid #e5e7eb;">Canada</td>
+            <td style="padding: 12px; border: 1px solid #e5e7eb;">95</td>
+            <td style="padding: 12px; border: 1px solid #e5e7eb;">2.7%</td>
+          </tr>
+          <tr>
+            <td style="padding: 12px; border: 1px solid #e5e7eb;">Other/Unspecified</td>
+            <td style="padding: 12px; border: 1px solid #e5e7eb;">1,635</td>
+            <td style="padding: 12px; border: 1px solid #e5e7eb;">47.2%</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p><strong>Key Insights:</strong></p>
+      <ul>
+        <li>Over one-third of remote jobs require US residency (likely for legal/tax reasons)</li>
+        <li>Only 8% are truly location-agnostic - the dream of working from anywhere isn't universal</li>
+        <li>Digital nomads should specifically filter for "Anywhere/Worldwide" positions</li>
+        <li>European and Canadian workers have fewer options than US-based candidates</li>
+      </ul>
+
+      <h2>5. Market Activity: Hiring Is Hot</h2>
+      <p>All 3,465 jobs in our analysis were posted within the <strong>last 30 days</strong>, indicating robust hiring activity.</p>
+
+      <p>Companies are actively building remote teams across all industries. This isn't a temporary trend - remote work is now standard practice for knowledge workers.</p>
+
+      <h2>What This Means for Job Seekers</h2>
+
+      <h3>If You're a Developer:</h3>
+      <p>You're in the best position. With 483 software development roles plus 202 DevOps positions, nearly 20% of all remote jobs are in tech engineering. Focus on:</p>
+      <ul>
+        <li>Building projects that demonstrate remote collaboration skills</li>
+        <li>Highlighting async communication abilities in your resume</li>
+        <li>Targeting companies with strong remote-first cultures (Atlassian, GitLab, etc.)</li>
+      </ul>
+
+      <h3>If You're Not in Tech:</h3>
+      <p>Don't despair. Over 2,000 non-technical remote positions exist across:</p>
+      <ul>
+        <li>Sales & Business Development (203 jobs)</li>
+        <li>Customer Service (192 jobs)</li>
+        <li>Marketing (158 jobs)</li>
+        <li>Finance & Legal (144 jobs)</li>
+      </ul>
+
+      <h3>If You're Outside the USA:</h3>
+      <p>Filter aggressively for "Anywhere" or your specific region. Only 8% of jobs are location-agnostic, so you'll need to be strategic about which roles you target.</p>
+
+      <h2>The Salary Transparency Call to Action</h2>
+      <p>To employers: <strong>List your salary ranges.</strong> You'll attract better candidates and save everyone time.</p>
+
+      <p>To job seekers: <strong>Demand transparency.</strong> Don't waste time on companies that won't disclose compensation upfront. The 28% of employers who do are signaling respect for your time.</p>
+
+      <h2>Methodology</h2>
+      <p>This analysis is based on 3,465 remote job listings aggregated from leading remote job boards including RemoteOK and Remotive. Data was collected in January 2025. All jobs were active within the 30-day collection period.</p>
+
+      <h2>Browse Remote Jobs by Category</h2>
+      <p>Ready to find your next remote role? Browse our curated listings:</p>
+      <ul>
+        <li><a href="/category/software-development">Remote Software Development Jobs</a> (483 positions)</li>
+        <li><a href="/category/design">Remote Design Jobs</a> (176 positions)</li>
+        <li><a href="/category/marketing">Remote Marketing Jobs</a> (158 positions)</li>
+        <li><a href="/category/sales">Remote Sales Jobs</a> (203 positions)</li>
+        <li><a href="/category/customer-service">Remote Customer Service Jobs</a> (192 positions)</li>
+        <li><a href="/">View All Remote Jobs</a> (3,400+ positions)</li>
+      </ul>
+
+      <p><strong>Get weekly remote job alerts:</strong> <a href="/#newsletter">Subscribe to our newsletter</a> and never miss new opportunities.</p>
+
+      <hr style="margin: 40px 0; border: none; border-top: 2px solid #e5e7eb;">
+
+      <p><em>Data accurate as of January 2025. Job counts and statistics are updated daily on No Commute Jobs.</em></p>
+    `
+  },
+  {
     title: "From Retail to Remote Developer: A 6-Month Transformation Story",
     slug: "become-software-developer-no-degree",
     author: "Sarah Chen",
