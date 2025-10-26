@@ -787,11 +787,9 @@ const [totalJobs, setTotalJobs] = useState(initialTotalJobs);
               <Link
                 key={job.id}
                 href={`/jobs/${job.id}/${slug}`}
-                scroll={true}
-                prefetch={false}
+                className={`group ${darkMode ? 'bg-gray-800 border-gray-700 hover:bg-gray-750' : 'bg-white border-gray-200 hover:bg-gray-50'} rounded-lg border transition-all cursor-pointer p-4 flex items-center gap-4 hover:border-blue-400 block`}
               >
-                <div className={`group ${darkMode ? 'bg-gray-800 border-gray-700 hover:bg-gray-750' : 'bg-white border-gray-200 hover:bg-gray-50'} rounded-lg border transition-all cursor-pointer p-4 flex items-center gap-4 hover:border-blue-400 block`}>
-                  <div className={`w-12 h-12 ${darkMode ? 'bg-gray-700' : 'bg-gray-100'} rounded-lg flex items-center justify-center flex-shrink-0 overflow-hidden relative`}>
+                <div className={`w-12 h-12 ${darkMode ? 'bg-gray-700' : 'bg-gray-100'} rounded-lg flex items-center justify-center flex-shrink-0 overflow-hidden relative`}>
                   <img
                     src={`https://logo.clearbit.com/${companyToDomain(job.company)}?size=80`}
                     alt={job.company}
@@ -843,7 +841,6 @@ const [totalJobs, setTotalJobs] = useState(initialTotalJobs);
                     <span className={`${darkMode ? 'text-gray-500' : 'text-gray-500'} text-sm whitespace-nowrap`}>
                       {formatDate(job.postedDate)}
                     </span>
-                  </div>
                   </div>
                 </div>
               </Link>
