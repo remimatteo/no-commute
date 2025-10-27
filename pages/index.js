@@ -159,6 +159,7 @@ export default function Home({ initialJobs = [], initialTotalJobs = 0 }) {
   const [jobs, setJobs] = useState(initialJobs);
   const [loading, setLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState(router.query.search || "");
+  const [debouncedSearchQuery, setDebouncedSearchQuery] = useState(router.query.search || "");
   const [showFilterMenu, setShowFilterMenu] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
@@ -167,6 +168,15 @@ export default function Home({ initialJobs = [], initialTotalJobs = 0 }) {
   const [salaryListed, setSalaryListed] = useState(router.query.salary || "All");
   const [experience, setExperience] = useState(router.query.experience || "All");
   
+  // Debounce search query - wait 500ms after user stops typing
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearchQuery(searchQuery);
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
+
   // Function to update URL when filters change
   const updateURL = useCallback((filters) => {
     const query = {};
@@ -200,16 +210,16 @@ export default function Home({ initialJobs = [], initialTotalJobs = 0 }) {
 const [visibleJobsCount, setVisibleJobsCount] = useState(30);
 const [totalJobs, setTotalJobs] = useState(initialTotalJobs);
 
-  // Update URL when filters change
+  // Update URL when filters change (use debounced search for URL)
   useEffect(() => {
     updateURL({
-      search: searchQuery,
+      search: debouncedSearchQuery,
       category,
       location,
       salary: salaryListed,
       experience
     });
-  }, [category, location, salaryListed, experience, searchQuery, updateURL]);
+  }, [category, location, salaryListed, experience, debouncedSearchQuery, updateURL]);
 
   // Fetch jobs when filters change (only if not using default filters)
   useEffect(() => {
@@ -218,7 +228,7 @@ const [totalJobs, setTotalJobs] = useState(initialTotalJobs);
                             location === "All" &&
                             salaryListed === "All" &&
                             experience === "All" &&
-                            searchQuery === "";
+                            debouncedSearchQuery === "";
 
     // If using default filters and we have initial jobs, skip API call
     if (isDefaultFilters && initialJobs.length > 0) {
@@ -235,7 +245,7 @@ const [totalJobs, setTotalJobs] = useState(initialTotalJobs);
           location,
           salaryListed,
           experience,
-          search: searchQuery,
+          search: debouncedSearchQuery,
           limit: 100
         });
 
@@ -286,7 +296,7 @@ const [totalJobs, setTotalJobs] = useState(initialTotalJobs);
     return () => {
       isMounted = false;
     };
-  }, [category, location, salaryListed, experience, searchQuery, initialJobs.length]);
+  }, [category, location, salaryListed, experience, debouncedSearchQuery, initialJobs.length]);
 
   // Typing animation effect
   useEffect(() => {
