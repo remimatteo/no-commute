@@ -159,6 +159,7 @@ export default function Home({ initialJobs = [], initialTotalJobs = 0 }) {
   const [jobs, setJobs] = useState(initialJobs);
   const [loading, setLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState(router.query.search || "");
+  const [debouncedSearchQuery, setDebouncedSearchQuery] = useState(router.query.search || "");
   const [showFilterMenu, setShowFilterMenu] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
@@ -166,7 +167,16 @@ export default function Home({ initialJobs = [], initialTotalJobs = 0 }) {
   const [location, setLocation] = useState(router.query.location || "All");
   const [salaryListed, setSalaryListed] = useState(router.query.salary || "All");
   const [experience, setExperience] = useState(router.query.experience || "All");
-  
+
+  // Debounce search query - wait 500ms after user stops typing
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearchQuery(searchQuery);
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
+
   // Function to update URL when filters change
   const updateURL = useCallback((filters) => {
     const query = {};
@@ -200,16 +210,16 @@ export default function Home({ initialJobs = [], initialTotalJobs = 0 }) {
 const [visibleJobsCount, setVisibleJobsCount] = useState(30);
 const [totalJobs, setTotalJobs] = useState(initialTotalJobs);
 
-  // Update URL when filters change
+  // Update URL when filters change (use debounced search to prevent URL spam)
   useEffect(() => {
     updateURL({
-      search: searchQuery,
+      search: debouncedSearchQuery,
       category,
       location,
       salary: salaryListed,
       experience
     });
-  }, [category, location, salaryListed, experience, searchQuery, updateURL]);
+  }, [category, location, salaryListed, experience, debouncedSearchQuery, updateURL]);
 
   // Fetch jobs when filters change (only if not using default filters)
   useEffect(() => {
@@ -218,7 +228,7 @@ const [totalJobs, setTotalJobs] = useState(initialTotalJobs);
                             location === "All" &&
                             salaryListed === "All" &&
                             experience === "All" &&
-                            searchQuery === "";
+                            debouncedSearchQuery === "";
 
     // If using default filters and we have initial jobs, skip API call
     if (isDefaultFilters && initialJobs.length > 0) {
@@ -235,7 +245,7 @@ const [totalJobs, setTotalJobs] = useState(initialTotalJobs);
           location,
           salaryListed,
           experience,
-          search: searchQuery,
+          search: debouncedSearchQuery,
           limit: 100
         });
 
@@ -286,7 +296,7 @@ const [totalJobs, setTotalJobs] = useState(initialTotalJobs);
     return () => {
       isMounted = false;
     };
-  }, [category, location, salaryListed, experience, searchQuery, initialJobs.length]);
+  }, [category, location, salaryListed, experience, debouncedSearchQuery, initialJobs.length]);
 
   // Typing animation effect
   useEffect(() => {
@@ -356,7 +366,7 @@ const [totalJobs, setTotalJobs] = useState(initialTotalJobs);
   // Reset visible jobs count when search/filters change
   useEffect(() => {
     setVisibleJobsCount(30);
-  }, [searchQuery, category, location, salaryListed, experience]);
+  }, [debouncedSearchQuery, category, location, salaryListed, experience]);
 
   // Smart search with operators - memoized to prevent infinite re-renders
   const filteredJobs = useMemo(() => jobs
@@ -837,10 +847,11 @@ const [totalJobs, setTotalJobs] = useState(initialTotalJobs);
                     <span className={`${darkMode ? 'text-gray-400' : 'text-gray-600'} truncate`}>{job.location}</span>
                   </div>
 
-                  <div className="sm:col-span-1 text-right">
+                  <div className="sm:col-span-1 flex items-center justify-end gap-2">
                     <span className={`${darkMode ? 'text-gray-500' : 'text-gray-500'} text-sm whitespace-nowrap`}>
                       {formatDate(job.postedDate)}
                     </span>
+                    <ExternalLink className={`w-4 h-4 ${darkMode ? 'text-gray-600' : 'text-gray-400'} group-hover:text-blue-500 transition-colors flex-shrink-0`} />
                   </div>
                 </div>
               </Link>
