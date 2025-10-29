@@ -434,7 +434,7 @@ export async function getStaticProps({ params }) {
       LIMIT 1000
     `);
 
-    console.log(`[${slug}] Fetched ${result.rows.length} jobs from database`);
+    console.log(`[getStaticProps] Category: ${slug}, Fetched ${result.rows.length} total jobs from database`);
 
     // Transform and filter jobs by normalized category
     const transformedJobs = result.rows
@@ -455,7 +455,7 @@ export async function getStaticProps({ params }) {
       .filter(job => job.category === config.name)
       .slice(0, 100); // Limit to 100 after filtering
 
-    console.log(`[${slug}] Filtered to ${transformedJobs.length} jobs for "${config.name}"`);
+    console.log(`[getStaticProps] Category: ${slug}, Filtered to ${transformedJobs.length} jobs matching "${config.name}"`);
 
     await pool.end();
 
