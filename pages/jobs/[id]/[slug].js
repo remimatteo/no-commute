@@ -208,11 +208,22 @@ export default function JobDetailPage({ job, similarJobs = [] }) {
               href={transformedJob.applyUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-8 rounded-xl inline-flex items-center justify-center gap-3 text-lg transition-all transform hover:scale-105 shadow-lg mb-8"
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-8 rounded-xl inline-flex items-center justify-center gap-3 text-lg transition-all transform hover:scale-105 shadow-lg mb-2"
             >
               Apply on Company Website
               <ExternalLink className="w-5 h-5" />
             </a>
+            {/* Display Apply URL */}
+            <div className="mb-8 text-center">
+              <a
+                href={transformedJob.applyUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`text-sm ${darkMode ? 'text-blue-400 hover:text-blue-300' : 'text-blue-600 hover:text-blue-700'} break-all transition-colors`}
+              >
+                {transformedJob.applyUrl}
+              </a>
+            </div>
 
             {/* Job Description */}
             <div className={`${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} rounded-2xl p-6 sm:p-8 shadow-lg mb-6 border transition-colors`}>
@@ -245,14 +256,25 @@ export default function JobDetailPage({ job, similarJobs = [] }) {
               href={transformedJob.applyUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-8 rounded-xl inline-flex items-center justify-center gap-3 text-lg transition-all transform hover:scale-105 shadow-lg"
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-8 rounded-xl inline-flex items-center justify-center gap-3 text-lg transition-all transform hover:scale-105 shadow-lg mb-2"
             >
               Apply on Company Website
               <ExternalLink className="w-5 h-5" />
             </a>
+            {/* Display Apply URL */}
+            <div className="mb-4 text-center">
+              <a
+                href={transformedJob.applyUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`text-sm ${darkMode ? 'text-blue-400 hover:text-blue-300' : 'text-blue-600 hover:text-blue-700'} break-all transition-colors`}
+              >
+                {transformedJob.applyUrl}
+              </a>
+            </div>
 
             {/* Job Source */}
-            <p className={`text-sm ${darkMode ? 'text-gray-500' : 'text-gray-600'} text-center mt-6`}>
+            <p className={`text-sm ${darkMode ? 'text-gray-500' : 'text-gray-600'} text-center mt-2`}>
               Job sourced from {transformedJob.source}
             </p>
           </div>

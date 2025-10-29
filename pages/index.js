@@ -159,7 +159,7 @@ export default function Home({ initialJobs = [], initialTotalJobs = 0 }) {
   const [jobs, setJobs] = useState(initialJobs);
   const [loading, setLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState(router.query.search || "");
-  const [debouncedSearchQuery, setDebouncedSearchQuery] = useState(router.query.search || "");
+  const [submittedSearch, setSubmittedSearch] = useState(router.query.search || "");
   const [showFilterMenu, setShowFilterMenu] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
@@ -168,14 +168,17 @@ export default function Home({ initialJobs = [], initialTotalJobs = 0 }) {
   const [salaryListed, setSalaryListed] = useState(router.query.salary || "All");
   const [experience, setExperience] = useState(router.query.experience || "All");
 
-  // Debounce search query - wait 500ms after user stops typing
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setDebouncedSearchQuery(searchQuery);
-    }, 500);
-
-    return () => clearTimeout(timer);
+  // Handle search submission (button click or Enter key)
+  const handleSearchSubmit = useCallback(() => {
+    setSubmittedSearch(searchQuery);
   }, [searchQuery]);
+
+  // Handle Enter key in search input
+  const handleSearchKeyPress = useCallback((e) => {
+    if (e.key === 'Enter') {
+      handleSearchSubmit();
+    }
+  }, [handleSearchSubmit]);
 
   // Function to update URL when filters change
   const updateURL = useCallback((filters) => {
@@ -210,16 +213,16 @@ export default function Home({ initialJobs = [], initialTotalJobs = 0 }) {
 const [visibleJobsCount, setVisibleJobsCount] = useState(30);
 const [totalJobs, setTotalJobs] = useState(initialTotalJobs);
 
-  // Update URL when filters change (use debounced search to prevent URL spam)
+  // Update URL when filters change (use submitted search only)
   useEffect(() => {
     updateURL({
-      search: debouncedSearchQuery,
+      search: submittedSearch,
       category,
       location,
       salary: salaryListed,
       experience
     });
-  }, [category, location, salaryListed, experience, debouncedSearchQuery, updateURL]);
+  }, [category, location, salaryListed, experience, submittedSearch, updateURL]);
 
   // Fetch jobs when filters change (only if not using default filters)
   useEffect(() => {
@@ -228,7 +231,7 @@ const [totalJobs, setTotalJobs] = useState(initialTotalJobs);
                             location === "All" &&
                             salaryListed === "All" &&
                             experience === "All" &&
-                            debouncedSearchQuery === "";
+                            submittedSearch === "";
 
     // If using default filters and we have initial jobs, skip API call
     if (isDefaultFilters && initialJobs.length > 0) {
@@ -245,7 +248,7 @@ const [totalJobs, setTotalJobs] = useState(initialTotalJobs);
           location,
           salaryListed,
           experience,
-          search: debouncedSearchQuery,
+          search: submittedSearch,
           limit: 100
         });
 
@@ -296,7 +299,7 @@ const [totalJobs, setTotalJobs] = useState(initialTotalJobs);
     return () => {
       isMounted = false;
     };
-  }, [category, location, salaryListed, experience, debouncedSearchQuery, initialJobs.length]);
+  }, [category, location, salaryListed, experience, submittedSearch, initialJobs.length]);
 
   // Typing animation effect
   useEffect(() => {
@@ -366,7 +369,7 @@ const [totalJobs, setTotalJobs] = useState(initialTotalJobs);
   // Reset visible jobs count when search/filters change
   useEffect(() => {
     setVisibleJobsCount(30);
-  }, [debouncedSearchQuery, category, location, salaryListed, experience]);
+  }, [submittedSearch, category, location, salaryListed, experience]);
 
   // Smart search with operators - memoized to prevent infinite re-renders
   const filteredJobs = useMemo(() => jobs
@@ -602,8 +605,15 @@ const [totalJobs, setTotalJobs] = useState(initialTotalJobs);
                   placeholder="Search: 'developer' or 'title:engineer' or 'react | vue' or '-junior'"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
+                  onKeyPress={handleSearchKeyPress}
                   className={`flex-1 ${darkMode ? 'bg-gray-800 text-white placeholder-gray-500' : 'bg-white text-gray-900 placeholder-gray-400'} px-4 py-3 outline-none text-lg`}
                 />
+                <button
+                  onClick={handleSearchSubmit}
+                  className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-semibold transition-colors"
+                >
+                  Search
+                </button>
                 <button
                   onClick={() => setShowFilterMenu(!showFilterMenu)}
                   className={`${darkMode ? 'bg-gray-700 hover:bg-gray-600' : 'bg-gray-100 hover:bg-gray-200'} px-6 py-3 rounded-xl font-semibold flex items-center gap-2 transition-colors`}
@@ -791,7 +801,7 @@ const [totalJobs, setTotalJobs] = useState(initialTotalJobs);
           </p>
 
           <div className="space-y-2">
-            {filteredJobs.slice(0, visibleJobsCount).map(job => {
+            {filteredJobs.slice(0, visibleJobsCount).map((job, index) => {
               const slug = job.slug || generateJobSlug(job.title, job.company);
               return (
               <Link
@@ -804,7 +814,7 @@ const [totalJobs, setTotalJobs] = useState(initialTotalJobs);
                     src={`https://logo.clearbit.com/${companyToDomain(job.company)}?size=80`}
                     alt={job.company}
                     className="w-full h-full object-cover"
-                    loading="lazy"
+                    loading={index < 30 ? "eager" : "lazy"}
                     width="48"
                     height="48"
                     onError={(e) => {
