@@ -715,7 +715,7 @@ const [totalJobs, setTotalJobs] = useState(initialTotalJobs);
 
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mt-12 max-w-4xl mx-auto">
               <div className={`${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} p-4 rounded-xl border transition-colors`}>
-                <div className={`text-3xl font-black ${darkMode ? 'text-white' : 'text-gray-900'}`}>{new Set(jobs.map(j => j.company)).size}</div>
+                <div className={`text-3xl font-black ${darkMode ? 'text-white' : 'text-gray-900'}`}>500+</div>
                 <div className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>Companies</div>
               </div>
               <div className={`${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} p-4 rounded-xl border transition-colors`}>
