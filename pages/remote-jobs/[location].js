@@ -424,7 +424,7 @@ export async function getStaticProps({ params }) {
       location: job.location || 'Remote',
       salary: job.salary || 'Competitive',
       type: job.type || 'Full-time',
-      category: normalizeCategory(job.category),
+      category: job.category, // Use DB category directly - already normalized
       tags: job.tags || [],
       postedDate: job.posted_date || job.created_at,
       description: job.description || '',

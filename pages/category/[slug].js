@@ -436,7 +436,7 @@ export async function getStaticProps({ params }) {
 
     console.log(`[getStaticProps] Category: ${slug}, Fetched ${result.rows.length} total jobs from database`);
 
-    // Transform and filter jobs by normalized category
+    // Transform jobs - NO normalization needed, DB already has normalized categories
     const transformedJobs = result.rows
       .map((job) => ({
         id: job.id,
@@ -445,12 +445,11 @@ export async function getStaticProps({ params }) {
         location: job.location || 'Remote',
         salary: job.salary || 'Competitive',
         type: job.type || 'Full-time',
-        category: normalizeCategory(job.category),
+        category: job.category, // Use DB category directly
         tags: job.tags || [],
         postedDate: job.posted_date || job.created_at,
         applyUrl: job.apply_url || job.url || '#',
-        slug: job.slug,
-        originalCategory: job.category // Keep original for debugging
+        slug: job.slug
       }))
       .filter(job => job.category === config.name)
       .slice(0, 100); // Limit to 100 after filtering
