@@ -213,26 +213,17 @@ export default function JobDetailPage({ job, similarJobs = [] }) {
               Apply on Company Website
               <ExternalLink className="w-5 h-5" />
             </a>
-            {/* Display Apply URL */}
-            <div className="mb-8 text-center">
-              <a
-                href={transformedJob.applyUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={`text-sm ${darkMode ? 'text-blue-400 hover:text-blue-300' : 'text-blue-600 hover:text-blue-700'} break-all transition-colors`}
-              >
-                {transformedJob.applyUrl}
-              </a>
-            </div>
 
-            {/* Job Description */}
-            <div className={`${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} rounded-2xl p-6 sm:p-8 shadow-lg mb-6 border transition-colors`}>
-              <h3 className={`text-2xl font-bold ${darkMode ? 'text-white' : 'text-gray-900'} mb-4`}>About the Role</h3>
-              <div
-                className={`${darkMode ? 'text-gray-300' : 'text-gray-700'} leading-relaxed prose prose-invert max-w-none job-description`}
-                dangerouslySetInnerHTML={{ __html: transformedJob.description }}
-              />
-            </div>
+            {/* Job Description - Only show if description exists and has content */}
+            {transformedJob.description && transformedJob.description.trim().length > 50 && (
+              <div className={`${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} rounded-2xl p-6 sm:p-8 shadow-lg mb-6 border transition-colors`}>
+                <h3 className={`text-2xl font-bold ${darkMode ? 'text-white' : 'text-gray-900'} mb-4`}>About the Role</h3>
+                <div
+                  className={`${darkMode ? 'text-gray-300' : 'text-gray-700'} leading-relaxed prose prose-invert max-w-none job-description`}
+                  dangerouslySetInnerHTML={{ __html: transformedJob.description }}
+                />
+              </div>
+            )}
 
             {/* Skills & Tags */}
             {transformedJob.tags.length > 0 && (

@@ -1,12 +1,16 @@
 import pg from 'pg';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const { Pool } = pg;
 
+// Configure for Render PostgreSQL
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
-  ssl: {
-    rejectUnauthorized: false
-  }
+  ssl: process.env.DATABASE_URL?.includes('render.com')
+    ? { rejectUnauthorized: false }
+    : false
 });
 
 /**
@@ -514,21 +518,21 @@ async function scrapeFlexJobs() {
 }
 
 /**
- * Clean up old jobs (older than 30 days)
+ * Clean up old jobs (older than 14 days)
  */
 async function cleanupOldJobs() {
   console.log('🧹 Cleaning up old jobs...');
 
   try {
-    // Delete jobs older than 30 days
+    // Delete jobs older than 14 days
     const result = await pool.query(`
       DELETE FROM jobs
-      WHERE created_at < NOW() - INTERVAL '30 days'
+      WHERE created_at < NOW() - INTERVAL '14 days'
       RETURNING id
     `);
 
     const deletedCount = result.rowCount;
-    console.log(`✅ Removed ${deletedCount} old jobs (>30 days old)\n`);
+    console.log(`✅ Removed ${deletedCount} old jobs (>14 days old)\n`);
     return deletedCount;
   } catch (error) {
     console.error('❌ Error cleaning up old jobs:', error.message);
@@ -536,159 +540,160 @@ async function cleanupOldJobs() {
   }
 }
 
+// REMOVED: Himalayas scraper (requires login to apply to jobs)
 // Scrape Himalayas API
-async function scrapeHimalayas() {
-  console.log('🔍 Fetching jobs from Himalayas API...');
-
-  try {
-    // Himalayas API with pagination - fetch first 100 jobs
-    const response = await fetch('https://himalayas.app/jobs/api?limit=100', {
-      headers: {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
-      }
-    });
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
-    const data = await response.json();
-    const jobs = data.jobs || [];
-
-    console.log(`📦 Found ${jobs.length} jobs from Himalayas API (out of ${data.totalCount} total)`);
-
-    let inserted = 0;
-    let skipped = 0;
-    let errors = 0;
-
-    for (const job of jobs) {
-      try {
-        if (!job.applicationLink) {
-          errors++;
-          continue;
-        }
-
-        // Check for duplicates
-        const existing = await pool.query(
-          'SELECT id FROM jobs WHERE apply_url = $1',
-          [job.applicationLink]
-        );
-
-        if (existing.rows.length > 0) {
-          skipped++;
-          continue;
-        }
-
-        const title = job.title || 'Unknown Position';
-        const company = job.companyName || 'Unknown Company';
-        const slug = generateJobSlug(title, company);
-        const description = stripHtml(job.description || job.excerpt || '').substring(0, 2000);
-
-        // Determine location from restrictions
-        let location = 'Worldwide';
-        if (job.locationRestrictions && job.locationRestrictions.length > 0) {
-          location = job.locationRestrictions.join(', ');
-        }
-
-        // Handle salary
-        let salary = 'Competitive';
-        if (job.minSalary && job.maxSalary) {
-          const currency = job.currency || 'USD';
-          salary = `${currency} ${job.minSalary.toLocaleString()} - ${job.maxSalary.toLocaleString()}`;
-        } else if (job.minSalary) {
-          const currency = job.currency || 'USD';
-          salary = `${currency} ${job.minSalary.toLocaleString()}+`;
-        }
-
-        // Determine category from parentCategories or categories
-        let category = 'Other';
-        if (job.parentCategories && job.parentCategories.length > 0) {
-          const categoryString = job.parentCategories[0].toLowerCase();
-          if (categoryString.includes('engineering') || categoryString.includes('development')) {
-            category = 'Software Development';
-          } else if (categoryString.includes('design')) {
-            category = 'Design';
-          } else if (categoryString.includes('marketing')) {
-            category = 'Marketing';
-          } else if (categoryString.includes('sales')) {
-            category = 'Sales / Business';
-          } else if (categoryString.includes('support') || categoryString.includes('customer')) {
-            category = 'Customer Service';
-          } else if (categoryString.includes('data')) {
-            category = 'Data Analysis';
-          } else if (categoryString.includes('hr') || categoryString.includes('people')) {
-            category = 'Human Resources';
-          } else if (categoryString.includes('writing') || categoryString.includes('content')) {
-            category = 'Writing';
-          } else if (categoryString.includes('product')) {
-            category = 'Product';
-          } else if (categoryString.includes('qa') || categoryString.includes('quality')) {
-            category = 'QA';
-          }
-        }
-
-        // Job type
-        let jobType = 'Full-time';
-        if (job.employmentType) {
-          if (job.employmentType === 'Part Time') jobType = 'Part Time';
-          if (job.employmentType === 'Contract') jobType = 'Contract';
-        }
-
-        // Posted date
-        let postedDate = 'Recently';
-        if (job.pubDate) {
-          postedDate = new Date(job.pubDate * 1000).toLocaleDateString('en-US', {
-            month: 'short',
-            day: 'numeric',
-            year: 'numeric'
-          });
-        }
-
-        const tags = job.categories || ['Remote'];
-
-        await pool.query(
-          `INSERT INTO jobs
-          (title, company, slug, location, salary, type, category, tags, posted_date, description, requirements, apply_url, featured, source)
-          VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)`,
-          [
-            title,
-            company,
-            slug,
-            location,
-            salary,
-            jobType,
-            category,
-            tags,
-            postedDate,
-            description || 'No description provided.',
-            job.seniority || ['Remote work experience'],
-            job.applicationLink,
-            false,
-            'Himalayas'
-          ]
-        );
-
-        inserted++;
-
-        if (inserted % 50 === 0) {
-          console.log(`   ⏳ Processed ${inserted + skipped}/${jobs.length} jobs...`);
-        }
-      } catch (err) {
-        errors++;
-        if (errors <= 5) {
-          console.error(`   ✗ Error inserting Himalayas job "${job.title}": ${err.message}`);
-        }
-      }
-    }
-
-    console.log(`✅ Himalayas: Inserted ${inserted} new jobs, skipped ${skipped} duplicates, ${errors} errors`);
-    return { inserted, skipped, errors, source: 'Himalayas' };
-
-  } catch (error) {
-    console.error('❌ Error scraping Himalayas:', error.message);
-    return { inserted: 0, skipped: 0, errors: 1, source: 'Himalayas', error: error.message };
-  }
-}
+// async function scrapeHimalayas() {
+//   console.log('🔍 Fetching jobs from Himalayas API...');
+//
+//   try {
+//     // Himalayas API with pagination - fetch first 100 jobs
+//     const response = await fetch('https://himalayas.app/jobs/api?limit=100', {
+//       headers: {
+//         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+//       }
+//     });
+//
+//     if (!response.ok) {
+//       throw new Error(`HTTP error! status: ${response.status}`);
+//     }
+//
+//     const data = await response.json();
+//     const jobs = data.jobs || [];
+//
+//     console.log(`📦 Found ${jobs.length} jobs from Himalayas API (out of ${data.totalCount} total)`);
+//
+//     let inserted = 0;
+//     let skipped = 0;
+//     let errors = 0;
+//
+//     for (const job of jobs) {
+//       try {
+//         if (!job.applicationLink) {
+//           errors++;
+//           continue;
+//         }
+//
+//         // Check for duplicates
+//         const existing = await pool.query(
+//           'SELECT id FROM jobs WHERE apply_url = $1',
+//           [job.applicationLink]
+//         );
+//
+//         if (existing.rows.length > 0) {
+//           skipped++;
+//           continue;
+//         }
+//
+//         const title = job.title || 'Unknown Position';
+//         const company = job.companyName || 'Unknown Company';
+//         const slug = generateJobSlug(title, company);
+//         const description = stripHtml(job.description || job.excerpt || '').substring(0, 2000);
+//
+//         // Determine location from restrictions
+//         let location = 'Worldwide';
+//         if (job.locationRestrictions && job.locationRestrictions.length > 0) {
+//           location = job.locationRestrictions.join(', ');
+//         }
+//
+//         // Handle salary
+//         let salary = 'Competitive';
+//         if (job.minSalary && job.maxSalary) {
+//           const currency = job.currency || 'USD';
+//           salary = `${currency} ${job.minSalary.toLocaleString()} - ${job.maxSalary.toLocaleString()}`;
+//         } else if (job.minSalary) {
+//           const currency = job.currency || 'USD';
+//           salary = `${currency} ${job.minSalary.toLocaleString()}+`;
+//         }
+//
+//         // Determine category from parentCategories or categories
+//         let category = 'Other';
+//         if (job.parentCategories && job.parentCategories.length > 0) {
+//           const categoryString = job.parentCategories[0].toLowerCase();
+//           if (categoryString.includes('engineering') || categoryString.includes('development')) {
+//             category = 'Software Development';
+//           } else if (categoryString.includes('design')) {
+//             category = 'Design';
+//           } else if (categoryString.includes('marketing')) {
+//             category = 'Marketing';
+//           } else if (categoryString.includes('sales')) {
+//             category = 'Sales / Business';
+//           } else if (categoryString.includes('support') || categoryString.includes('customer')) {
+//             category = 'Customer Service';
+//           } else if (categoryString.includes('data')) {
+//             category = 'Data Analysis';
+//           } else if (categoryString.includes('hr') || categoryString.includes('people')) {
+//             category = 'Human Resources';
+//           } else if (categoryString.includes('writing') || categoryString.includes('content')) {
+//             category = 'Writing';
+//           } else if (categoryString.includes('product')) {
+//             category = 'Product';
+//           } else if (categoryString.includes('qa') || categoryString.includes('quality')) {
+//             category = 'QA';
+//           }
+//         }
+//
+//         // Job type
+//         let jobType = 'Full-time';
+//         if (job.employmentType) {
+//           if (job.employmentType === 'Part Time') jobType = 'Part Time';
+//           if (job.employmentType === 'Contract') jobType = 'Contract';
+//         }
+//
+//         // Posted date
+//         let postedDate = 'Recently';
+//         if (job.pubDate) {
+//           postedDate = new Date(job.pubDate * 1000).toLocaleDateString('en-US', {
+//             month: 'short',
+//             day: 'numeric',
+//             year: 'numeric'
+//           });
+//         }
+//
+//         const tags = job.categories || ['Remote'];
+//
+//         await pool.query(
+//           `INSERT INTO jobs
+//           (title, company, slug, location, salary, type, category, tags, posted_date, description, requirements, apply_url, featured, source)
+//           VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)`,
+//           [
+//             title,
+//             company,
+//             slug,
+//             location,
+//             salary,
+//             jobType,
+//             category,
+//             tags,
+//             postedDate,
+//             description || 'No description provided.',
+//             job.seniority || ['Remote work experience'],
+//             job.applicationLink,
+//             false,
+//             'Himalayas'
+//           ]
+//         );
+//
+//         inserted++;
+//
+//         if (inserted % 50 === 0) {
+//           console.log(`   ⏳ Processed ${inserted + skipped}/${jobs.length} jobs...`);
+//         }
+//       } catch (err) {
+//         errors++;
+//         if (errors <= 5) {
+//           console.error(`   ✗ Error inserting Himalayas job "${job.title}": ${err.message}`);
+//         }
+//       }
+//     }
+//
+//     console.log(`✅ Himalayas: Inserted ${inserted} new jobs, skipped ${skipped} duplicates, ${errors} errors`);
+//     return { inserted, skipped, errors, source: 'Himalayas' };
+//
+//   } catch (error) {
+//     console.error('❌ Error scraping Himalayas:', error.message);
+//     return { inserted: 0, skipped: 0, errors: 1, source: 'Himalayas', error: error.message };
+//   }
+// }
 
 // Scrape Remote OK API
 async function scrapeRemoteOK() {
@@ -837,6 +842,238 @@ async function scrapeRemoteOK() {
   }
 }
 
+// Helper: Check if job is remote
+function isRemoteJob(job) {
+  const location = job.location?.name?.toLowerCase() || '';
+  const title = job.title?.toLowerCase() || '';
+  const content = job.content?.toLowerCase() || '';
+
+  const remoteKeywords = ['remote', 'work from home', 'wfh', 'anywhere', 'distributed'];
+
+  return remoteKeywords.some(keyword =>
+    location.includes(keyword) ||
+    title.includes(keyword) ||
+    content.includes(keyword)
+  );
+}
+
+// Helper: Extract metadata from Greenhouse job
+function extractGreenhouseMetadata(job) {
+  const metadata = {};
+
+  if (job.metadata && Array.isArray(job.metadata)) {
+    job.metadata.forEach(item => {
+      const key = item.name.toLowerCase().replace(/\s+/g, '_');
+      metadata[key] = item.value;
+    });
+  }
+
+  return metadata;
+}
+
+// Helper: Map Greenhouse department to category
+function mapGreenhouseCategory(job) {
+  if (!job.departments || job.departments.length === 0) {
+    return 'Other';
+  }
+
+  const deptName = job.departments[0].name.toLowerCase();
+
+  if (deptName.includes('engineering') || deptName.includes('software')) {
+    return 'Software Development';
+  } else if (deptName.includes('design')) {
+    return 'Design';
+  } else if (deptName.includes('marketing')) {
+    return 'Marketing';
+  } else if (deptName.includes('sales')) {
+    return 'Sales / Business';
+  } else if (deptName.includes('data')) {
+    return 'Data Analysis';
+  } else if (deptName.includes('product')) {
+    return 'Product';
+  } else if (deptName.includes('support') || deptName.includes('customer')) {
+    return 'Customer Service';
+  }
+
+  return 'Other';
+}
+
+// Scrape Greenhouse Companies
+async function scrapeGreenhouseCompanies() {
+  console.log('🔍 Fetching jobs from Greenhouse companies...');
+
+  try {
+    // Load company list
+    const fs = await import('fs/promises');
+    const { fileURLToPath } = await import('url');
+    const { dirname, join } = await import('path');
+
+    const __filename = fileURLToPath(import.meta.url);
+    const __dirname = dirname(__filename);
+    const companiesPath = join(__dirname, 'greenhouse-companies.json');
+
+    const companiesData = JSON.parse(await fs.readFile(companiesPath, 'utf-8'));
+
+    const activeCompanies = companiesData.companies.filter(c => c.active);
+    console.log(`📋 Found ${activeCompanies.length} active Greenhouse companies`);
+
+    let totalInserted = 0;
+    let totalSkipped = 0;
+    let totalErrors = 0;
+    let totalRemoteJobs = 0;
+
+    for (const companyInfo of activeCompanies) {
+      try {
+        // Fetch jobs from Greenhouse API
+        const url = `https://boards-api.greenhouse.io/v1/boards/${companyInfo.token}/jobs`;
+        const response = await fetch(url, {
+          headers: {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+            'Accept': 'application/json'
+          }
+        });
+
+        if (!response.ok) {
+          console.log(`   ⚠️  ${companyInfo.name}: API error ${response.status}`);
+          totalErrors++;
+          continue;
+        }
+
+        const data = await response.json();
+        const jobs = data.jobs || [];
+
+        let companyInserted = 0;
+        let companySkipped = 0;
+        let remoteCount = 0;
+
+        for (const job of jobs) {
+          // Filter for remote jobs only
+          if (!isRemoteJob(job)) continue;
+          remoteCount++;
+
+          const applyUrl = job.absolute_url;
+          if (!applyUrl) continue;
+
+          // Check for duplicates
+          const existing = await pool.query(
+            'SELECT id FROM jobs WHERE apply_url = $1',
+            [applyUrl]
+          );
+
+          if (existing.rows.length > 0) {
+            companySkipped++;
+            continue;
+          }
+
+          // Fetch full job details to get description
+          let jobContent = job.content || '';
+          try {
+            const jobDetailUrl = `https://boards-api.greenhouse.io/v1/boards/${companyInfo.token}/jobs/${job.id}`;
+            const detailResponse = await fetch(jobDetailUrl, {
+              headers: {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+                'Accept': 'application/json'
+              }
+            });
+
+            if (detailResponse.ok) {
+              const jobDetail = await detailResponse.json();
+              jobContent = jobDetail.content || jobDetail.description || job.content || '';
+            }
+
+            // Small delay to be respectful to API
+            await new Promise(resolve => setTimeout(resolve, 300));
+          } catch (err) {
+            // If detail fetch fails, use basic content
+            console.log(`   ⚠️  Could not fetch details for job ${job.id}: ${err.message}`);
+          }
+
+          // Extract job details
+          const metadata = extractGreenhouseMetadata(job);
+          const title = job.title;
+          const company = companyInfo.name;
+          const slug = generateJobSlug(title, company);
+          const location = job.location?.name || 'Remote';
+          const category = mapGreenhouseCategory(job);
+          const description = stripHtml(jobContent).substring(0, 10000);
+          const salary = metadata.salary_range || metadata.compensation || 'Competitive';
+          const jobType = metadata.employment_type || 'Full-time';
+
+          // Format posted date
+          let postedDate = 'Recently';
+          if (job.updated_at) {
+            postedDate = new Date(job.updated_at).toLocaleDateString('en-US', {
+              month: 'short',
+              day: 'numeric',
+              year: 'numeric'
+            });
+          }
+
+          // Build tags
+          const tags = ['Remote', 'Greenhouse'];
+          if (job.departments && job.departments.length > 0) {
+            tags.push(job.departments[0].name);
+          }
+
+          // Insert into database
+          await pool.query(
+            `INSERT INTO jobs
+            (title, company, slug, location, salary, type, category, tags, posted_date, description, requirements, apply_url, featured, source)
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)`,
+            [
+              title,
+              company,
+              slug,
+              location,
+              salary,
+              jobType,
+              category,
+              tags,
+              postedDate,
+              description,
+              ['See job description for details'],
+              applyUrl,
+              false,
+              `Greenhouse (${company})`
+            ]
+          );
+
+          companyInserted++;
+        }
+
+        if (jobs.length > 0) {
+          console.log(`   ✓ ${companyInfo.name}: ${jobs.length} total, ${remoteCount} remote, +${companyInserted} new, ${companySkipped} skipped`);
+        }
+
+        totalInserted += companyInserted;
+        totalSkipped += companySkipped;
+        totalRemoteJobs += remoteCount;
+
+        // Rate limiting - be respectful to API
+        await new Promise(resolve => setTimeout(resolve, 1500));
+
+      } catch (err) {
+        totalErrors++;
+        console.error(`   ✗ ${companyInfo.name}: ${err.message}`);
+      }
+    }
+
+    console.log(`✅ Greenhouse: Inserted ${totalInserted} new jobs from ${totalRemoteJobs} remote positions across ${activeCompanies.length} companies`);
+    console.log(`   Skipped ${totalSkipped} duplicates, ${totalErrors} errors`);
+
+    return {
+      inserted: totalInserted,
+      skipped: totalSkipped,
+      errors: totalErrors,
+      source: 'Greenhouse'
+    };
+
+  } catch (error) {
+    console.error('❌ Error scraping Greenhouse companies:', error.message);
+    return { inserted: 0, skipped: 0, errors: 1, source: 'Greenhouse', error: error.message };
+  }
+}
+
 async function main() {
   console.log('🚀 Starting RSS-based job scraper...\n');
   console.log(`⏰ Run time: ${new Date().toLocaleString()}\n`);
@@ -872,9 +1109,14 @@ async function main() {
   results.push(flexJobsResult);
   console.log('');
 
-  // Scrape Himalayas
-  const himalayasResult = await scrapeHimalayas();
-  results.push(himalayasResult);
+  // REMOVED: Scrape Himalayas (requires login to apply)
+  // const himalayasResult = await scrapeHimalayas();
+  // results.push(himalayasResult);
+  // console.log('');
+
+  // Scrape Greenhouse companies (NEW!)
+  const greenhouseResult = await scrapeGreenhouseCompanies();
+  results.push(greenhouseResult);
   console.log('');
 
   // Summary
@@ -902,6 +1144,15 @@ async function main() {
     const countResult = await pool.query('SELECT COUNT(*) as total FROM jobs');
     const totalJobs = countResult.rows[0].total;
     console.log(`\n📈 Total jobs in database: ${totalJobs}`);
+
+    // Show Greenhouse breakdown
+    const greenhouseCountResult = await pool.query(
+      "SELECT COUNT(*) as total FROM jobs WHERE source LIKE 'Greenhouse%'"
+    );
+    const greenhouseTotal = greenhouseCountResult.rows[0].total;
+    if (greenhouseTotal > 0) {
+      console.log(`   🏢 Greenhouse jobs: ${greenhouseTotal} (from direct company career pages)`);
+    }
   } catch (error) {
     console.error('Error getting total count:', error.message);
   }

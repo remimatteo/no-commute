@@ -978,9 +978,15 @@ const [totalJobs, setTotalJobs] = useState(initialTotalJobs);
   );
 }
 
-// ISR: Fetch jobs at build time and revalidate every 6 hours
-export async function getStaticProps() {
+// SSR: Fetch jobs on every request with caching for stability
+export async function getServerSideProps({ res }) {
   const { Pool } = require('pg');
+
+  // Set cache headers - cache for 1 hour, serve stale for 24 hours while revalidating
+  res.setHeader(
+    'Cache-Control',
+    'public, s-maxage=3600, stale-while-revalidate=86400'
+  );
 
   const pool = new Pool({
     connectionString: process.env.DATABASE_URL,
@@ -1001,11 +1007,30 @@ export async function getStaticProps() {
 
     const totalJobs = parseInt(countResult.rows[0].total, 10);
 
-    // Fetch jobs - load ALL recent jobs, not just USA
+    // Fetch jobs with company diversity - limit max jobs per company
     const result = await pool.query(`
-      SELECT * FROM jobs
+      WITH ranked_jobs AS (
+        SELECT *,
+          ROW_NUMBER() OVER (
+            PARTITION BY company
+            ORDER BY created_at DESC
+          ) as company_rank
+        FROM jobs
+      )
+      SELECT * FROM ranked_jobs
+      WHERE company_rank <= 5
       ORDER BY
         COALESCE(featured, false) DESC,
+        CASE
+          WHEN location ILIKE '%United States%'
+            OR location ILIKE '%USA%'
+            OR location ILIKE '%US - %'
+            OR location ILIKE '%Remote - US%'
+            OR location ILIKE '%, US%'
+            OR location ILIKE '%U.S.%'
+          THEN 0
+          ELSE 1
+        END,
         created_at DESC
       LIMIT $1
     `, [limit]);
@@ -1035,8 +1060,7 @@ export async function getStaticProps() {
       props: {
         initialJobs: transformedJobs,
         initialTotalJobs: totalJobs
-      },
-      revalidate: 21600 // Revalidate every 6 hours (6 * 60 * 60 seconds)
+      }
     };
   } catch (error) {
     console.error('Error in getStaticProps:', error);

@@ -1,0 +1,291 @@
+{
+  "companies": [
+    {
+      "name": "GitLab",
+      "token": "gitlab",
+      "remoteFirst": true,
+      "priority": 1,
+      "active": true,
+      "notes": "Fully remote, 100+ jobs"
+    },
+    {
+      "name": "Grammarly",
+      "token": "grammarly",
+      "remoteFirst": true,
+      "priority": 1,
+      "active": true,
+      "notes": "Remote-first, writing/AI"
+    },
+    {
+      "name": "Dropbox",
+      "token": "dropbox",
+      "remoteFirst": false,
+      "priority": 1,
+      "active": true,
+      "notes": "Hybrid, 150+ jobs"
+    },
+    {
+      "name": "Gusto",
+      "token": "gusto",
+      "remoteFirst": false,
+      "priority": 1,
+      "active": true,
+      "notes": "HR/Payroll platform"
+    },
+    {
+      "name": "Asana",
+      "token": "asana",
+      "remoteFirst": false,
+      "priority": 1,
+      "active": true,
+      "notes": "Project management"
+    },
+    {
+      "name": "Automattic",
+      "token": "automattic",
+      "remoteFirst": true,
+      "priority": 1,
+      "active": true,
+      "notes": "WordPress.com, fully distributed"
+    },
+    {
+      "name": "Zapier",
+      "token": "zapier",
+      "remoteFirst": true,
+      "priority": 1,
+      "active": true,
+      "notes": "100% remote automation platform"
+    },
+    {
+      "name": "Buffer",
+      "token": "buffer",
+      "remoteFirst": true,
+      "priority": 1,
+      "active": true,
+      "notes": "Fully remote social media tools"
+    },
+    {
+      "name": "Doist",
+      "token": "doist",
+      "remoteFirst": true,
+      "priority": 1,
+      "active": true,
+      "notes": "Todoist/Twist, fully remote"
+    },
+    {
+      "name": "Toptal",
+      "token": "toptal",
+      "remoteFirst": true,
+      "priority": 2,
+      "active": true,
+      "notes": "Freelance network"
+    },
+    {
+      "name": "Stripe",
+      "token": "stripe",
+      "remoteFirst": false,
+      "priority": 1,
+      "active": true,
+      "notes": "Payments platform"
+    },
+    {
+      "name": "Shopify",
+      "token": "shopify",
+      "remoteFirst": false,
+      "priority": 1,
+      "active": true,
+      "notes": "E-commerce platform"
+    },
+    {
+      "name": "Coinbase",
+      "token": "coinbase",
+      "remoteFirst": false,
+      "priority": 1,
+      "active": true,
+      "notes": "Cryptocurrency exchange"
+    },
+    {
+      "name": "HashiCorp",
+      "token": "hashicorp",
+      "remoteFirst": true,
+      "priority": 1,
+      "active": true,
+      "notes": "Cloud infrastructure"
+    },
+    {
+      "name": "Figma",
+      "token": "figma",
+      "remoteFirst": true,
+      "priority": 1,
+      "active": true,
+      "notes": "Design tools"
+    },
+    {
+      "name": "Notion",
+      "token": "notion",
+      "remoteFirst": false,
+      "priority": 1,
+      "active": true,
+      "notes": "Productivity platform"
+    },
+    {
+      "name": "Slack",
+      "token": "slack",
+      "remoteFirst": false,
+      "priority": 1,
+      "active": true,
+      "notes": "Communication platform"
+    },
+    {
+      "name": "Twilio",
+      "token": "twilio",
+      "remoteFirst": false,
+      "priority": 1,
+      "active": true,
+      "notes": "Communications API"
+    },
+    {
+      "name": "MongoDB",
+      "token": "mongodb",
+      "remoteFirst": false,
+      "priority": 2,
+      "active": true,
+      "notes": "Database company"
+    },
+    {
+      "name": "Elastic",
+      "token": "elastic",
+      "remoteFirst": true,
+      "priority": 1,
+      "active": true,
+      "notes": "Search/analytics"
+    },
+    {
+      "name": "Atlassian",
+      "token": "atlassian",
+      "remoteFirst": false,
+      "priority": 1,
+      "active": true,
+      "notes": "Jira/Confluence"
+    },
+    {
+      "name": "Square",
+      "token": "square",
+      "remoteFirst": false,
+      "priority": 2,
+      "active": true,
+      "notes": "Payment processing"
+    },
+    {
+      "name": "DoorDash",
+      "token": "doordash",
+      "remoteFirst": false,
+      "priority": 2,
+      "active": true,
+      "notes": "Food delivery"
+    },
+    {
+      "name": "Airbnb",
+      "token": "airbnb",
+      "remoteFirst": false,
+      "priority": 1,
+      "active": true,
+      "notes": "Travel/hospitality"
+    },
+    {
+      "name": "Instacart",
+      "token": "instacart",
+      "remoteFirst": false,
+      "priority": 2,
+      "active": true,
+      "notes": "Grocery delivery"
+    },
+    {
+      "name": "Airtable",
+      "token": "airtable",
+      "remoteFirst": false,
+      "priority": 2,
+      "active": true,
+      "notes": "Collaboration platform"
+    },
+    {
+      "name": "Lattice",
+      "token": "lattice",
+      "remoteFirst": false,
+      "priority": 2,
+      "active": true,
+      "notes": "HR software"
+    },
+    {
+      "name": "Front",
+      "token": "front",
+      "remoteFirst": false,
+      "priority": 2,
+      "active": true,
+      "notes": "Customer communication"
+    },
+    {
+      "name": "Retool",
+      "token": "retool",
+      "remoteFirst": false,
+      "priority": 2,
+      "active": true,
+      "notes": "Internal tools platform"
+    },
+    {
+      "name": "Webflow",
+      "token": "webflow",
+      "remoteFirst": false,
+      "priority": 2,
+      "active": true,
+      "notes": "Web design platform"
+    },
+    {
+      "name": "Benchling",
+      "token": "benchling",
+      "remoteFirst": false,
+      "priority": 3,
+      "active": true,
+      "notes": "Life sciences platform"
+    },
+    {
+      "name": "ChartHop",
+      "token": "charthop",
+      "remoteFirst": false,
+      "priority": 3,
+      "active": true,
+      "notes": "People analytics"
+    },
+    {
+      "name": "Canva",
+      "token": "canva",
+      "remoteFirst": false,
+      "priority": 1,
+      "active": true,
+      "notes": "Design platform"
+    },
+    {
+      "name": "Postman",
+      "token": "postman",
+      "remoteFirst": false,
+      "priority": 2,
+      "active": true,
+      "notes": "API development"
+    },
+    {
+      "name": "Loom",
+      "token": "loom",
+      "remoteFirst": false,
+      "priority": 2,
+      "active": true,
+      "notes": "Video communication"
+    }
+  ],
+  "metadata": {
+    "lastUpdated": "2025-10-30",
+    "totalCompanies": 35,
+    "activeCompanies": 35,
+    "remoteFirstCount": 10,
+    "notes": "Verified Greenhouse tokens as of Oct 2025. Priority 1 = highest remote job count."
+  }
+}
