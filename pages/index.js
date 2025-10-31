@@ -1075,8 +1075,7 @@ export async function getServerSideProps({ res }) {
       props: {
         initialJobs: [],
         initialTotalJobs: 0
-      },
-      revalidate: 3600 // Retry in 1 hour if error
+      }
     };
   }
 }
