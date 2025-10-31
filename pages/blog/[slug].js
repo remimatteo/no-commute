@@ -1,10 +1,28 @@
 import { useRouter } from 'next/router';
+import { useEffect } from 'react';
 import Link from 'next/link';
 import SEO from '../../components/SEO';
 import { blogPosts } from '../../data/blogPosts';
 
 export default function BlogPost({ post }) {
   const router = useRouter();
+
+  // Initialize AdSense ads in the content
+  useEffect(() => {
+    if (typeof window !== 'undefined' && window.adsbygoogle) {
+      // Find all ad slots that haven't been initialized
+      const ads = document.querySelectorAll('.adsbygoogle');
+      ads.forEach((ad) => {
+        if (!ad.getAttribute('data-adsbygoogle-status')) {
+          try {
+            (window.adsbygoogle = window.adsbygoogle || []).push({});
+          } catch (e) {
+            console.log('AdSense error:', e);
+          }
+        }
+      });
+    }
+  }, [post]);
 
   if (router.isFallback) {
     return <div>Loading...</div>;
