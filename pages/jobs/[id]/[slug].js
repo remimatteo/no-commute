@@ -3,6 +3,7 @@ import { MapPin, DollarSign, Clock, Briefcase, ExternalLink, ArrowLeft, Moon, Su
 import SEO from '../../../components/SEO';
 import JobSchema from '../../../components/JobSchema';
 import BreadcrumbSchema from '../../../components/BreadcrumbSchema';
+import AdSenseJobDisplay from '../../../components/AdSenseJobDisplay';
 import Link from 'next/link';
 import { Pool } from 'pg';
 import { formatSalary } from '../../../lib/formatSalary';
@@ -268,6 +269,9 @@ export default function JobDetailPage({ job, similarJobs = [] }) {
             <p className={`text-sm ${darkMode ? 'text-gray-500' : 'text-gray-600'} text-center mt-2`}>
               Job sourced from {transformedJob.source}
             </p>
+
+            {/* AdSense Display Ad */}
+            <AdSenseJobDisplay />
           </div>
         </div>
 

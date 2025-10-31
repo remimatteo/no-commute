@@ -1094,10 +1094,10 @@ async function main() {
   results.push(remoteOKResult);
   console.log('');
 
-  // Scrape We Work Remotely (secondary source)
-  const wwrResult = await scrapeWeWorkRemotely();
-  results.push(wwrResult);
-  console.log('');
+  // Scrape We Work Remotely (DISABLED - removed per user request)
+  // const wwrResult = await scrapeWeWorkRemotely();
+  // results.push(wwrResult);
+  // console.log('');
 
   // Scrape Remote.co
   const remoteCoResult = await scrapeRemoteCo();
