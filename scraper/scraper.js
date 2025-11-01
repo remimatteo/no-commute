@@ -139,6 +139,9 @@ async function scrapeWeWorkRemotely() {
         const description = stripHtml(job.description).substring(0, 2000);
         const category = job.category || 'Other';
 
+        // Try to extract salary from description
+        const salary = extractSalaryFromText(job.description) || 'Competitive';
+
         let postedDate = 'Recently';
         if (job.pubDate) {
           try {
@@ -161,7 +164,7 @@ async function scrapeWeWorkRemotely() {
             company,
             slug,
             'Worldwide',
-            'Competitive',
+            salary,
             'Full-time',
             category,
             ['Remote', category],
@@ -250,6 +253,9 @@ async function scrapeRemoteCo() {
         const description = stripHtml(job.description).substring(0, 2000);
         const category = job.category || 'Other';
 
+        // Try to extract salary from description
+        const salary = extractSalaryFromText(job.description) || 'Competitive';
+
         let postedDate = 'Recently';
         if (job.pubDate) {
           try {
@@ -272,7 +278,7 @@ async function scrapeRemoteCo() {
             company,
             slug,
             'Worldwide',
-            'Competitive',
+            salary,
             'Full-time',
             category,
             ['Remote', category],
@@ -349,7 +355,14 @@ async function scrapeRemotive() {
         const description = stripHtml(job.description || '').substring(0, 2000);
         const category = job.category || 'Other';
         const location = job.candidate_required_location || 'Worldwide';
-        const salary = job.salary || 'Competitive';
+
+        // Try to extract salary from description if not provided
+        let salary = job.salary;
+        if (!salary || salary === 'Competitive') {
+          const extractedSalary = extractSalaryFromText(job.description);
+          salary = extractedSalary || 'Competitive';
+        }
+
         const jobType = job.job_type || 'full_time';
         const tags = job.tags || ['Remote'];
 
@@ -466,6 +479,9 @@ async function scrapeFlexJobs() {
         const description = stripHtml(job.description).substring(0, 2000);
         const category = job.category || 'Other';
 
+        // Try to extract salary from description
+        const salary = extractSalaryFromText(job.description) || 'Competitive';
+
         let postedDate = 'Recently';
         if (job.pubDate) {
           try {
@@ -488,7 +504,7 @@ async function scrapeFlexJobs() {
             company,
             slug,
             'Remote',
-            'Competitive',
+            salary,
             'Full-time',
             category,
             ['Remote', 'Flexible', category],
@@ -712,6 +728,37 @@ function isRemoteJob(job) {
   );
 }
 
+// Helper: Extract salary from job description text
+function extractSalaryFromText(text) {
+  if (!text) return null;
+
+  // Pattern 1: "$83,300—$147,000 USD" or "$83,300-$147,000 USD"
+  const pattern1 = /\$[\d,]+\s*[—\-–]\s*\$[\d,]+\s*USD/i;
+  const match1 = text.match(pattern1);
+  if (match1) {
+    return match1[0].replace(/\s+/g, ' ').trim();
+  }
+
+  // Pattern 2: "Salary Range: $83,300—$147,000" or similar
+  const pattern2 = /(salary|compensation|pay)\s*(?:range)?:?\s*\$[\d,]+\s*[—\-–]\s*\$[\d,]+/i;
+  const match2 = text.match(pattern2);
+  if (match2) {
+    const salaryPart = match2[0].match(/\$[\d,]+\s*[—\-–]\s*\$[\d,]+/);
+    if (salaryPart) {
+      return salaryPart[0].replace(/\s+/g, ' ').trim();
+    }
+  }
+
+  // Pattern 3: "$83,300 - $147,000" (with spaces and dash)
+  const pattern3 = /\$[\d,]+\s*-\s*\$[\d,]+/;
+  const match3 = text.match(pattern3);
+  if (match3) {
+    return match3[0].replace(/\s+/g, ' ').trim();
+  }
+
+  return null;
+}
+
 // Helper: Extract metadata from Greenhouse job
 function extractGreenhouseMetadata(job) {
   const metadata = {};
@@ -851,7 +898,15 @@ async function scrapeGreenhouseCompanies() {
           const location = job.location?.name || 'Remote';
           const category = mapGreenhouseCategory(job);
           const description = stripHtml(jobContent).substring(0, 10000);
-          const salary = metadata.salary_range || metadata.compensation || 'Competitive';
+
+          // Try to extract salary from multiple sources
+          let salary = metadata.salary_range || metadata.compensation;
+          if (!salary || salary === 'Competitive') {
+            // Try to extract from raw job content
+            const extractedSalary = extractSalaryFromText(jobContent);
+            salary = extractedSalary || 'Competitive';
+          }
+
           const jobType = metadata.employment_type || 'Full-time';
 
           // Format posted date
