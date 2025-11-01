@@ -1,6 +1,6 @@
-import { Resend } from 'resend';
-import { getPool } from '../../../lib/db';
-import rateLimit from '../../../lib/rateLimit';
+const { Resend } = require('resend');
+const { getPool } = require('../../../lib/db');
+const rateLimit = require('../../../lib/rateLimit');
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -9,7 +9,7 @@ const limiter = rateLimit({
   uniqueTokenPerInterval: 500,
 });
 
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
   // Only allow POST requests
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });

@@ -6,7 +6,6 @@ import BreadcrumbSchema from '../../../components/BreadcrumbSchema';
 import AdSenseJobDisplay from '../../../components/AdSenseJobDisplay';
 import Link from 'next/link';
 import { formatSalary } from '../../../lib/formatSalary';
-import { getPool } from '../../../lib/db';
 
 const formatDate = (dateString) => {
   if (!dateString) return 'Recently';
@@ -376,6 +375,7 @@ export default function JobDetailPage({ job, similarJobs = [] }) {
 // REMOVED getStaticPaths - using getServerSideProps for better reliability
 
 export async function getServerSideProps({ params, res }) {
+  const { getPool } = require('../../../lib/db');
   const { id, slug } = params;
 
   // Set cache headers
