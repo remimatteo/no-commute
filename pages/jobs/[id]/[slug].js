@@ -5,15 +5,8 @@ import JobSchema from '../../../components/JobSchema';
 import BreadcrumbSchema from '../../../components/BreadcrumbSchema';
 import AdSenseJobDisplay from '../../../components/AdSenseJobDisplay';
 import Link from 'next/link';
-import { Pool } from 'pg';
 import { formatSalary } from '../../../lib/formatSalary';
-
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: {
-    rejectUnauthorized: false
-  }
-});
+import { getPool } from '../../../lib/db';
 
 const formatDate = (dateString) => {
   if (!dateString) return 'Recently';
@@ -390,6 +383,8 @@ export async function getServerSideProps({ params, res }) {
     'Cache-Control',
     'public, s-maxage=3600, stale-while-revalidate=86400'
   );
+
+  const pool = getPool();
 
   try{
     const result = await pool.query(

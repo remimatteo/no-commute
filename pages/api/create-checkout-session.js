@@ -1,11 +1,10 @@
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
-const { Pool } = require('pg');
+const { getPool } = require('../../lib/db');
+const rateLimit = require('../../lib/rateLimit').default;
 
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: {
-    rejectUnauthorized: false
-  }
+const limiter = rateLimit({
+  interval: 60 * 1000, // 1 minute
+  uniqueTokenPerInterval: 500,
 });
 
 function generateJobSlug(title, company) {
@@ -31,6 +30,14 @@ function generateJobSlug(title, company) {
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
+  }
+
+  // Rate limiting: 5 requests per minute per IP
+  const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+  try {
+    await limiter.check(5, ip);
+  } catch (error) {
+    return res.status(429).json({ error: 'Too many requests. Please try again later.' });
   }
 
   try {

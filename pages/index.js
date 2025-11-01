@@ -986,7 +986,7 @@ const [totalJobs, setTotalJobs] = useState(initialTotalJobs);
 
 // SSR: Fetch jobs on every request with caching for stability
 export async function getServerSideProps({ res }) {
-  const { Pool } = require('pg');
+  const { getPool } = require('../lib/db');
 
   // Set cache headers - cache for 1 hour, serve stale for 24 hours while revalidating
   res.setHeader(
@@ -994,12 +994,7 @@ export async function getServerSideProps({ res }) {
     'public, s-maxage=3600, stale-while-revalidate=86400'
   );
 
-  const pool = new Pool({
-    connectionString: process.env.DATABASE_URL,
-    ssl: {
-      rejectUnauthorized: false
-    }
-  });
+  const pool = getPool();
 
   try {
     // Fetch all recent jobs (no location filter for better coverage)

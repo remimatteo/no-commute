@@ -1,12 +1,5 @@
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
-const { Pool } = require('pg');
-
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: {
-    rejectUnauthorized: false
-  }
-});
+const { getPool } = require('../../lib/db');
 
 // Disable body parsing, need raw body for Stripe
 export const config = {
@@ -47,6 +40,8 @@ export default async function handler(req, res) {
     const session = event.data.object;
 
     try {
+      const pool = getPool();
+
       // Retrieve job data from session metadata
       const jobData = JSON.parse(session.metadata.jobData);
 

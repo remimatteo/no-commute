@@ -1,13 +1,7 @@
-const { Pool } = require('pg');
-
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: {
-    rejectUnauthorized: false
-  }
-});
+const { getPool } = require('../../../lib/db');
 
 export default async function handler(req, res) {
+  const pool = getPool();
   const { id } = req.query;
 
   if (!id) {
