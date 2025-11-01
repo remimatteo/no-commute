@@ -281,7 +281,7 @@ const [totalJobs, setTotalJobs] = useState(initialTotalJobs);
           applyUrl: job.apply_url || job.url || '#',
           featured: job.featured || false,
           company_url: job.company_url || job.url || '',
-          source: job.source || 'RemoteOK'
+          source: job.source || 'Unknown'
         }));
 
         setJobs(transformedJobs);

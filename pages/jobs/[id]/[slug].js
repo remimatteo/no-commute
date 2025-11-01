@@ -90,7 +90,7 @@ export default function JobDetailPage({ job, similarJobs = [] }) {
     description: job.description || '',
     applyUrl: job.apply_url || job.url || '#',
     company_url: job.company_url || job.url || '',
-    source: job.source || 'RemoteOK',
+    source: job.source || 'Unknown',
     created_at: job.created_at
   };
 
