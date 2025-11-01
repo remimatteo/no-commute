@@ -2,7 +2,7 @@ services:
   - type: web
     name: no-commute
     env: node
-    buildCommand: rm -rf .next && npm install && npm run build
+    buildCommand: rm -rf .next && npm install && npm run build && cp -r lib .next/server/
     startCommand: npm start
     envVars:
       - key: DATABASE_URL
