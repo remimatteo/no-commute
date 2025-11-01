@@ -1,4 +1,4 @@
-const { getPool } = require('../../lib/db');
+const { getPool } = require('../../lib/db.cjs');
 
 export default async function handler(req, res) {
   const pool = getPool();

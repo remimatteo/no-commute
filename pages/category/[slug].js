@@ -392,7 +392,7 @@ export default function CategoryJobs({ category, initialJobs = [] }) {
 // REMOVED getStaticPaths - using getServerSideProps instead for better reliability
 
 export async function getServerSideProps({ params, res }) {
-  const { getPool } = require('../../lib/db');
+  const { getPool } = require('../../lib/db.cjs');
   const pool = getPool();
 
   // Set cache headers for better performance

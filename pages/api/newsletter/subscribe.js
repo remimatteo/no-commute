@@ -1,6 +1,6 @@
 const { Resend } = require('resend');
-const { getPool } = require('../../../lib/db');
-const rateLimit = require('../../../lib/rateLimit');
+const { getPool } = require('../../../lib/db.cjs');
+const rateLimit = require('../../../lib/rateLimit.cjs');
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 

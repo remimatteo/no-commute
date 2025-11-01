@@ -1,5 +1,5 @@
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
-const { getPool } = require('../../lib/db');
+const { getPool } = require('../../lib/db.cjs');
 
 // Disable body parsing, need raw body for Stripe
 export const config = {

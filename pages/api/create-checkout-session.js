@@ -1,6 +1,6 @@
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
-const { getPool } = require('../../lib/db');
-const rateLimit = require('../../lib/rateLimit').default;
+const { getPool } = require('../../lib/db.cjs');
+const rateLimit = require('../../lib/rateLimit.cjs').default;
 
 const limiter = rateLimit({
   interval: 60 * 1000, // 1 minute

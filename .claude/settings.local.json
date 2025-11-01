@@ -18,7 +18,8 @@
       "Bash(git add:*)",
       "Bash(npx next build --no-lint)",
       "Bash(git revert:*)",
-      "Bash(cat:*)"
+      "Bash(cat:*)",
+      "Bash(psql:*)"
     ],
     "deny": [],
     "ask": []

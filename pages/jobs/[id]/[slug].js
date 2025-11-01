@@ -375,7 +375,7 @@ export default function JobDetailPage({ job, similarJobs = [] }) {
 // REMOVED getStaticPaths - using getServerSideProps for better reliability
 
 export async function getServerSideProps({ params, res }) {
-  const { getPool } = require('../../../lib/db');
+  const { getPool } = require('../../../lib/db.cjs');
   const { id, slug } = params;
 
   // Set cache headers

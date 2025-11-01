@@ -986,7 +986,7 @@ const [totalJobs, setTotalJobs] = useState(initialTotalJobs);
 
 // SSR: Fetch jobs on every request with caching for stability
 export async function getServerSideProps({ res }) {
-  const { getPool } = require('../lib/db');
+  const { getPool } = require('../lib/db.cjs');
 
   // Set cache headers - cache for 1 hour, serve stale for 24 hours while revalidating
   res.setHeader(
