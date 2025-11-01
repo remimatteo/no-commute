@@ -405,7 +405,7 @@ export async function getStaticPaths() {
     paths: categories.map(category => ({
       params: { slug: category }
     })),
-    fallback: false
+    fallback: 'blocking' // Generate pages on-demand instead of showing 404
   };
 }
 
