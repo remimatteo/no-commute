@@ -1,7 +1,13 @@
-const { getPool } = require('../../lib/db.cjs');
+const { Pool } = require('pg');
+
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: {
+    rejectUnauthorized: false
+  }
+});
 
 export default async function handler(req, res) {
-  const pool = getPool();
   try {
     const {
       page = 1,

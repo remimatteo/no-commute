@@ -392,8 +392,14 @@ export default function CategoryJobs({ category, initialJobs = [] }) {
 // REMOVED getStaticPaths - using getServerSideProps instead for better reliability
 
 export async function getServerSideProps({ params, res }) {
-  const { getPool } = require('../../lib/db.cjs');
-  const pool = getPool();
+  const { Pool } = require('pg');
+
+  const pool = new Pool({
+    connectionString: process.env.DATABASE_URL,
+    ssl: {
+      rejectUnauthorized: false
+    }
+  });
 
   // Set cache headers for better performance
   res.setHeader(
@@ -438,7 +444,7 @@ export async function getServerSideProps({ params, res }) {
 
     console.log(`[getStaticProps] Category: ${slug}, Filtered to ${transformedJobs.length} jobs matching "${config.name}"`);
 
-    // No need to close the singleton pool
+    await pool.end();
 
     // Ensure we're returning serializable data (no undefined values)
     const serializedJobs = transformedJobs.map(job => ({
@@ -458,7 +464,11 @@ export async function getServerSideProps({ params, res }) {
   } catch (error) {
     console.error(`[${slug}] Error in getStaticProps:`, error);
 
-    // No need to close the singleton pool
+    try {
+      await pool.end();
+    } catch (e) {
+      // Ignore
+    }
 
     return {
       props: {

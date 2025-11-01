@@ -1,26 +1,14 @@
-const { Resend } = require('resend');
-const { getPool } = require('../../../lib/db.cjs');
-const rateLimit = require('../../../lib/rateLimit.cjs');
+import { Resend } from 'resend';
+import pg from 'pg';
+
+const { Pool } = pg;
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-const limiter = rateLimit({
-  interval: 60 * 1000, // 1 minute
-  uniqueTokenPerInterval: 500,
-});
-
-module.exports = async function handler(req, res) {
+export default async function handler(req, res) {
   // Only allow POST requests
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
-  }
-
-  // Rate limiting: 3 newsletter signups per minute per IP
-  const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-  try {
-    await limiter.check(3, ip);
-  } catch (error) {
-    return res.status(429).json({ error: 'Too many requests. Please try again later.' });
   }
 
   const { email } = req.body;
@@ -30,7 +18,10 @@ module.exports = async function handler(req, res) {
     return res.status(400).json({ error: 'Invalid email address' });
   }
 
-  const pool = getPool();
+  const pool = new Pool({
+    connectionString: process.env.DATABASE_URL,
+    ssl: { rejectUnauthorized: false }
+  });
 
   try {
     // 1. Check if email already exists
@@ -43,7 +34,7 @@ module.exports = async function handler(req, res) {
       const existing = existingCheck.rows[0];
 
       if (existing.is_active) {
-        // No need to close singleton pool
+        await pool.end();
         return res.status(200).json({
           success: true,
           message: 'You are already subscribed!'
@@ -54,7 +45,7 @@ module.exports = async function handler(req, res) {
           'UPDATE newsletter_subscribers SET is_active = true, subscribed_at = NOW(), unsubscribed_at = NULL WHERE email = $1',
           [email.toLowerCase()]
         );
-        // No need to close singleton pool
+        await pool.end();
         return res.status(200).json({
           success: true,
           message: 'Welcome back! Your subscription has been reactivated.'
@@ -129,7 +120,7 @@ module.exports = async function handler(req, res) {
       `
     });
 
-    // No need to close singleton pool
+    await pool.end();
 
     return res.status(200).json({
       success: true,
@@ -139,7 +130,11 @@ module.exports = async function handler(req, res) {
   } catch (error) {
     console.error('Newsletter subscription error:', error);
 
-    // No need to close singleton pool
+    try {
+      await pool.end();
+    } catch (e) {
+      // Ignore pool close error
+    }
 
     return res.status(500).json({
       error: 'Failed to subscribe. Please try again later.'
