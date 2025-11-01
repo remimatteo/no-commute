@@ -380,37 +380,18 @@ export default function JobDetailPage({ job, similarJobs = [] }) {
   );
 }
 
-// Pre-generate the 200 most recent job pages at build time
-export async function getStaticPaths() {
-  try {
-    const result = await pool.query(
-      'SELECT id, slug FROM jobs ORDER BY created_at DESC LIMIT 200'
-    );
-    
-    const paths = result.rows.map(job => ({
-      params: {
-        id: job.id.toString(),
-        slug: job.slug || 'job'
-      }
-    }));
-    
-    return {
-      paths,
-      fallback: 'blocking' // Generate other pages on-demand
-    };
-  } catch (error) {
-    console.error('Error in getStaticPaths:', error);
-    return {
-      paths: [],
-      fallback: 'blocking'
-    };
-  }
-}
+// REMOVED getStaticPaths - using getServerSideProps for better reliability
 
-export async function getStaticProps({ params }) {
+export async function getServerSideProps({ params, res }) {
   const { id, slug } = params;
 
-  try {
+  // Set cache headers
+  res.setHeader(
+    'Cache-Control',
+    'public, s-maxage=3600, stale-while-revalidate=86400'
+  );
+
+  try{
     const result = await pool.query(
       'SELECT * FROM jobs WHERE id = $1',
       [id]
@@ -418,8 +399,7 @@ export async function getStaticProps({ params }) {
 
     if (result.rows.length === 0) {
       return {
-        notFound: true,
-        revalidate: 3600 // Recheck in 1 hour
+        notFound: true
       };
     }
 
@@ -454,14 +434,12 @@ export async function getStaticProps({ params }) {
       props: {
         job: JSON.parse(JSON.stringify(job)),
         similarJobs: JSON.parse(JSON.stringify(similarJobsResult.rows))
-      },
-      revalidate: 21600 // Revalidate every 6 hours (same as homepage)
+      }
     };
   } catch (error) {
     console.error('Error fetching job:', error);
     return {
-      notFound: true,
-      revalidate: 3600
+      notFound: true
     };
   }
 }

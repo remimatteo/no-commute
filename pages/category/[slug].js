@@ -389,27 +389,9 @@ export default function CategoryJobs({ category, initialJobs = [] }) {
   );
 }
 
-export async function getStaticPaths() {
-  const categories = [
-    'software-development',
-    'design',
-    'marketing',
-    'sales',
-    'customer-service',
-    'product',
-    'data-analysis',
-    'writing'
-  ];
+// REMOVED getStaticPaths - using getServerSideProps instead for better reliability
 
-  return {
-    paths: categories.map(category => ({
-      params: { slug: category }
-    })),
-    fallback: 'blocking' // Generate pages on-demand instead of showing 404
-  };
-}
-
-export async function getStaticProps({ params }) {
+export async function getServerSideProps({ params, res }) {
   const { Pool } = require('pg');
 
   const pool = new Pool({
@@ -418,6 +400,12 @@ export async function getStaticProps({ params }) {
       rejectUnauthorized: false
     }
   });
+
+  // Set cache headers for better performance
+  res.setHeader(
+    'Cache-Control',
+    'public, s-maxage=300, stale-while-revalidate=600'
+  );
 
   const { slug } = params;
   const config = categoryConfig[slug] || categoryConfig['software-development'];
@@ -471,8 +459,7 @@ export async function getStaticProps({ params }) {
       props: {
         category: slug,
         initialJobs: serializedJobs
-      },
-      revalidate: 300 // Revalidate every 5 minutes (faster updates)
+      }
     };
   } catch (error) {
     console.error(`[${slug}] Error in getStaticProps:`, error);
@@ -487,8 +474,7 @@ export async function getStaticProps({ params }) {
       props: {
         category: slug,
         initialJobs: []
-      },
-      revalidate: 3600
+      }
     };
   }
 }
