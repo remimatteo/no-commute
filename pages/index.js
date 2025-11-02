@@ -1007,12 +1007,20 @@ export async function getStaticProps() {
 
     const totalJobs = parseInt(countResult.rows[0].total, 10);
 
-    // Simple, fast query - just sort by featured and date
+    // Optimized query: Prioritize US jobs for US-based audience
     const result = await pool.query(`
       SELECT * FROM jobs
       WHERE status = 'active'
       ORDER BY
         COALESCE(featured, false) DESC,
+        CASE
+          WHEN location ILIKE '%United States%'
+            OR location ILIKE '%USA%'
+            OR location ILIKE '%US%'
+            OR location ILIKE '%U.S.%'
+          THEN 0
+          ELSE 1
+        END,
         created_at DESC
       LIMIT $1
     `, [limit]);
