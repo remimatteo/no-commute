@@ -985,14 +985,8 @@ const [totalJobs, setTotalJobs] = useState(initialTotalJobs);
 }
 
 // SSR: Fetch jobs on every request with caching for stability
-export async function getServerSideProps({ res }) {
+export async function getStaticProps() {
   const { Pool } = require('pg');
-
-  // Set cache headers - cache for 1 hour, serve stale for 24 hours while revalidating
-  res.setHeader(
-    'Cache-Control',
-    'public, s-maxage=3600, stale-while-revalidate=86400'
-  );
 
   const pool = new Pool({
     connectionString: process.env.DATABASE_URL,
@@ -1048,7 +1042,8 @@ export async function getServerSideProps({ res }) {
       props: {
         initialJobs: transformedJobs,
         initialTotalJobs: totalJobs
-      }
+      },
+      revalidate: 300 // Rebuild page every 5 minutes
     };
   } catch (error) {
     console.error('Error in getStaticProps:', error);
@@ -1063,7 +1058,8 @@ export async function getServerSideProps({ res }) {
       props: {
         initialJobs: [],
         initialTotalJobs: 0
-      }
+      },
+      revalidate: 60 // Retry in 1 minute if error
     };
   }
 }

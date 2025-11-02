@@ -382,14 +382,17 @@ export default function JobDetailPage({ job, similarJobs = [] }) {
 
 // REMOVED getStaticPaths - using getServerSideProps for better reliability
 
-export async function getServerSideProps({ params, res }) {
-  const { id, slug } = params;
+// Generate paths for top 100 most recent jobs at build time
+// Other jobs will be generated on-demand and cached
+export async function getStaticPaths() {
+  return {
+    paths: [], // Pre-build no pages (all on-demand)
+    fallback: 'blocking' // Generate pages on-demand, then cache
+  };
+}
 
-  // Set cache headers
-  res.setHeader(
-    'Cache-Control',
-    'public, s-maxage=3600, stale-while-revalidate=86400'
-  );
+export async function getStaticProps({ params }) {
+  const { id, slug } = params;
 
   try{
     const result = await pool.query(
@@ -423,6 +426,7 @@ export async function getServerSideProps({ params, res }) {
        FROM jobs
        WHERE category = $1
          AND id != $2
+         AND status = 'active'
          AND created_at >= NOW() - INTERVAL '60 days'
        ORDER BY created_at DESC
        OFFSET $3
@@ -434,12 +438,14 @@ export async function getServerSideProps({ params, res }) {
       props: {
         job: JSON.parse(JSON.stringify(job)),
         similarJobs: JSON.parse(JSON.stringify(similarJobsResult.rows))
-      }
+      },
+      revalidate: 3600 // Rebuild every hour
     };
   } catch (error) {
     console.error('Error fetching job:', error);
     return {
-      notFound: true
+      notFound: true,
+      revalidate: 60 // Retry in 1 minute if error
     };
   }
 }

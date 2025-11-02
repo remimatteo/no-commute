@@ -391,7 +391,19 @@ export default function CategoryJobs({ category, initialJobs = [] }) {
 
 // REMOVED getStaticPaths - using getServerSideProps instead for better reliability
 
-export async function getServerSideProps({ params, res }) {
+// Pre-generate all category pages at build time
+export async function getStaticPaths() {
+  const paths = Object.keys(categoryConfig).map(slug => ({
+    params: { slug }
+  }));
+
+  return {
+    paths,
+    fallback: false // Only these predefined paths exist
+  };
+}
+
+export async function getStaticProps({ params }) {
   const { Pool } = require('pg');
 
   const pool = new Pool({
@@ -400,12 +412,6 @@ export async function getServerSideProps({ params, res }) {
       rejectUnauthorized: false
     }
   });
-
-  // Set cache headers for better performance
-  res.setHeader(
-    'Cache-Control',
-    'public, s-maxage=300, stale-while-revalidate=600'
-  );
 
   const { slug } = params;
   const config = categoryConfig[slug] || categoryConfig['software-development'];
@@ -422,7 +428,7 @@ export async function getServerSideProps({ params, res }) {
       LIMIT 100
     `, [config.name]);
 
-    console.log(`[getServerSideProps] Category: ${slug}, Fetched ${result.rows.length} jobs for category "${config.name}"`);
+    console.log(`[getStaticProps] Category: ${slug}, Fetched ${result.rows.length} jobs for category "${config.name}"`);
 
     // Transform jobs
     const transformedJobs = result.rows.map((job) => ({
@@ -439,7 +445,7 @@ export async function getServerSideProps({ params, res }) {
       slug: job.slug
     }));
 
-    console.log(`[getServerSideProps] Category: ${slug}, Returning ${transformedJobs.length} jobs`);
+    console.log(`[getStaticProps] Category: ${slug}, Returning ${transformedJobs.length} jobs`);
 
     await pool.end();
 
@@ -456,7 +462,8 @@ export async function getServerSideProps({ params, res }) {
       props: {
         category: slug,
         initialJobs: serializedJobs
-      }
+      },
+      revalidate: 300 // Rebuild every 5 minutes
     };
   } catch (error) {
     console.error(`[${slug}] Error in getStaticProps:`, error);
@@ -471,7 +478,8 @@ export async function getServerSideProps({ params, res }) {
       props: {
         category: slug,
         initialJobs: []
-      }
+      },
+      revalidate: 60 // Retry in 1 minute if error
     };
   }
 }
