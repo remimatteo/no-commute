@@ -411,38 +411,35 @@ export async function getServerSideProps({ params, res }) {
   const config = categoryConfig[slug] || categoryConfig['software-development'];
 
   try {
-    // Fetch ALL jobs first, then filter in JavaScript after normalizing
-    // This is necessary because the database stores raw category names
-    // but we need to match against normalized category names
+    // OPTIMIZED: Filter by category in database, not JavaScript
+    // Only fetch 100 jobs for this specific category
     const result = await pool.query(`
       SELECT * FROM jobs
+      WHERE status = 'active' AND category = $1
       ORDER BY
         COALESCE(featured, false) DESC,
         created_at DESC
-      LIMIT 1000
-    `);
+      LIMIT 100
+    `, [config.name]);
 
-    console.log(`[getStaticProps] Category: ${slug}, Fetched ${result.rows.length} total jobs from database`);
+    console.log(`[getServerSideProps] Category: ${slug}, Fetched ${result.rows.length} jobs for category "${config.name}"`);
 
-    // Transform jobs - NO normalization needed, DB already has normalized categories
-    const transformedJobs = result.rows
-      .map((job) => ({
-        id: job.id,
-        title: job.title,
-        company: job.company,
-        location: job.location || 'Remote',
-        salary: job.salary || 'Competitive',
-        type: job.type || 'Full-time',
-        category: job.category, // Use DB category directly
-        tags: job.tags || [],
-        postedDate: job.posted_date || job.created_at,
-        applyUrl: job.apply_url || job.url || '#',
-        slug: job.slug
-      }))
-      .filter(job => job.category === config.name)
-      .slice(0, 100); // Limit to 100 after filtering
+    // Transform jobs
+    const transformedJobs = result.rows.map((job) => ({
+      id: job.id,
+      title: job.title,
+      company: job.company,
+      location: job.location || 'Remote',
+      salary: job.salary || 'Competitive',
+      type: job.type || 'Full-time',
+      category: job.category,
+      tags: job.tags || [],
+      postedDate: job.posted_date || job.created_at,
+      applyUrl: job.apply_url || job.url || '#',
+      slug: job.slug
+    }));
 
-    console.log(`[getStaticProps] Category: ${slug}, Filtered to ${transformedJobs.length} jobs matching "${config.name}"`);
+    console.log(`[getServerSideProps] Category: ${slug}, Returning ${transformedJobs.length} jobs`);
 
     await pool.end();
 
