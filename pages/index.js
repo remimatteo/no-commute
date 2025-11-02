@@ -1002,41 +1002,23 @@ export async function getServerSideProps({ res }) {
   });
 
   try {
-    // Fetch all recent jobs (no location filter for better coverage)
-    // Pre-load 1000 jobs so most filter combinations work without API calls
-    const limit = 1000;
+    // OPTIMIZED: Fetch recent jobs only (100 instead of 1000)
+    // Removed expensive window function for better performance
+    const limit = 100;
 
-    // Count total jobs
+    // Count total active jobs only
     const countResult = await pool.query(`
-      SELECT COUNT(*) as total FROM jobs
+      SELECT COUNT(*) as total FROM jobs WHERE status = 'active'
     `);
 
     const totalJobs = parseInt(countResult.rows[0].total, 10);
 
-    // Fetch jobs with company diversity - limit max jobs per company
+    // Simple, fast query - just sort by featured and date
     const result = await pool.query(`
-      WITH ranked_jobs AS (
-        SELECT *,
-          ROW_NUMBER() OVER (
-            PARTITION BY company
-            ORDER BY created_at DESC
-          ) as company_rank
-        FROM jobs
-      )
-      SELECT * FROM ranked_jobs
-      WHERE company_rank <= 5
+      SELECT * FROM jobs
+      WHERE status = 'active'
       ORDER BY
         COALESCE(featured, false) DESC,
-        CASE
-          WHEN location ILIKE '%United States%'
-            OR location ILIKE '%USA%'
-            OR location ILIKE '%US - %'
-            OR location ILIKE '%Remote - US%'
-            OR location ILIKE '%, US%'
-            OR location ILIKE '%U.S.%'
-          THEN 0
-          ELSE 1
-        END,
         created_at DESC
       LIMIT $1
     `, [limit]);
