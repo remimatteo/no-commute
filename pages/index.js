@@ -1028,7 +1028,7 @@ export async function getStaticProps() {
       type: job.type || 'Full-time',
       category: normalizeCategory(job.category),
       tags: job.tags || [],
-      postedDate: job.posted_date || job.created_at,
+      postedDate: job.created_at.toISOString(), // Use created_at to show when job was added to our database
       description: job.description || '',
       requirements: [],
       applyUrl: job.apply_url || job.url || '#',
