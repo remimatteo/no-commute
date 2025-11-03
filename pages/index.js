@@ -373,91 +373,84 @@ const [totalJobs, setTotalJobs] = useState(initialTotalJobs);
   }, [submittedSearch, category, location, salaryListed, experience]);
 
   // Smart search with operators - memoized to prevent infinite re-renders
-  const filteredJobs = useMemo(() => jobs
-    .filter(job => {
-      let matchesSearch = true;
+  const filteredJobs = useMemo(() => {
+    // Use submittedSearch for filtering, not searchQuery (which updates as user types)
+    const searchToUse = submittedSearch.trim();
 
-      if (searchQuery.trim()) {
-        const query = searchQuery.trim();
+    return jobs
+      .filter(job => {
+        let matchesSearch = true;
 
-        // Check for search operators
-        if (query.includes(':')) {
-          // Support operators: title:, company:, category:, tag:
-          const operatorRegex = /(title|company|category|tag):([^\s]+)/gi;
-          let matches = [...query.matchAll(operatorRegex)];
+        if (searchToUse) {
+          const query = searchToUse;
 
-          if (matches.length > 0) {
-            matchesSearch = matches.every(match => {
-              const [, field, value] = match;
-              const lowerValue = value.toLowerCase();
+          // Check for search operators
+          if (query.includes(':')) {
+            // Support operators: title:, company:, category:, tag:
+            const operatorRegex = /(title|company|category|tag):([^\s]+)/gi;
+            let matches = [...query.matchAll(operatorRegex)];
 
-              switch (field.toLowerCase()) {
-                case 'title':
-                  return job.title.toLowerCase().includes(lowerValue);
-                case 'company':
-                  return job.company.toLowerCase().includes(lowerValue);
-                case 'category':
-                  return job.category.toLowerCase().includes(lowerValue);
-                case 'tag':
-                  return job.tags.some(tag => tag.toLowerCase().includes(lowerValue));
-                default:
-                  return true;
-              }
-            });
+            if (matches.length > 0) {
+              matchesSearch = matches.every(match => {
+                const [, field, value] = match;
+                const lowerValue = value.toLowerCase();
+
+                switch (field.toLowerCase()) {
+                  case 'title':
+                    return job.title.toLowerCase().includes(lowerValue);
+                  case 'company':
+                    return job.company.toLowerCase().includes(lowerValue);
+                  case 'category':
+                    return job.category.toLowerCase().includes(lowerValue);
+                  case 'tag':
+                    return job.tags.some(tag => tag.toLowerCase().includes(lowerValue));
+                  default:
+                    return true;
+                }
+              });
+            } else {
+              // No valid operators, fall back to regular search
+              matchesSearch = job.title.toLowerCase().includes(query.toLowerCase()) ||
+                             job.company.toLowerCase().includes(query.toLowerCase()) ||
+                             job.tags.some(tag => tag.toLowerCase().includes(query.toLowerCase()));
+            }
+          } else if (query.includes('|')) {
+            // OR operator: "react | vue | angular"
+            const terms = query.split('|').map(t => t.trim().toLowerCase());
+            matchesSearch = terms.some(term =>
+              job.title.toLowerCase().includes(term) ||
+              job.company.toLowerCase().includes(term) ||
+              job.tags.some(tag => tag.toLowerCase().includes(term))
+            );
+          } else if (query.startsWith('-')) {
+            // NOT operator: "-junior"
+            const excludeTerm = query.substring(1).toLowerCase();
+            matchesSearch = !(
+              job.title.toLowerCase().includes(excludeTerm) ||
+              job.company.toLowerCase().includes(excludeTerm) ||
+              job.tags.some(tag => tag.toLowerCase().includes(excludeTerm))
+            );
           } else {
-            // No valid operators, fall back to regular search
+            // Regular search
             matchesSearch = job.title.toLowerCase().includes(query.toLowerCase()) ||
                            job.company.toLowerCase().includes(query.toLowerCase()) ||
                            job.tags.some(tag => tag.toLowerCase().includes(query.toLowerCase()));
           }
-        } else if (query.includes('|')) {
-          // OR operator: "react | vue | angular"
-          const terms = query.split('|').map(t => t.trim().toLowerCase());
-          matchesSearch = terms.some(term =>
-            job.title.toLowerCase().includes(term) ||
-            job.company.toLowerCase().includes(term) ||
-            job.tags.some(tag => tag.toLowerCase().includes(term))
-          );
-        } else if (query.startsWith('-')) {
-          // NOT operator: "-junior"
-          const excludeTerm = query.substring(1).toLowerCase();
-          matchesSearch = !(
-            job.title.toLowerCase().includes(excludeTerm) ||
-            job.company.toLowerCase().includes(excludeTerm) ||
-            job.tags.some(tag => tag.toLowerCase().includes(excludeTerm))
-          );
-        } else {
-          // Regular search
-          matchesSearch = job.title.toLowerCase().includes(query.toLowerCase()) ||
-                         job.company.toLowerCase().includes(query.toLowerCase()) ||
-                         job.tags.some(tag => tag.toLowerCase().includes(query.toLowerCase()));
         }
-      }
 
-      const matchesCategory = filterState.category === "All" || job.category === filterState.category;
-      const matchesLocation = filterState.location === "All" ||
-                             job.location.toLowerCase().includes(filterState.location.toLowerCase());
-      const hasSalary = job.salary && job.salary !== 'Competitive' && job.salary.match(/\d/);
-      const matchesSalary = filterState.salaryListed === "All" ||
-                           (filterState.salaryListed === "Yes" && hasSalary) ||
-                           (filterState.salaryListed === "No" && !hasSalary);
+        const matchesCategory = filterState.category === "All" || job.category === filterState.category;
+        const matchesLocation = filterState.location === "All" ||
+                               job.location.toLowerCase().includes(filterState.location.toLowerCase());
+        const hasSalary = job.salary && job.salary !== 'Competitive' && job.salary.match(/\d/);
+        const matchesSalary = filterState.salaryListed === "All" ||
+                             (filterState.salaryListed === "Yes" && hasSalary) ||
+                             (filterState.salaryListed === "No" && !hasSalary);
 
-      return matchesSearch && matchesCategory && matchesLocation && matchesSalary;
-    })
-    .sort((a, b) => {
-      // Sort by date (most recent first)
-      const dateA = new Date(a.postedDate);
-      const dateB = new Date(b.postedDate);
-
-      // If dates are very close (within same day), sort alphabetically by title
-      // This creates consistent ordering without bias toward senior roles
-      const dateDiff = dateB - dateA;
-      if (Math.abs(dateDiff) < 1000 * 60 * 60 * 24) { // Within 24 hours
-        return a.title.localeCompare(b.title);
-      }
-
-      return dateDiff;
-    }), [jobs, searchQuery, filterState]);
+        return matchesSearch && matchesCategory && matchesLocation && matchesSalary;
+      });
+      // IMPORTANT: Don't re-sort here! Jobs are already sorted correctly by the database
+      // with US jobs prioritized first, then by date. Client-side re-sorting breaks this.
+  }, [jobs, submittedSearch, filterState]);
 
   if (loading) {
     return (
@@ -1007,7 +1000,7 @@ export async function getStaticProps() {
 
     const totalJobs = parseInt(countResult.rows[0].total, 10);
 
-    // Optimized query: Prioritize US jobs for US-based audience
+    // Optimized query: Prioritize US jobs for US-based audience, sorted by posted_date
     const result = await pool.query(`
       SELECT * FROM jobs
       WHERE status = 'active'
