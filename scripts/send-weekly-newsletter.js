@@ -16,11 +16,15 @@ async function sendWeeklyNewsletter() {
   try {
     console.log('📧 Starting weekly newsletter send...\n');
 
-    // 1. Get jobs from the past 7 days
+    // 1. Get the freshest jobs - added in past 3 days AND posted within past 14 days
     const jobsResult = await pool.query(`
-      SELECT id, title, company, location, salary, category, slug, posted_date
+      SELECT id, title, company, location, salary, category, slug, posted_date, created_at
       FROM jobs
-      WHERE created_at >= NOW() - INTERVAL '7 days'
+      WHERE created_at >= NOW() - INTERVAL '3 days'
+        AND (
+          posted_date IS NULL
+          OR TO_DATE(posted_date, 'Mon DD, YYYY') >= CURRENT_DATE - INTERVAL '14 days'
+        )
       ORDER BY created_at DESC
       LIMIT 20
     `);
@@ -85,24 +89,39 @@ async function sendWeeklyNewsletter() {
               max-width: 600px;
               margin: 0 auto;
               padding: 20px;
+              background-color: #f9fafb;
+            }
+            .email-container {
               background-color: #ffffff;
+              border-radius: 12px;
+              overflow: hidden;
+              box-shadow: 0 2px 8px rgba(0,0,0,0.1);
             }
             .header {
               text-align: center;
-              padding: 20px 0;
+              padding: 30px 20px;
+              background: #ffffff;
               border-bottom: 1px solid #e5e7eb;
-              margin-bottom: 30px;
+            }
+            .header-logo {
+              width: 50px;
+              height: 50px;
+              margin: 0 auto 15px auto;
+              display: block;
             }
             .header h1 {
               margin: 0;
-              font-size: 24px;
+              font-size: 28px;
+              font-weight: 700;
               color: #111827;
-              font-weight: 600;
             }
             .header p {
-              margin: 5px 0 0 0;
+              margin: 8px 0 0 0;
               font-size: 14px;
               color: #6b7280;
+            }
+            .content {
+              padding: 30px 25px;
             }
             .blog-section {
               background: #f9fafb;
@@ -133,27 +152,81 @@ async function sendWeeklyNewsletter() {
               margin: 0 0 20px 0;
             }
             .job-item {
-              padding: 12px 0;
-              border-bottom: 1px solid #e5e7eb;
+              padding: 12px;
+              margin-bottom: 8px;
+              border: 1px solid #e5e7eb;
+              border-radius: 6px;
+              background: #ffffff;
+              transition: all 0.2s;
             }
-            .job-item:last-child {
-              border-bottom: none;
+            .job-item:hover {
+              border-color: #3b82f6;
+              box-shadow: 0 2px 8px rgba(59,130,246,0.1);
+            }
+            .job-header {
+              display: flex;
+              align-items: center;
+              gap: 10px;
+            }
+            .company-logo {
+              width: 44px;
+              height: 44px;
+              border-radius: 6px;
+              object-fit: contain;
+              flex-shrink: 0;
+              background: #f3f4f6;
+              padding: 2px;
+            }
+            .job-info {
+              flex: 1;
+              min-width: 0;
             }
             .job-title {
-              font-size: 15px;
-              font-weight: 500;
+              font-size: 14px;
+              font-weight: 600;
               color: #111827;
               text-decoration: none;
               display: block;
-              margin-bottom: 4px;
+              line-height: 1.3;
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
             }
             .job-title:hover {
               color: #3b82f6;
             }
+            .job-company {
+              font-size: 12px;
+              color: #6b7280;
+              margin-top: 2px;
+            }
+            .job-meta {
+              display: flex;
+              align-items: center;
+              gap: 8px;
+              font-size: 12px;
+              margin-top: 4px;
+            }
             .job-salary {
-              font-size: 13px;
+              font-size: 12px;
               color: #10b981;
               font-weight: 600;
+              background: #d1fae5;
+              padding: 2px 8px;
+              border-radius: 4px;
+              white-space: nowrap;
+            }
+            .job-location {
+              font-size: 11px;
+              color: #6b7280;
+            }
+            .job-category {
+              font-size: 11px;
+              color: #6366f1;
+              background: #e0e7ff;
+              padding: 2px 6px;
+              border-radius: 3px;
+              white-space: nowrap;
             }
             .side-hustles-section {
               background: #fffbeb;
@@ -249,14 +322,15 @@ async function sendWeeklyNewsletter() {
           </style>
         </head>
         <body>
-          <!-- Email Banner -->
-          <img src="https://no-commute-jobs.com/email-banner.png" alt="No Commute Jobs" class="banner-image" />
+          <div class="email-container">
+            <!-- Header -->
+            <div class="header">
+              <img src="https://no-commute-jobs.com/logo.png" alt="No Commute Jobs" class="header-logo" />
+              <h1>No Commute Jobs</h1>
+              <p>${new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</p>
+            </div>
 
-          <!-- Header -->
-          <div class="header">
-            <h1>No Commute Jobs</h1>
-            <p>${new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</p>
-          </div>
+            <div class="content">
 
           <!-- Welcome Message -->
           <div class="welcome-section">
@@ -272,17 +346,30 @@ async function sendWeeklyNewsletter() {
 
           <!-- Jobs Section -->
           <div class="jobs-section">
-            <h2>This Week's Top Remote Jobs (400+ new)</h2>
-            ${weeklyJobs.slice(0, 12).map(job => `
+            <h2>This Week's Top Remote Jobs (${weeklyJobs.length}+ new)</h2>
+            ${weeklyJobs.slice(0, 12).map(job => {
+              const logoUrl = `https://logo.clearbit.com/${job.company.toLowerCase().replace(/\s+/g, '')}.com`;
+              const hasSalary = job.salary && job.salary !== 'Competitive' && job.salary.match(/\d/);
+
+              return `
               <div class="job-item">
-                <a href="https://no-commute-jobs.com/jobs/${job.id}/${job.slug}" class="job-title">
-                  ${job.title}
-                </a>
-                ${job.salary && job.salary !== 'Competitive' && job.salary.match(/\d/) ?
-                  `<span class="job-salary">${job.salary}</span>` :
-                  ''}
+                <div class="job-header">
+                  <img src="${logoUrl}" alt="${job.company}" class="company-logo" onerror="this.style.display='none'" />
+                  <div class="job-info">
+                    <a href="https://no-commute-jobs.com/jobs/${job.id}/${job.slug}" class="job-title">
+                      ${job.title}
+                    </a>
+                    <div class="job-company">${job.company}</div>
+                    <div class="job-meta">
+                      ${hasSalary ? `<span class="job-salary">💰 ${job.salary}</span>` : ''}
+                      ${job.location ? `<span class="job-location">📍 ${job.location}</span>` : ''}
+                      ${job.category && job.category !== 'Other' ? `<span class="job-category">${job.category}</span>` : ''}
+                    </div>
+                  </div>
+                </div>
               </div>
-            `).join('')}
+            `;
+            }).join('')}
           </div>
 
           <!-- Side Hustles Section -->
@@ -306,11 +393,13 @@ async function sendWeeklyNewsletter() {
               <a href="https://no-commute-jobs.com">Browse Jobs</a> ·
               <a href="https://no-commute-jobs.com/blog">Blog</a> ·
               <a href="https://no-commute-jobs.com/make-money-online">Side Hustles</a> ·
-              <a href="#">Unsubscribe</a>
+              <a href="https://no-commute-jobs.com/unsubscribe">Unsubscribe</a>
             </p>
             <p style="margin-top: 15px; font-size: 12px;">
               © 2025 No Commute Jobs. All rights reserved.
             </p>
+          </div>
+            </div>
           </div>
         </body>
       </html>

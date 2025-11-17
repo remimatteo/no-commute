@@ -1,27 +1,36 @@
 import { useRouter } from 'next/router';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import Link from 'next/link';
 import SEO from '../../components/SEO';
 import { blogPosts } from '../../data/blogPosts';
 
 export default function BlogPost({ post }) {
   const router = useRouter();
+  const adsInitialized = useRef(false);
 
   // Initialize AdSense ads in the content
   useEffect(() => {
-    if (typeof window !== 'undefined' && window.adsbygoogle) {
-      // Find all ad slots that haven't been initialized
-      const ads = document.querySelectorAll('.adsbygoogle');
-      ads.forEach((ad) => {
-        if (!ad.getAttribute('data-adsbygoogle-status')) {
-          try {
-            (window.adsbygoogle = window.adsbygoogle || []).push({});
-          } catch (e) {
-            console.log('AdSense error:', e);
+    // Wait a bit for DOM to be ready
+    const timer = setTimeout(() => {
+      if (typeof window !== 'undefined' && !adsInitialized.current) {
+        const ads = document.querySelectorAll('.adsbygoogle');
+
+        ads.forEach((ad) => {
+          const status = ad.getAttribute('data-adsbygoogle-status');
+          if (!status || status === 'error') {
+            try {
+              (window.adsbygoogle = window.adsbygoogle || []).push({});
+            } catch (e) {
+              console.log('AdSense load attempt:', e);
+            }
           }
-        }
-      });
-    }
+        });
+
+        adsInitialized.current = true;
+      }
+    }, 100);
+
+    return () => clearTimeout(timer);
   }, [post]);
 
   if (router.isFallback) {
@@ -121,6 +130,18 @@ export default function BlogPost({ post }) {
             [&>div>table>tbody>tr>td]:p-3 [&>div>table>tbody>tr>td]:border-t [&>div>table>tbody>tr>td]:border-gray-200
           ">
             <div dangerouslySetInnerHTML={{ __html: post.content }} />
+          </div>
+
+          {/* AdSense Ad at End of Article */}
+          <div className="my-12 text-center">
+            <ins
+              className="adsbygoogle"
+              style={{ display: 'block', textAlign: 'center' }}
+              data-ad-layout="in-article"
+              data-ad-format="fluid"
+              data-ad-client="ca-pub-9962507745166386"
+              data-ad-slot="9575908622"
+            ></ins>
           </div>
 
           {/* Footer Navigation */}
