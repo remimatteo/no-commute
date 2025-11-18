@@ -17,12 +17,13 @@ export default function Document() {
         />
 
         {/* ✅ CookieYes banner script - deferred for better performance */}
-        <script
+        {/* TEMPORARILY DISABLED TO FIX MOBILE INTERACTION ISSUES */}
+        {/* <script
           id="cookieyes"
           type="text/javascript"
           src="https://cdn-cookieyes.com/client_data/812e5433b4a05d2ac6826592/script.js"
           defer
-        ></script>
+        ></script> */}
 
         {/* ✅ Google AdSense script - async already applied */}
         <script
