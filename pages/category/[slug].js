@@ -440,7 +440,7 @@ export async function getStaticProps({ params }) {
       type: job.type || 'Full-time',
       category: job.category,
       tags: job.tags || [],
-      postedDate: job.posted_date || job.created_at,
+      postedDate: job.created_at,
       applyUrl: job.apply_url || job.url || '#',
       slug: job.slug
     }));
