@@ -1,11 +1,9 @@
-import { useRouter } from 'next/router';
 import { useEffect, useRef } from 'react';
 import Link from 'next/link';
 import SEO from '../../components/SEO';
 import { blogPosts } from '../../data/blogPosts';
 
 export default function BlogPost({ post }) {
-  const router = useRouter();
   const adsInitialized = useRef(false);
 
   // Initialize AdSense ads in the content
@@ -32,10 +30,6 @@ export default function BlogPost({ post }) {
 
     return () => clearTimeout(timer);
   }, [post]);
-
-  if (router.isFallback) {
-    return <div>Loading...</div>;
-  }
 
   if (!post) {
     return (

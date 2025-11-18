@@ -1,14 +1,9 @@
-import { useRouter } from 'next/router';
 import Link from 'next/link';
 import SEO from '../../components/SEO';
 import { sideHustles } from '../../data/sideHustles';
 import { ChevronLeft, Clock, Tag } from 'lucide-react';
 
-export default function SideHustlePage() {
-  const router = useRouter();
-  const { slug } = router.query;
-
-  const hustle = sideHustles.find(h => h.slug === slug);
+export default function SideHustlePage({ hustle }) {
 
   if (!hustle) {
     return (
@@ -128,7 +123,7 @@ export default function SideHustlePage() {
             </h2>
             <div className="grid md:grid-cols-2 gap-6">
               {sideHustles
-                .filter(h => h.slug !== slug)
+                .filter(h => h.slug !== hustle.slug)
                 .slice(0, 4)
                 .map(relatedHustle => (
                   <Link
@@ -153,4 +148,31 @@ export default function SideHustlePage() {
       </div>
     </>
   );
+}
+
+export async function getStaticPaths() {
+  const paths = sideHustles.map((hustle) => ({
+    params: { slug: hustle.slug },
+  }));
+
+  return {
+    paths,
+    fallback: false,
+  };
+}
+
+export async function getStaticProps({ params }) {
+  const hustle = sideHustles.find(h => h.slug === params.slug);
+
+  if (!hustle) {
+    return {
+      notFound: true,
+    };
+  }
+
+  return {
+    props: {
+      hustle,
+    },
+  };
 }
