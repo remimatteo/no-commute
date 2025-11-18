@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Search, MapPin, DollarSign, Briefcase, Moon, Sun, Menu, X } from 'lucide-react';
 import SEO from '../../components/SEO';
+import AdSenseInFeed from '../../components/AdSenseInFeed';
 import Link from 'next/link';
 import { generateJobSlug } from '../../lib/slugify';
 import { formatSalary } from '../../lib/formatSalary';
@@ -295,11 +296,13 @@ export default function CategoryJobs({ category, initialJobs = [] }) {
           </div>
 
           <div className="space-y-2">
-            {filteredJobs.slice(0, visibleJobsCount).map(job => {
+            {filteredJobs.slice(0, visibleJobsCount).map((job, index) => {
               const slug = job.slug || generateJobSlug(job.title, job.company);
+              const shouldShowAd = (index + 1) % 5 === 0 && index >= 4; // Show ad every 5 jobs, starting after the 5th job
+
               return (
+              <React.Fragment key={job.id}>
                 <Link
-                  key={job.id}
                   href={`/jobs/${job.id}/${slug}`}
                   className={`group ${darkMode ? 'bg-gray-800 border-gray-700 hover:bg-gray-750' : 'bg-white border-gray-200 hover:bg-gray-50'} rounded-lg border transition-all cursor-pointer p-4 flex items-center gap-4 hover:border-blue-400 block`}
                 >
@@ -347,6 +350,9 @@ export default function CategoryJobs({ category, initialJobs = [] }) {
                     </div>
                   </div>
                 </Link>
+
+                {shouldShowAd && <AdSenseInFeed />}
+              </React.Fragment>
               );
             })}
           </div>
