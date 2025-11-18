@@ -86,7 +86,7 @@ export default function JobDetailPage({ job, similarJobs = [] }) {
     type: job.type || 'Full-time',
     category: normalizeCategory(job.category),
     tags: job.tags || [],
-    postedDate: job.posted_date || job.created_at,
+    postedDate: job.created_at,
     description: job.description || '',
     applyUrl: job.apply_url || job.url || '#',
     company_url: job.company_url || job.url || '',

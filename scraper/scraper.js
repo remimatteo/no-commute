@@ -732,28 +732,65 @@ function isRemoteJob(job) {
 function extractSalaryFromText(text) {
   if (!text) return null;
 
-  // Pattern 1: "$83,300—$147,000 USD" or "$83,300-$147,000 USD"
-  const pattern1 = /\$[\d,]+\s*[—\-–]\s*\$[\d,]+\s*USD/i;
+  // Check time-period patterns FIRST (more specific, should take precedence)
+
+  // Pattern 1: Hourly rates "$40-60/hour" or "$40-60 per hour" or "$40-$60/hr"
+  const pattern1 = /[$€£¥]?\d+\s*[—\-–]\s*[$€£¥]?\d+\s*(?:\/|per)\s*(?:hour|hr)/i;
   const match1 = text.match(pattern1);
   if (match1) {
     return match1[0].replace(/\s+/g, ' ').trim();
   }
 
-  // Pattern 2: "Salary Range: $83,300—$147,000" or similar
-  const pattern2 = /(salary|compensation|pay)\s*(?:range)?:?\s*\$[\d,]+\s*[—\-–]\s*\$[\d,]+/i;
+  // Pattern 2: Annual notation "80k-100k per year" or "80,000-100,000/year"
+  const pattern2 = /[$€£¥]?[\d,]+k?\s*[—\-–]\s*[$€£¥]?[\d,]+k?\s*(?:\/|per)\s*(?:year|annum|annually)/i;
   const match2 = text.match(pattern2);
   if (match2) {
-    const salaryPart = match2[0].match(/\$[\d,]+\s*[—\-–]\s*\$[\d,]+/);
+    return match2[0].replace(/\s+/g, ' ').trim();
+  }
+
+  // Pattern 3: "$83,300—$147,000 USD" or "$83,300-$147,000 USD" with currency code
+  const pattern3 = /[$€£¥][\d,]+\s*[—\-–]\s*[$€£¥][\d,]+\s*(USD|EUR|GBP|CAD|AUD|NZD|CHF|SEK|NOK|DKK)/i;
+  const match3 = text.match(pattern3);
+  if (match3) {
+    return match3[0].replace(/\s+/g, ' ').trim();
+  }
+
+  // Pattern 4: "Salary Range: $83,300—$147,000" or similar with label
+  const pattern4 = /(salary|compensation|pay)\s*(?:range)?:?\s*[$€£¥][\d,]+\s*[—\-–]\s*[$€£¥][\d,]+/i;
+  const match4 = text.match(pattern4);
+  if (match4) {
+    const salaryPart = match4[0].match(/[$€£¥][\d,]+\s*[—\-–]\s*[$€£¥][\d,]+/);
     if (salaryPart) {
       return salaryPart[0].replace(/\s+/g, ' ').trim();
     }
   }
 
-  // Pattern 3: "$83,300 - $147,000" (with spaces and dash)
-  const pattern3 = /\$[\d,]+\s*-\s*\$[\d,]+/;
-  const match3 = text.match(pattern3);
-  if (match3) {
-    return match3[0].replace(/\s+/g, ' ').trim();
+  // Pattern 5: "$83,300 - $147,000" (basic range with currency symbol)
+  const pattern5 = /[$€£¥][\d,]+\s*[—\-–]\s*[$€£¥][\d,]+/;
+  const match5 = text.match(pattern5);
+  if (match5) {
+    return match5[0].replace(/\s+/g, ' ').trim();
+  }
+
+  // Pattern 6: "$80k-$100k" or "$80K-$100K" (k notation with both symbols)
+  const pattern6 = /[$€£¥]\d+k\s*[—\-–]\s*[$€£¥]\d+k/i;
+  const match6 = text.match(pattern6);
+  if (match6) {
+    return match6[0].replace(/\s+/g, ' ').trim();
+  }
+
+  // Pattern 7: "$80-100k" or "$80-100K" (compact k notation)
+  const pattern7 = /[$€£¥]\d+\s*[—\-–]\s*\d+k/i;
+  const match7 = text.match(pattern7);
+  if (match7) {
+    return match7[0].replace(/\s+/g, ' ').trim();
+  }
+
+  // Pattern 8: "80k-100k" or "80-100k" (k notation without currency symbol)
+  const pattern8 = /\b\d+k?\s*[—\-–]\s*\d+k\b/i;
+  const match8 = text.match(pattern8);
+  if (match8) {
+    return match8[0].replace(/\s+/g, ' ').trim();
   }
 
   return null;
@@ -869,6 +906,7 @@ async function scrapeGreenhouseCompanies() {
 
           // Fetch full job details to get description
           let jobContent = job.content || '';
+          let webPageHtml = '';
           try {
             const jobDetailUrl = `https://boards-api.greenhouse.io/v1/boards/${companyInfo.token}/jobs/${job.id}`;
             const detailResponse = await fetch(jobDetailUrl, {
@@ -890,6 +928,26 @@ async function scrapeGreenhouseCompanies() {
             console.log(`   ⚠️  Could not fetch details for job ${job.id}: ${err.message}`);
           }
 
+          // ALSO fetch the actual web page to get salary info (not in API)
+          try {
+            if (job.absolute_url) {
+              const webResponse = await fetch(job.absolute_url, {
+                headers: {
+                  'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+                }
+              });
+
+              if (webResponse.ok) {
+                webPageHtml = await webResponse.text();
+              }
+
+              // Small delay to be respectful
+              await new Promise(resolve => setTimeout(resolve, 300));
+            }
+          } catch (err) {
+            console.log(`   ⚠️  Could not fetch web page for job ${job.id}: ${err.message}`);
+          }
+
           // Extract job details
           const metadata = extractGreenhouseMetadata(job);
           const title = job.title;
@@ -902,9 +960,17 @@ async function scrapeGreenhouseCompanies() {
           // Try to extract salary from multiple sources
           let salary = metadata.salary_range || metadata.compensation;
           if (!salary || salary === 'Competitive') {
-            // Try to extract from raw job content
-            const extractedSalary = extractSalaryFromText(jobContent);
-            salary = extractedSalary || 'Competitive';
+            // Try to extract from web page HTML first (more complete)
+            if (webPageHtml) {
+              const extractedSalary = extractSalaryFromText(webPageHtml);
+              salary = extractedSalary || salary;
+            }
+
+            // Fallback to API content if web page didn't work
+            if (!salary || salary === 'Competitive') {
+              const extractedSalary = extractSalaryFromText(jobContent);
+              salary = extractedSalary || 'Competitive';
+            }
           }
 
           const jobType = metadata.employment_type || 'Full-time';
