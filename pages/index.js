@@ -592,29 +592,33 @@ const [totalJobs, setTotalJobs] = useState(initialTotalJobs);
 </p>
 
             <div className="max-w-3xl mx-auto space-y-4">
-              <div className={`${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} rounded-2xl shadow-xl p-2 flex items-center gap-2 border transition-colors`}>
-                <Search className={`w-5 h-5 ${darkMode ? 'text-gray-400' : 'text-gray-500'} ml-3`} />
-                <input
-                  type="text"
-                  placeholder="Search: 'developer' or 'title:engineer' or 'react | vue' or '-junior'"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  onKeyPress={handleSearchKeyPress}
-                  className={`flex-1 ${darkMode ? 'bg-gray-800 text-white placeholder-gray-500' : 'bg-white text-gray-900 placeholder-gray-400'} px-4 py-3 outline-none text-lg`}
-                />
-                <button
-                  onClick={handleSearchSubmit}
-                  className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-semibold transition-colors"
-                >
-                  Search
-                </button>
-                <button
-                  onClick={() => setShowFilterMenu(!showFilterMenu)}
-                  className={`${darkMode ? 'bg-gray-700 hover:bg-gray-600' : 'bg-gray-100 hover:bg-gray-200'} px-6 py-3 rounded-xl font-semibold flex items-center gap-2 transition-colors`}
-                >
-                  <Filter className="w-4 h-4" />
-                  Filters
-                </button>
+              <div className={`${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} rounded-2xl shadow-xl p-2 border transition-colors`}>
+                <div className="flex items-center gap-2">
+                  <Search className={`w-5 h-5 ${darkMode ? 'text-gray-400' : 'text-gray-500'} ml-3 flex-shrink-0`} />
+                  <input
+                    type="text"
+                    placeholder="Search: 'developer' or 'title:engineer' or 'react | vue' or '-junior'"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    onKeyPress={handleSearchKeyPress}
+                    className={`flex-1 ${darkMode ? 'bg-gray-800 text-white placeholder-gray-500' : 'bg-white text-gray-900 placeholder-gray-400'} px-4 py-3 outline-none text-lg`}
+                  />
+                </div>
+                <div className="flex gap-2 mt-2">
+                  <button
+                    onClick={handleSearchSubmit}
+                    className="flex-1 sm:flex-none bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-semibold transition-colors"
+                  >
+                    Search
+                  </button>
+                  <button
+                    onClick={() => setShowFilterMenu(!showFilterMenu)}
+                    className={`flex-1 sm:flex-none ${darkMode ? 'bg-gray-700 hover:bg-gray-600' : 'bg-gray-100 hover:bg-gray-200'} px-6 py-3 rounded-xl font-semibold flex items-center justify-center gap-2 transition-colors`}
+                  >
+                    <Filter className="w-4 h-4" />
+                    Filters
+                  </button>
+                </div>
               </div>
 
               {searchQuery && (
