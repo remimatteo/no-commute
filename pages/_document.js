@@ -4,6 +4,9 @@ export default function Document() {
   return (
     <Html lang="en">
       <Head>
+        {/* Mobile viewport optimization */}
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes" />
+
         {/* Preconnect to external domains for faster loading */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
@@ -26,11 +29,12 @@ export default function Document() {
         ></script> */}
 
         {/* ✅ Google AdSense script - async already applied */}
-        <script
+        {/* TEMPORARILY DISABLED TO TEST MOBILE INTERACTION ISSUES */}
+        {/* <script
           async
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9962507745166386"
           crossOrigin="anonymous"
-        ></script>
+        ></script> */}
       </Head>
       <body>
         <Main />

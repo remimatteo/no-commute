@@ -754,11 +754,13 @@ const [totalJobs, setTotalJobs] = useState(initialTotalJobs);
                 { name: 'Data Analysis', slug: 'data-analysis', emoji: '📊' },
                 { name: 'Writing', slug: 'writing', emoji: '✍️' }
               ].map(cat => (
-                <Link href={`/category/${cat.slug}`} key={cat.slug}>
-                  <div className={`${darkMode ? 'bg-gray-800 border-gray-700 hover:border-blue-500' : 'bg-gray-50 border-gray-200 hover:border-blue-400'} border rounded-lg sm:rounded-xl p-3 sm:p-6 hover:shadow-lg transition-all text-center cursor-pointer`}>
-                    <div className="text-2xl sm:text-4xl mb-1 sm:mb-3">{cat.emoji}</div>
-                    <h3 className={`text-xs sm:text-base font-semibold ${darkMode ? 'text-white' : 'text-gray-900'}`}>{cat.name}</h3>
-                  </div>
+                <Link
+                  href={`/category/${cat.slug}`}
+                  key={cat.slug}
+                  className={`${darkMode ? 'bg-gray-800 border-gray-700 hover:border-blue-500' : 'bg-gray-50 border-gray-200 hover:border-blue-400'} border rounded-lg sm:rounded-xl p-3 sm:p-6 hover:shadow-lg text-center cursor-pointer block touch-manipulation`}
+                >
+                  <div className="text-2xl sm:text-4xl mb-1 sm:mb-3">{cat.emoji}</div>
+                  <h3 className={`text-xs sm:text-base font-semibold ${darkMode ? 'text-white' : 'text-gray-900'}`}>{cat.name}</h3>
                 </Link>
               ))}
             </div>
@@ -780,10 +782,12 @@ const [totalJobs, setTotalJobs] = useState(initialTotalJobs);
                 { name: 'Australia', slug: 'australia' },
                 { name: 'Asia', slug: 'asia' }
               ].map(loc => (
-                <Link href={`/remote-jobs/${loc.slug}`} key={loc.slug}>
-                  <div className={`${darkMode ? 'bg-gray-800 border-gray-700 hover:border-blue-500' : 'bg-white border-gray-200 hover:border-blue-400'} border rounded-lg sm:rounded-xl p-4 sm:p-6 hover:shadow-lg transition-all text-center cursor-pointer`}>
-                    <h3 className={`text-sm sm:text-base font-semibold ${darkMode ? 'text-white' : 'text-gray-900'}`}>{loc.name}</h3>
-                  </div>
+                <Link
+                  href={`/remote-jobs/${loc.slug}`}
+                  key={loc.slug}
+                  className={`${darkMode ? 'bg-gray-800 border-gray-700 hover:border-blue-500' : 'bg-white border-gray-200 hover:border-blue-400'} border rounded-lg sm:rounded-xl p-4 sm:p-6 hover:shadow-lg text-center cursor-pointer block touch-manipulation`}
+                >
+                  <h3 className={`text-sm sm:text-base font-semibold ${darkMode ? 'text-white' : 'text-gray-900'}`}>{loc.name}</h3>
                 </Link>
               ))}
             </div>
@@ -807,7 +811,7 @@ const [totalJobs, setTotalJobs] = useState(initialTotalJobs);
               <React.Fragment key={job.id}>
               <Link
                 href={`/jobs/${job.id}/${slug}`}
-                className={`group ${darkMode ? 'bg-gray-800 border-gray-700 hover:bg-gray-750' : 'bg-white border-gray-200 hover:bg-gray-50'} rounded-lg border transition-all cursor-pointer p-4 flex items-center gap-4 hover:border-blue-400 block`}
+                className={`group ${darkMode ? 'bg-gray-800 border-gray-700 hover:bg-gray-750' : 'bg-white border-gray-200 hover:bg-gray-50'} rounded-lg border cursor-pointer p-4 flex items-center gap-4 hover:border-blue-400 block touch-manipulation`}
               >
                 <div className={`w-12 h-12 ${darkMode ? 'bg-gray-700' : 'bg-gray-100'} rounded-lg flex items-center justify-center flex-shrink-0 overflow-hidden relative`}>
                   <img
