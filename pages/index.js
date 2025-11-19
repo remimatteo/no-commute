@@ -627,25 +627,6 @@ const [totalJobs, setTotalJobs] = useState(initialTotalJobs);
                 </div>
               )}
 
-              <form onSubmit={handleEmailSubmit} className={`${darkMode ? 'bg-blue-900/20 border-blue-700' : 'bg-blue-50 border-blue-200'} rounded-2xl p-4 border transition-colors`}>
-                <div className="flex flex-col sm:flex-row gap-3">
-                  <input
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="your@email.com - Get weekly job alerts"
-                    className={`flex-1 px-4 py-3 rounded-xl ${darkMode ? 'bg-gray-800 text-white border-gray-700' : 'bg-white text-gray-900 border-gray-300'} border outline-none transition-colors`}
-                    disabled={emailSubmitting}
-                  />
-                  <button 
-                    type="submit"
-                    disabled={emailSubmitting || emailSubmitted}
-                    className="bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 py-3 rounded-xl transition-colors whitespace-nowrap disabled:opacity-50"
-                  >
-                    {emailSubmitted ? '✓ Subscribed!' : emailSubmitting ? 'Submitting...' : 'Subscribe'}
-                  </button>
-                </div>
-              </form>
 
               {showFilterMenu && (
                 <div className={`${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} p-6 rounded-2xl shadow-xl border transition-colors`}>
@@ -711,29 +692,6 @@ const [totalJobs, setTotalJobs] = useState(initialTotalJobs);
               )}
             </div>
 
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mt-12 max-w-4xl mx-auto">
-              <div className={`${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} p-4 rounded-xl border transition-colors`}>
-                <div className={`text-3xl font-black ${darkMode ? 'text-white' : 'text-gray-900'}`}>250+</div>
-                <div className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>Companies</div>
-              </div>
-              <div className={`${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} p-4 rounded-xl border transition-colors`}>
-                <div className={`text-3xl font-black ${darkMode ? 'text-white' : 'text-gray-900'}`}>50+</div>
-                <div className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>Countries</div>
-              </div>
-              <div className={`${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} p-4 rounded-xl border transition-colors`}>
-                <div className={`text-3xl font-black ${darkMode ? 'text-white' : 'text-gray-900'}`}>{jobs.filter(j => {
-                  try {
-                    const date = new Date(j.postedDate);
-                    const now = new Date();
-                    const diffDays = Math.floor((now - date) / (1000 * 60 * 60 * 24));
-                    return diffDays >= 0 && diffDays < 7;
-                  } catch {
-                    return false;
-                  }
-                }).length}</div>
-                <div className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>New This Week</div>
-              </div>
-            </div>
           </div>
         </section>
 
@@ -806,6 +764,7 @@ const [totalJobs, setTotalJobs] = useState(initialTotalJobs);
             {filteredJobs.slice(0, visibleJobsCount).map((job, index) => {
               const slug = job.slug || generateJobSlug(job.title, job.company);
               const shouldShowAd = (index + 1) % 5 === 0 && index >= 4; // Show ad every 5 jobs, starting after the 5th job
+              const shouldShowEmailBox = index === 2; // Show email box after 3rd job (index 2)
 
               return (
               <React.Fragment key={job.id}>
@@ -869,6 +828,28 @@ const [totalJobs, setTotalJobs] = useState(initialTotalJobs);
                   </div>
                 </div>
               </a>
+
+              {shouldShowEmailBox && (
+                <form onSubmit={handleEmailSubmit} className={`${darkMode ? 'bg-blue-900/20 border-blue-700' : 'bg-blue-50 border-blue-200'} rounded-2xl p-4 border transition-colors`}>
+                  <div className="flex flex-col sm:flex-row gap-3">
+                    <input
+                      type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      placeholder="your@email.com - Get weekly job alerts"
+                      className={`flex-1 px-4 py-3 rounded-xl ${darkMode ? 'bg-gray-800 text-white border-gray-700' : 'bg-white text-gray-900 border-gray-300'} border outline-none transition-colors`}
+                      disabled={emailSubmitting}
+                    />
+                    <button
+                      type="submit"
+                      disabled={emailSubmitting || emailSubmitted}
+                      className="bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 py-3 rounded-xl transition-colors whitespace-nowrap disabled:opacity-50"
+                    >
+                      {emailSubmitted ? '✓ Subscribed!' : emailSubmitting ? 'Submitting...' : 'Subscribe'}
+                    </button>
+                  </div>
+                </form>
+              )}
 
               {shouldShowAd && <AdSenseInFeed />}
               </React.Fragment>
