@@ -1,10 +1,54 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useMemo } from 'react';
 import Link from 'next/link';
 import SEO from '../../components/SEO';
 import { blogPosts } from '../../data/blogPosts';
 
 export default function BlogPost({ post }) {
   const adsInitialized = useRef(false);
+
+  // Split content into sections and insert ads dynamically based on length
+  const contentWithAds = useMemo(() => {
+    if (!post || !post.content) return '';
+
+    const content = post.content;
+    // Count paragraphs or sections (split by </p> tags)
+    const paragraphs = content.split('</p>').filter(p => p.trim());
+    const totalParagraphs = paragraphs.length;
+
+    // Determine number of ads based on content length
+    // Short post (< 5 paragraphs): 0 mid-article ads
+    // Medium post (5-10 paragraphs): 1 mid-article ad
+    // Long post (> 10 paragraphs): 2 mid-article ads
+    let adPositions = [];
+    if (totalParagraphs >= 10) {
+      adPositions = [Math.floor(totalParagraphs / 3), Math.floor(2 * totalParagraphs / 3)];
+    } else if (totalParagraphs >= 5) {
+      adPositions = [Math.floor(totalParagraphs / 2)];
+    }
+
+    // Insert ads at calculated positions
+    let result = [];
+    paragraphs.forEach((p, index) => {
+      result.push(p + '</p>');
+
+      if (adPositions.includes(index)) {
+        result.push(`
+          <div class="my-8 text-center ad-container">
+            <ins
+              class="adsbygoogle"
+              style="display:block; text-align:center;"
+              data-ad-layout="in-article"
+              data-ad-format="fluid"
+              data-ad-client="ca-pub-9962507745166386"
+              data-ad-slot="9575908622"
+            ></ins>
+          </div>
+        `);
+      }
+    });
+
+    return result.join('');
+  }, [post]);
 
   // Initialize AdSense ads in the content
   useEffect(() => {
@@ -29,7 +73,7 @@ export default function BlogPost({ post }) {
     }, 100);
 
     return () => clearTimeout(timer);
-  }, [post]);
+  }, [post, contentWithAds]);
 
   if (!post) {
     return (
@@ -123,7 +167,7 @@ export default function BlogPost({ post }) {
             [&>div>table>thead>tr>th]:bg-gray-100 [&>div>table>thead>tr>th]:p-3 [&>div>table>thead>tr>th]:font-bold [&>div>table>thead>tr>th]:text-left
             [&>div>table>tbody>tr>td]:p-3 [&>div>table>tbody>tr>td]:border-t [&>div>table>tbody>tr>td]:border-gray-200
           ">
-            <div dangerouslySetInnerHTML={{ __html: post.content }} />
+            <div dangerouslySetInnerHTML={{ __html: contentWithAds }} />
           </div>
 
           {/* AdSense Ad at End of Article */}
