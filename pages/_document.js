@@ -29,12 +29,11 @@ export default function Document() {
         ></script> */}
 
         {/* ✅ Google AdSense script - async already applied */}
-        {/* TEMPORARILY DISABLED TO TEST MOBILE INTERACTION ISSUES */}
-        {/* <script
+        <script
           async
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9962507745166386"
           crossOrigin="anonymous"
-        ></script> */}
+        ></script>
       </Head>
       <body>
         <Main />
