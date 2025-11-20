@@ -712,14 +712,15 @@ const [totalJobs, setTotalJobs] = useState(initialTotalJobs);
                 { name: 'Data Analysis', slug: 'data-analysis', emoji: '📊' },
                 { name: 'Writing', slug: 'writing', emoji: '✍️' }
               ].map(cat => (
-                <a
+                <Link
                   href={`/category/${cat.slug}`}
                   key={cat.slug}
                   className={`${darkMode ? 'bg-gray-800 border-gray-700 hover:border-blue-500' : 'bg-gray-50 border-gray-200 hover:border-blue-400'} border rounded-lg sm:rounded-xl p-3 sm:p-6 hover:shadow-lg text-center cursor-pointer block touch-manipulation`}
+                  prefetch={false}
                 >
                   <div className="text-2xl sm:text-4xl mb-1 sm:mb-3">{cat.emoji}</div>
                   <h3 className={`text-xs sm:text-base font-semibold ${darkMode ? 'text-white' : 'text-gray-900'}`}>{cat.name}</h3>
-                </a>
+                </Link>
               ))}
             </div>
           </div>
@@ -740,13 +741,14 @@ const [totalJobs, setTotalJobs] = useState(initialTotalJobs);
                 { name: 'Australia', slug: 'australia' },
                 { name: 'Asia', slug: 'asia' }
               ].map(loc => (
-                <a
+                <Link
                   href={`/remote-jobs/${loc.slug}`}
                   key={loc.slug}
                   className={`${darkMode ? 'bg-gray-800 border-gray-700 hover:border-blue-500' : 'bg-white border-gray-200 hover:border-blue-400'} border rounded-lg sm:rounded-xl p-4 sm:p-6 hover:shadow-lg text-center cursor-pointer block touch-manipulation`}
+                  prefetch={false}
                 >
                   <h3 className={`text-sm sm:text-base font-semibold ${darkMode ? 'text-white' : 'text-gray-900'}`}>{loc.name}</h3>
-                </a>
+                </Link>
               ))}
             </div>
           </div>
@@ -768,8 +770,9 @@ const [totalJobs, setTotalJobs] = useState(initialTotalJobs);
 
               return (
               <React.Fragment key={job.id}>
-              <a
+              <Link
                 href={`/jobs/${job.id}/${slug}`}
+                prefetch={false}
                 className={`group ${darkMode ? 'bg-gray-800 border-gray-700 hover:bg-gray-750' : 'bg-white border-gray-200 hover:bg-gray-50'} rounded-lg border cursor-pointer p-4 flex items-center gap-4 hover:border-blue-400 block touch-manipulation`}
               >
                 <div className={`w-12 h-12 ${darkMode ? 'bg-gray-700' : 'bg-gray-100'} rounded-lg flex items-center justify-center flex-shrink-0 overflow-hidden relative`}>
@@ -827,7 +830,7 @@ const [totalJobs, setTotalJobs] = useState(initialTotalJobs);
                     <ExternalLink className={`w-4 h-4 ${darkMode ? 'text-gray-600' : 'text-gray-400'} group-hover:text-blue-500 transition-colors flex-shrink-0`} />
                   </div>
                 </div>
-              </a>
+              </Link>
 
               {shouldShowEmailBox && (
                 <form onSubmit={handleEmailSubmit} className={`${darkMode ? 'bg-blue-900/20 border-blue-700' : 'bg-blue-50 border-blue-200'} rounded-2xl p-4 border transition-colors`}>
