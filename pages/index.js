@@ -582,12 +582,12 @@ const [totalJobs, setTotalJobs] = useState(initialTotalJobs);
           )}
         </header>
 
-        <section className={`${darkMode ? 'bg-black' : 'bg-gray-50'} py-12 sm:py-16 transition-colors`}>
+        <section className={`${darkMode ? 'bg-black' : 'bg-gray-50'} py-6 sm:py-10 transition-colors`}>
           <div className="max-w-7xl mx-auto px-4 sm:px-6 text-center">
-            <h2 className={`text-4xl sm:text-5xl lg:text-6xl font-black ${darkMode ? 'text-white' : 'text-gray-900'} mb-4 min-h-[1.2em]`}>
+            <h2 className={`text-4xl sm:text-5xl lg:text-6xl font-black ${darkMode ? 'text-white' : 'text-gray-900'} mb-3 min-h-[1.2em]`}>
               {typedText}<span className="animate-pulse">|</span>
             </h2>
-<p className={`text-lg sm:text-xl ${darkMode ? 'text-gray-400' : 'text-gray-600'} mb-8 max-w-2xl mx-auto`}>
+<p className={`text-lg sm:text-xl ${darkMode ? 'text-gray-400' : 'text-gray-600'} mb-6 max-w-2xl mx-auto`}>
   Work from anywhere. Live everywhere. 2000+ remote positions from top companies worldwide.
 </p>
 
@@ -696,9 +696,9 @@ const [totalJobs, setTotalJobs] = useState(initialTotalJobs);
         </section>
 
         {/* Browse by Category Section */}
-        <section className={`py-8 sm:py-12 ${darkMode ? 'bg-gray-900' : 'bg-white'} transition-colors`}>
+        <section className={`py-4 sm:py-6 ${darkMode ? 'bg-gray-900' : 'bg-white'} transition-colors`}>
           <div className="max-w-7xl mx-auto px-4 sm:px-6">
-            <h2 className={`text-2xl sm:text-3xl font-bold ${darkMode ? 'text-white' : 'text-gray-900'} mb-4 sm:mb-8 text-center`}>
+            <h2 className={`text-2xl sm:text-3xl font-bold ${darkMode ? 'text-white' : 'text-gray-900'} mb-2 sm:mb-4 text-center`}>
               Browse by Category
             </h2>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-4">
@@ -727,9 +727,9 @@ const [totalJobs, setTotalJobs] = useState(initialTotalJobs);
         </section>
 
         {/* Browse by Location Section */}
-        <section className={`py-6 sm:py-12 ${darkMode ? 'bg-black' : 'bg-gray-50'} transition-colors`}>
+        <section className={`py-3 sm:py-6 ${darkMode ? 'bg-black' : 'bg-gray-50'} transition-colors`}>
           <div className="max-w-7xl mx-auto px-4 sm:px-6">
-            <h2 className={`text-xl sm:text-3xl font-bold ${darkMode ? 'text-white' : 'text-gray-900'} mb-3 sm:mb-8 text-center`}>
+            <h2 className={`text-xl sm:text-3xl font-bold ${darkMode ? 'text-white' : 'text-gray-900'} mb-2 sm:mb-4 text-center`}>
               Browse by Location
             </h2>
             <div className="grid grid-cols-3 md:grid-cols-3 lg:grid-cols-6 gap-2 sm:gap-4">

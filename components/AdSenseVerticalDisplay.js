@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 
-export default function AdSenseJobDisplay() {
+export default function AdSenseVerticalDisplay() {
   const adLoaded = useRef(false);
 
   useEffect(() => {
@@ -17,12 +17,12 @@ export default function AdSenseJobDisplay() {
   }, []);
 
   return (
-    <div className="my-8">
+    <div className="adsense-container">
       <ins
         className="adsbygoogle"
         style={{ display: 'block' }}
         data-ad-client="ca-pub-9962507745166386"
-        data-ad-slot="9436716943"
+        data-ad-slot="3231011024"
         data-ad-format="auto"
         data-full-width-responsive="true"
       />

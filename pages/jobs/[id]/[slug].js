@@ -4,6 +4,7 @@ import SEO from '../../../components/SEO';
 import JobSchema from '../../../components/JobSchema';
 import BreadcrumbSchema from '../../../components/BreadcrumbSchema';
 import AdSenseJobDisplay from '../../../components/AdSenseJobDisplay';
+import AdSenseVerticalDisplay from '../../../components/AdSenseVerticalDisplay';
 import Link from 'next/link';
 import { Pool } from 'pg';
 import { formatSalary } from '../../../lib/formatSalary';
@@ -152,7 +153,7 @@ export default function JobDetailPage({ job, similarJobs = [] }) {
         </header>
 
         {/* Main Content */}
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
           <Link
             href="/"
             className={`${darkMode ? 'text-blue-400 hover:text-blue-300' : 'text-blue-600 hover:text-blue-700'} mb-6 flex items-center font-semibold text-lg group transition-colors`}
@@ -161,117 +162,130 @@ export default function JobDetailPage({ job, similarJobs = [] }) {
             Back to all jobs
           </Link>
 
-          <div className="mb-8">
-            <h2 className={`text-3xl sm:text-4xl font-bold ${darkMode ? 'text-white' : 'text-gray-900'} mb-3`}>
-              {transformedJob.title}
-            </h2>
-            <p className={`text-xl sm:text-2xl ${darkMode ? 'text-gray-300' : 'text-gray-700'} font-semibold mb-6`}>
-              {transformedJob.company}
-            </p>
+          {/* Two Column Layout */}
+          <div className="flex flex-col lg:flex-row gap-6">
+            {/* Main Content Column */}
+            <div className="flex-1">
+              <h2 className={`text-3xl sm:text-4xl font-bold ${darkMode ? 'text-white' : 'text-gray-900'} mb-3`}>
+                {transformedJob.title}
+              </h2>
+              <p className={`text-xl sm:text-2xl ${darkMode ? 'text-gray-300' : 'text-gray-700'} font-semibold mb-6`}>
+                {transformedJob.company}
+              </p>
 
-            {/* Job Meta Info */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
-              <div className={`flex items-center ${darkMode ? 'text-gray-300 bg-gray-800' : 'text-gray-700 bg-gray-100'} p-4 rounded-xl transition-colors`}>
-                <MapPin className={`w-5 h-5 mr-3 ${darkMode ? 'text-blue-400' : 'text-blue-600'}`} />
-                <div>
-                  <p className={`text-xs ${darkMode ? 'text-gray-500' : 'text-gray-500'} font-medium`}>Location</p>
-                  <p className="font-semibold">{transformedJob.location}</p>
+              {/* Job Meta Info */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+                <div className={`flex items-center ${darkMode ? 'text-gray-300 bg-gray-800' : 'text-gray-700 bg-gray-100'} p-4 rounded-xl transition-colors`}>
+                  <MapPin className={`w-5 h-5 mr-3 ${darkMode ? 'text-blue-400' : 'text-blue-600'}`} />
+                  <div>
+                    <p className={`text-xs ${darkMode ? 'text-gray-500' : 'text-gray-500'} font-medium`}>Location</p>
+                    <p className="font-semibold">{transformedJob.location}</p>
+                  </div>
+                </div>
+                <div className={`flex items-center ${darkMode ? 'text-gray-300 bg-gray-800' : 'text-gray-700 bg-gray-100'} p-4 rounded-xl transition-colors`}>
+                  <DollarSign className={`w-5 h-5 mr-3 ${darkMode ? 'text-blue-400' : 'text-blue-600'}`} />
+                  <div>
+                    <p className={`text-xs ${darkMode ? 'text-gray-500' : 'text-gray-500'} font-medium`}>Salary</p>
+                    <p className="font-semibold">{formatSalary(transformedJob.salary)}</p>
+                  </div>
+                </div>
+                <div className={`flex items-center ${darkMode ? 'text-gray-300 bg-gray-800' : 'text-gray-700 bg-gray-100'} p-4 rounded-xl transition-colors`}>
+                  <Clock className={`w-5 h-5 mr-3 ${darkMode ? 'text-blue-400' : 'text-blue-600'}`} />
+                  <div>
+                    <p className={`text-xs ${darkMode ? 'text-gray-500' : 'text-gray-500'} font-medium`}>Posted</p>
+                    <p className="font-semibold">{formatDate(transformedJob.postedDate)}</p>
+                  </div>
                 </div>
               </div>
-              <div className={`flex items-center ${darkMode ? 'text-gray-300 bg-gray-800' : 'text-gray-700 bg-gray-100'} p-4 rounded-xl transition-colors`}>
-                <DollarSign className={`w-5 h-5 mr-3 ${darkMode ? 'text-blue-400' : 'text-blue-600'}`} />
-                <div>
-                  <p className={`text-xs ${darkMode ? 'text-gray-500' : 'text-gray-500'} font-medium`}>Salary</p>
-                  <p className="font-semibold">{formatSalary(transformedJob.salary)}</p>
-                </div>
+
+              {/* Additional Info */}
+              <div className="flex flex-wrap gap-3 mb-6">
+                <span className={`${darkMode ? 'bg-green-900/30 text-green-400 border-green-700' : 'bg-green-100 text-green-700 border-green-200'} px-4 py-2 rounded-full font-semibold border`}>
+                  {transformedJob.type}
+                </span>
+                <span className={`${darkMode ? 'bg-purple-900/30 text-purple-400 border-purple-700' : 'bg-purple-100 text-purple-700 border-purple-200'} px-4 py-2 rounded-full font-semibold border`}>
+                  {transformedJob.category}
+                </span>
               </div>
-              <div className={`flex items-center ${darkMode ? 'text-gray-300 bg-gray-800' : 'text-gray-700 bg-gray-100'} p-4 rounded-xl transition-colors`}>
-                <Clock className={`w-5 h-5 mr-3 ${darkMode ? 'text-blue-400' : 'text-blue-600'}`} />
-                <div>
-                  <p className={`text-xs ${darkMode ? 'text-gray-500' : 'text-gray-500'} font-medium`}>Posted</p>
-                  <p className="font-semibold">{formatDate(transformedJob.postedDate)}</p>
-                </div>
-              </div>
-            </div>
 
-            {/* Additional Info */}
-            <div className="flex flex-wrap gap-3 mb-6">
-              <span className={`${darkMode ? 'bg-green-900/30 text-green-400 border-green-700' : 'bg-green-100 text-green-700 border-green-200'} px-4 py-2 rounded-full font-semibold border`}>
-                {transformedJob.type}
-              </span>
-              <span className={`${darkMode ? 'bg-purple-900/30 text-purple-400 border-purple-700' : 'bg-purple-100 text-purple-700 border-purple-200'} px-4 py-2 rounded-full font-semibold border`}>
-                {transformedJob.category}
-              </span>
-            </div>
-
-            {/* Apply Button - Top */}
-            <a
-              href={transformedJob.applyUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-8 rounded-xl inline-flex items-center justify-center gap-3 text-lg transition-all transform hover:scale-105 shadow-lg mb-2"
-            >
-              Apply on Company Website
-              <ExternalLink className="w-5 h-5" />
-            </a>
-
-            {/* Job Description - Only show if description exists and has content */}
-            {transformedJob.description && transformedJob.description.trim().length > 50 && (
-              <div className={`${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} rounded-2xl p-6 sm:p-8 shadow-lg mb-6 border transition-colors`}>
-                <h3 className={`text-2xl font-bold ${darkMode ? 'text-white' : 'text-gray-900'} mb-4`}>About the Role</h3>
-                <div
-                  className={`${darkMode ? 'text-gray-300' : 'text-gray-700'} leading-relaxed prose prose-invert max-w-none job-description`}
-                  dangerouslySetInnerHTML={{ __html: transformedJob.description }}
-                />
-              </div>
-            )}
-
-            {/* Skills & Tags */}
-            {transformedJob.tags.length > 0 && (
-              <div className="mb-8">
-                <h3 className={`text-xl font-bold ${darkMode ? 'text-white' : 'text-gray-900'} mb-4`}>Skills & Tags</h3>
-                <div className="flex flex-wrap gap-3">
-                  {transformedJob.tags.map((tag, idx) => (
-                    <span
-                      key={idx}
-                      className={`${darkMode ? 'bg-blue-900/30 text-blue-300 border-blue-700' : 'bg-blue-50 text-blue-700 border-blue-200'} px-4 py-2 rounded-full font-medium border transition-colors`}
-                    >
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Apply Button - Bottom */}
-            <a
-              href={transformedJob.applyUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-8 rounded-xl inline-flex items-center justify-center gap-3 text-lg transition-all transform hover:scale-105 shadow-lg mb-2"
-            >
-              Apply on Company Website
-              <ExternalLink className="w-5 h-5" />
-            </a>
-            {/* Display Apply URL */}
-            <div className="mb-4 text-center">
+              {/* Apply Button - Top */}
               <a
                 href={transformedJob.applyUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className={`text-sm ${darkMode ? 'text-blue-400 hover:text-blue-300' : 'text-blue-600 hover:text-blue-700'} break-all transition-colors`}
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-8 rounded-xl inline-flex items-center justify-center gap-3 text-lg transition-all transform hover:scale-105 shadow-lg mb-2"
               >
-                {transformedJob.applyUrl}
+                Apply on Company Website
+                <ExternalLink className="w-5 h-5" />
               </a>
+
+              {/* Job Description - Only show if description exists and has content */}
+              {transformedJob.description && transformedJob.description.trim().length > 50 && (
+                <div className={`${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} rounded-2xl p-6 sm:p-8 shadow-lg mb-6 border transition-colors`}>
+                  <h3 className={`text-2xl font-bold ${darkMode ? 'text-white' : 'text-gray-900'} mb-4`}>About the Role</h3>
+                  <div
+                    className={`${darkMode ? 'text-gray-300' : 'text-gray-700'} leading-relaxed prose prose-invert max-w-none job-description`}
+                    dangerouslySetInnerHTML={{ __html: transformedJob.description }}
+                  />
+                </div>
+              )}
+
+              {/* Skills & Tags */}
+              {transformedJob.tags.length > 0 && (
+                <div className="mb-8">
+                  <h3 className={`text-xl font-bold ${darkMode ? 'text-white' : 'text-gray-900'} mb-4`}>Skills & Tags</h3>
+                  <div className="flex flex-wrap gap-3">
+                    {transformedJob.tags.map((tag, idx) => (
+                      <span
+                        key={idx}
+                        className={`${darkMode ? 'bg-blue-900/30 text-blue-300 border-blue-700' : 'bg-blue-50 text-blue-700 border-blue-200'} px-4 py-2 rounded-full font-medium border transition-colors`}
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Apply Button - Bottom */}
+              <a
+                href={transformedJob.applyUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-8 rounded-xl inline-flex items-center justify-center gap-3 text-lg transition-all transform hover:scale-105 shadow-lg mb-2"
+              >
+                Apply on Company Website
+                <ExternalLink className="w-5 h-5" />
+              </a>
+
+              {/* Display Apply URL */}
+              <div className="mb-4 text-center">
+                <a
+                  href={transformedJob.applyUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`text-sm ${darkMode ? 'text-blue-400 hover:text-blue-300' : 'text-blue-600 hover:text-blue-700'} break-all transition-colors`}
+                >
+                  {transformedJob.applyUrl}
+                </a>
+              </div>
+
+              {/* Job Source */}
+              <p className={`text-sm ${darkMode ? 'text-gray-500' : 'text-gray-600'} text-center mt-2`}>
+                Job sourced from {transformedJob.source}
+              </p>
+
+              {/* AdSense Display Ad */}
+              <AdSenseJobDisplay />
             </div>
 
-            {/* Job Source */}
-            <p className={`text-sm ${darkMode ? 'text-gray-500' : 'text-gray-600'} text-center mt-2`}>
-              Job sourced from {transformedJob.source}
-            </p>
-
-            {/* AdSense Display Ad */}
-            <AdSenseJobDisplay />
+            {/* Sidebar with Vertical Ad - Desktop Only */}
+            <div className="hidden lg:block lg:w-80 flex-shrink-0">
+              <div className={`sticky top-24 ${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} rounded-2xl p-4 border shadow-lg transition-colors`}>
+                <p className={`text-xs ${darkMode ? 'text-gray-500' : 'text-gray-500'} text-center mb-2`}>Advertisement</p>
+                <AdSenseVerticalDisplay />
+              </div>
+            </div>
           </div>
         </div>
 
