@@ -1,5 +1,293 @@
 export const blogPosts = [
   {
+    title: "Top 10 Remote-First Companies Hiring Right Now (2025 Data)",
+    slug: "top-remote-first-companies-hiring-2025",
+    author: "Remi",
+    date: "2025-01-28",
+    readTime: "10 min read",
+    excerpt: "We analyzed our database of active job listings to identify the companies hiring the most remote workers right now. From tech giants to innovative startups, here are the top 10 remote-first employers and what makes them stand out.",
+    tags: ["Remote Work", "Company Culture", "Job Search", "Tech Companies"],
+    image: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800&h=400&fit=crop",
+    content: `
+      <h2>The Companies Building the Future of Remote Work</h2>
+      <p>Not all remote jobs are created equal. Some companies treat remote work as a temporary compromise. Others have built their entire culture around distributed teams, offering better benefits, clearer communication, and genuine work-life balance.</p>
+
+      <p>We analyzed thousands of active job listings in our database to identify which companies are hiring the most remote workers right now. But we didn't stop at the numbers—we dug into what makes these companies exceptional remote employers.</p>
+
+      <p>Here are the top 10 remote-first companies you should be watching in 2025. <a href="/">Browse all current remote job openings →</a></p>
+
+      <h2>1. Coinbase - 84+ Remote Positions</h2>
+      <p><strong>What they do:</strong> Leading cryptocurrency exchange platform</p>
+
+      <p><strong>Why they're exceptional:</strong> Coinbase went "remote-first" in 2021 and hasn't looked back. They're not just allowing remote work—they've redesigned their entire organization around it. Employees can work from anywhere with no location-based pay cuts, and the company provides generous home office stipends.</p>
+
+      <p><strong>Open roles:</strong> Engineering, Product, Design, Operations, Compliance, and Finance positions across USA, Canada, and UK</p>
+
+      <p><strong>Remote work philosophy:</strong> Coinbase operates on a "Remote First" model where distributed work is the default, not the exception. All meetings are designed for remote participation, documentation is prioritized over synchronous communication, and career advancement isn't tied to physical presence.</p>
+
+      <p><strong>Key benefits:</strong></p>
+      <ul>
+        <li>Location flexibility with no salary adjustments</li>
+        <li>$1,000+ annual home office budget</li>
+        <li>Quarterly in-person team meetups</li>
+        <li>Comprehensive health benefits regardless of location</li>
+      </ul>
+
+      <p><a href="/category/software-development">Browse Coinbase's remote engineering roles →</a></p>
+
+      <h2>2. Dropbox - 62+ Remote Positions</h2>
+      <p><strong>What they do:</strong> Cloud storage and collaboration platform</p>
+
+      <p><strong>Why they're exceptional:</strong> Dropbox pioneered the "Virtual First" model in 2020, closing most physical offices and going all-in on remote work. They've since become a case study in how to do distributed work right.</p>
+
+      <p><strong>Open roles:</strong> Software Engineering, Product Management, Marketing, Sales, and Customer Success across USA and Canada</p>
+
+      <p><strong>Remote work philosophy:</strong> "Virtual First" means remote is the primary experience. Dropbox maintains "Studios"—collaborative spaces for occasional in-person work—but they're designed as optional amenities, not required offices.</p>
+
+      <p><strong>Key benefits:</strong></p>
+      <ul>
+        <li>90% of roles are available remotely</li>
+        <li>Core Collaboration Hours (limited required synchronous time)</li>
+        <li>Home office setup budget</li>
+        <li>Access to Dropbox Studios in major cities for optional in-person work</li>
+        <li>Emphasis on async communication and documentation</li>
+      </ul>
+
+      <p><strong>What employees say:</strong> "Dropbox actually walks the walk on remote work. No Zoom fatigue because they default to async. No pressure to be on camera. Just results-focused work."</p>
+
+      <p><a href="/">See all remote tech jobs →</a></p>
+
+      <h2>3. Instacart - 50+ Remote Positions</h2>
+      <p><strong>What they do:</strong> Grocery delivery and pickup platform</p>
+
+      <p><strong>Why they're exceptional:</strong> While Instacart's shopper network is inherently distributed, the company has extended its remote-first approach to corporate roles, hiring across product, engineering, and operations teams.</p>
+
+      <p><strong>Open roles:</strong> Product, Engineering, Data Science, Operations, and Business Development in USA and Canada</p>
+
+      <p><strong>Remote work philosophy:</strong> Instacart embraces a "flex-first" model where employees choose their work environment. The company focuses on outcomes over hours logged and provides extensive support for remote workers.</p>
+
+      <p><strong>Key benefits:</strong></p>
+      <ul>
+        <li>Competitive salary packages ($120k-$200k+ for senior roles)</li>
+        <li>Flexible work arrangements</li>
+        <li>Strong emphasis on work-life balance</li>
+        <li>Access to Instacart services as an employee perk</li>
+      </ul>
+
+      <h2>4. Twilio - 40+ Remote Positions</h2>
+      <p><strong>What they do:</strong> Cloud communications platform (APIs for messaging, voice, video)</p>
+
+      <p><strong>Why they're exceptional:</strong> Twilio has been remote-friendly since its founding, and the company's "Build Positive" culture extends to how they support distributed teams. They hire globally and offer extensive development opportunities for remote employees.</p>
+
+      <p><strong>Open roles:</strong> Engineering, Solutions Architecture, Sales, Marketing, and Customer Success across USA, Canada, UK, and Ireland</p>
+
+      <p><strong>Remote work philosophy:</strong> Twilio believes remote work enables them to hire the best talent regardless of location. They've invested heavily in remote collaboration tools and async workflows.</p>
+
+      <p><strong>Key benefits:</strong></p>
+      <ul>
+        <li>Global hiring (truly location-agnostic for many roles)</li>
+        <li>Generous PTO and parental leave policies</li>
+        <li>$2,000+ home office allowance</li>
+        <li>Quarterly team offsites for relationship building</li>
+        <li>Strong learning and development programs</li>
+      </ul>
+
+      <h2>5. GitLab - 30+ Remote Positions</h2>
+      <p><strong>What they do:</strong> DevOps platform and version control</p>
+
+      <p><strong>Why they're exceptional:</strong> GitLab is the gold standard for remote work. They've been 100% remote since day one, with team members in 65+ countries. They literally wrote the handbook on remote work—their public employee handbook has 2,000+ pages documenting every aspect of remote operations.</p>
+
+      <p><strong>Open roles:</strong> Engineering, Product, Sales, Marketing, and People Operations globally</p>
+
+      <p><strong>Remote work philosophy:</strong> "All-remote" is core to GitLab's DNA. Everything is documented, all communication defaults to async, and they've proven that remote work scales even at 2,000+ employees.</p>
+
+      <p><strong>Key benefits:</strong></p>
+      <ul>
+        <li>Work from anywhere in the world</li>
+        <li>Transparent salary calculator based on role and location</li>
+        <li>Unlimited PTO with a minimum requirement (yes, they require you to take time off)</li>
+        <li>$1,500+ home office budget</li>
+        <li>Annual company summit bringing the whole team together</li>
+      </ul>
+
+      <p><strong>What makes them different:</strong> GitLab's commitment to transparency extends to their remote work practices. Their entire employee handbook is public, offering a masterclass in how to run a distributed company.</p>
+
+      <p><a href="https://about.gitlab.com/company/culture/all-remote/" target="_blank" rel="noopener">Read GitLab's public remote work handbook →</a></p>
+
+      <h2>6. Webflow - 17+ Remote Positions</h2>
+      <p><strong>What they do:</strong> No-code website builder and hosting platform</p>
+
+      <p><strong>Why they're exceptional:</strong> Webflow transitioned to a fully remote model and has maintained a strong design-focused culture despite being distributed. They're known for excellent benefits and a supportive work environment.</p>
+
+      <p><strong>Open roles:</strong> Engineering, Design, Product, Marketing, and Customer Success in USA and select Canadian provinces</p>
+
+      <p><strong>Remote work philosophy:</strong> Webflow emphasizes "intentional collaboration"—they bring teams together when it matters and embrace async work for everything else.</p>
+
+      <p><strong>Key benefits:</strong></p>
+      <ul>
+        <li>Competitive compensation with equity</li>
+        <li>100% remote within USA and select Canadian regions</li>
+        <li>Generous health and wellness benefits</li>
+        <li>Professional development budgets</li>
+        <li>Regular team offsites and retreats</li>
+      </ul>
+
+      <h2>7. Postman - 15+ Remote Positions</h2>
+      <p><strong>What they do:</strong> API development and testing platform</p>
+
+      <p><strong>Why they're exceptional:</strong> Postman has grown into a global remote-first company while maintaining a strong engineering culture. They hire across multiple countries and offer flexible work arrangements.</p>
+
+      <p><strong>Open roles:</strong> Engineering, Product, Developer Relations, and Sales across USA, Europe, and India</p>
+
+      <p><strong>Remote work philosophy:</strong> Postman operates on a "remote-first" model with regional hubs. They believe in hiring the best talent globally and providing flexibility.</p>
+
+      <p><strong>Key benefits:</strong></p>
+      <ul>
+        <li>Global hiring across multiple time zones</li>
+        <li>Flexible work hours</li>
+        <li>Competitive salaries and equity</li>
+        <li>Home office setup support</li>
+      </ul>
+
+      <h2>8. Obsidian - 8+ Remote Positions</h2>
+      <p><strong>What they do:</strong> Knowledge management and note-taking application</p>
+
+      <p><strong>Why they're exceptional:</strong> As a smaller but rapidly growing company, Obsidian offers the startup experience with remote flexibility. They're known for their product-focused culture and passionate community.</p>
+
+      <p><strong>Open roles:</strong> Engineering, Product, Community, and Operations across USA, UK, and Canada</p>
+
+      <p><strong>Remote work philosophy:</strong> Small team, global reach. Obsidian embraces async communication and deep work, which aligns with their product's philosophy.</p>
+
+      <p><strong>Key benefits:</strong></p>
+      <ul>
+        <li>Work with a passionate, engaged user community</li>
+        <li>Flexibility and autonomy</li>
+        <li>Competitive compensation for a growing startup</li>
+        <li>Impact-driven work environment</li>
+      </ul>
+
+      <h2>9. Automattic - Fully Remote DNA</h2>
+      <p><strong>What they do:</strong> Company behind WordPress.com, WooCommerce, Tumblr, and more</p>
+
+      <p><strong>Why they're exceptional:</strong> Automattic has been distributed since 2005, making them one of the longest-running remote-first companies. With 2,000+ employees across 95+ countries, they've perfected remote work at scale.</p>
+
+      <p><strong>Open roles:</strong> Engineering, Design, Marketing, Happiness Engineers (Support), and more—globally</p>
+
+      <p><strong>Remote work philosophy:</strong> "Distributed" is their default. Automattic believes great talent exists everywhere, and physical location shouldn't limit opportunity.</p>
+
+      <p><strong>Key benefits:</strong></p>
+      <ul>
+        <li>Work from anywhere in the world</li>
+        <li>Open vacation policy</li>
+        <li>Home office setup and co-working space budget</li>
+        <li>Annual company meetups in different countries</li>
+        <li>Sabbaticals after 5 years</li>
+      </ul>
+
+      <p><strong>Unique perk:</strong> Automattic offers every new employee a paid "work from anywhere" trial period to experience different locations before settling.</p>
+
+      <p><a href="/">Explore more remote opportunities →</a></p>
+
+      <h2>10. Zapier - Remote Work Pioneers</h2>
+      <p><strong>What they do:</strong> Workflow automation platform connecting apps</p>
+
+      <p><strong>Why they're exceptional:</strong> Zapier has been fully remote since 2011 and actively shares their remote work playbook. They're proof that you can build a fast-growing tech company without ever having an office.</p>
+
+      <p><strong>Open roles:</strong> Engineering, Product, Marketing, Customer Support, and Operations globally</p>
+
+      <p><strong>Remote work philosophy:</strong> Zapier doesn't just allow remote work—they optimize for it. Every process, tool, and communication channel is designed for distributed teams.</p>
+
+      <p><strong>Key benefits:</strong></p>
+      <ul>
+        <li>$10,000 budget to visit and work from a "dream location" each year</li>
+        <li>De-location stipend if you move away from expensive cities</li>
+        <li>Co-working space or home office budget</li>
+        <li>Generous health and wellness benefits</li>
+        <li>14 weeks paid parental leave</li>
+      </ul>
+
+      <p><strong>What makes them different:</strong> Zapier's "de-location" package pays employees a bonus if they move from expensive cities, acknowledging that remote work should benefit employees financially.</p>
+
+      <h2>What These Companies Have in Common</h2>
+      <p>After analyzing these top remote employers, several patterns emerge:</p>
+
+      <p><strong>1. Remote-first, not remote-allowed</strong></p>
+      <p>These companies don't just tolerate remote work—they've designed their culture, processes, and tools around it. Remote employees aren't second-class citizens attending meetings via Zoom; they're the default.</p>
+
+      <p><strong>2. Async communication is prioritized</strong></p>
+      <p>All of these companies emphasize documentation and asynchronous communication. This reduces meeting fatigue and enables true flexibility across time zones.</p>
+
+      <p><strong>3. Generous home office budgets</strong></p>
+      <p>Every company on this list provides stipends for home office equipment, ranging from $1,000 to $2,000+. They recognize that remote work requires investment.</p>
+
+      <p><strong>4. Intentional in-person connection</strong></p>
+      <p>Despite being remote-first, these companies invest in bringing teams together periodically. Quarterly offsites, annual summits, and team retreats maintain relationships and culture.</p>
+
+      <p><strong>5. Location flexibility with fair compensation</strong></p>
+      <p>Many of these companies offer location-agnostic pay or transparent salary bands. They're moving away from the outdated model of paying people based on where they live rather than the value they create.</p>
+
+      <p>Looking for companies with these traits? <a href="/">Browse remote jobs from top employers →</a></p>
+
+      <h2>Red Flags to Watch For in "Remote" Companies</h2>
+      <p>Not all companies claiming to be remote-friendly actually are. Watch out for these warning signs:</p>
+
+      <ul>
+        <li><strong>Required office attendance:</strong> If they're hiring "remote" but requiring 2-3 days in-office, that's hybrid, not remote</li>
+        <li><strong>No written remote work policy:</strong> If remote work guidelines aren't documented, expect inconsistency</li>
+        <li><strong>All meetings scheduled for one time zone:</strong> True remote-first companies accommodate multiple time zones</li>
+        <li><strong>Excessive surveillance tools:</strong> Time trackers, screenshot monitors, and activity tracking suggest a lack of trust</li>
+        <li><strong>Location-based pay cuts:</strong> Be wary of companies that dramatically slash salaries for remote workers</li>
+      </ul>
+
+      <h2>How to Land a Job at These Companies</h2>
+      <p>These top remote employers receive thousands of applications. Here's how to stand out:</p>
+
+      <p><strong>1. Demonstrate remote work skills</strong></p>
+      <p>Highlight experience with async communication, self-directed work, and remote collaboration tools. If you've never worked remotely, emphasize transferable skills like written communication and time management.</p>
+
+      <p><strong>2. Show, don't tell</strong></p>
+      <p>Instead of saying "I'm a self-starter," share examples of projects you initiated and completed independently. Results speak louder than adjectives.</p>
+
+      <p><strong>3. Research their remote culture</strong></p>
+      <p>Many of these companies publish their remote work handbooks publicly (GitLab, Zapier, Automattic). Read them. Reference specific practices in your cover letter to show you've done your homework.</p>
+
+      <p><strong>4. Optimize for async communication</strong></p>
+      <p>Your written communication in the application process is a preview of how you'll work remotely. Be clear, concise, and thorough in emails and written responses.</p>
+
+      <p><strong>5. Be ready for remote-specific interview questions</strong></p>
+      <p>Expect questions like:</p>
+      <ul>
+        <li>"How do you handle working across different time zones?"</li>
+        <li>"Describe a time you had to solve a problem without being able to tap someone on the shoulder"</li>
+        <li>"How do you prevent burnout when working from home?"</li>
+        <li>"What's your home office setup?"</li>
+      </ul>
+
+      <h2>The Future of Remote-First Hiring</h2>
+      <p>The companies on this list aren't just hiring remotely out of necessity—they're proving that distributed teams can be more productive, more diverse, and more sustainable than traditional office-based models.</p>
+
+      <p>As more companies see the results these pioneers are achieving, remote-first hiring will continue to grow. The question isn't whether remote work is here to stay—it's which companies will lead the way and which will be left behind.</p>
+
+      <h2>Start Your Remote Job Search Today</h2>
+      <p>Ready to join one of these incredible remote-first companies? Here's how to get started:</p>
+
+      <p><strong>Browse current openings from these top employers:</strong></p>
+      <ul>
+        <li><a href="/">All remote jobs on No Commute Jobs</a></li>
+        <li><a href="/category/software-development">Remote software development jobs</a></li>
+        <li><a href="/category/design">Remote design jobs</a></li>
+        <li><a href="/category/marketing">Remote marketing jobs</a></li>
+        <li><a href="/category/customer-service">Remote customer service jobs</a></li>
+      </ul>
+
+      <p><strong>Get new remote job alerts:</strong> <a href="/#newsletter">Subscribe to our weekly newsletter</a> and be the first to know when these top companies are hiring.</p>
+
+      <hr style="margin: 40px 0; border: none; border-top: 2px solid #e5e7eb;">
+
+      <p><em>Data current as of January 2025. Job counts based on active listings in the No Commute Jobs database. Company information compiled from public sources, employee reviews, and official company remote work policies.</em></p>
+    `
+  },
+  {
     title: "Remote Work Statistics 2025: We Analyzed 3,465 Job Listings",
     slug: "remote-work-statistics-2025",
     author: "Remi",
